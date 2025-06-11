@@ -1,15 +1,22 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LobbyUIHandler : MonoBehaviour
 {
+    [Header("Lobby UI Elements")]
     [SerializeField] private Button gameStartButton;
     [SerializeField] private Button howToPlayButton;
     [SerializeField] private Button optionButton;
     [SerializeField] private Button exitButton;
     [SerializeField] private Button editorsButton;
+
+    [Header("UI Panels")]
+    [SerializeField] private GameObject howToPlayPanel;
+    [SerializeField] private GameObject optionsPanel;
+    [SerializeField] private GameObject editorsPanel;
 
     private void Awake()
     {
@@ -37,6 +44,7 @@ public class LobbyUIHandler : MonoBehaviour
     {
         // Logic to start the game
         print("Game Start Button Clicked");
+        SceneManager.LoadScene("GameScene");
     }
     private void OnHowToPlayButtonClicked()
     {
