@@ -1,41 +1,44 @@
 using System;
 using UnityEngine;
+using CardBoardGame.Assets._Scripts.Utility;
 
 [Serializable]
-public struct PlayerData
+public class PlayerData
 {
 
 }
 [Serializable]
-public struct GameData
+public class GameData
 {
-    public Difficulty difficulty;
-    // public string playerName;
+    Difficulty difficulty;
     public void SetDifficulty(Difficulty diff)
     {
         difficulty = diff;
     }
+    public Difficulty GetDifficulty()
+    {
+        return difficulty;
+
+    }
     public PlayerData playerData;
 
 }
-public enum Difficulty
-{
-    Easy,
-    Normal,
-    Hard
-}
 public class DataManager : MonoBehaviour
 {
-    [SerializeField] private GridScriptableObject[] gridScriptableObjects;
     private GameData currentGameData;
     public GameData CurrentGameData
     {
         get { return currentGameData; }
-        set { currentGameData = value; }
+        set
+        {
+            currentGameData = value;
+        }
     }
-    public GridScriptableObject[] GridScriptableObjects
+
+    private void Awake()
     {
-        get => gridScriptableObjects;
+        // Initialize the current game data
+        currentGameData = new GameData();
     }
 
 }

@@ -1,19 +1,10 @@
 using System;
 using UnityEngine;
-
+using CardBoardGame.Assets._Scripts.Utility;
 [Serializable]
 public struct GridData
 {
-    public enum GridType
-    {
-        Start = 0,
-        Day = 1,
-        Night = 2,
-        PlayerHeal = 3,
-        MonsterHeal = 4,
-        Draw = 5,
-        MiniGame = 6
-    }
+
     [SerializeField]
     public GridType gridType;
 }

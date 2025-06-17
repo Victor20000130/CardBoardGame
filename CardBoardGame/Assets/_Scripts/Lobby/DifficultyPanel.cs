@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using CardBoardGame.Assets._Scripts.Utility;
 
 public class DifficultyPanel : LobbyPanel
 {
