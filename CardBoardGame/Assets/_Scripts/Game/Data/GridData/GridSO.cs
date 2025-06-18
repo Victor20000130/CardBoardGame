@@ -2,8 +2,9 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GridScriptableObject", menuName = "Scriptable Objects/GridScriptableObject")]
-public class GridScriptableObject : ScriptableObject
+public class GridSO : ScriptableObject
 {
     [SerializeField]
     private GridData[] gridData;
+    public GridData[] GridDataArray => gridData;
 }

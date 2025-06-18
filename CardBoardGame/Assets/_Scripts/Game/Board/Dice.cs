@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class Dice : MonoBehaviour
 {
     private Rigidbody _rigidbody;
+
     [Header("주사위 설정")]
     public float jumpForce = 1.5f;
     public float rollForce = 10f;
@@ -14,6 +15,7 @@ public class Dice : MonoBehaviour
     public float maxForce = 5f;
     public float minTorque = -5f;
     public float maxTorque = 5f;
+    public float wallForce = 2;
     // 각 면의 이름(또는 번호)을 담을 배열
     private int[] faceNames = new int[6];
     [Header("주사위 눈금 설정")]
@@ -25,6 +27,8 @@ public class Dice : MonoBehaviour
     public int back;
 
     private bool isRolling = false;
+    private bool isStopped = false;
+    private bool isRolled = false;
 
     // 주사위의 각 면이 로컬에서 바라보는 방향(노멀)
     private Vector3[] localNormals = new Vector3[]
@@ -54,6 +58,16 @@ public class Dice : MonoBehaviour
     /// <returns></returns>
     public int GetUpFace()
     {
+        if (isRolled == false)
+        {
+            Debug.Log("주사위가 굴려지지 않았습니다.");
+            return -1;
+        }
+        if (isStopped == false)
+        {
+            Debug.LogWarning("주사위가 멈추지 않았습니다.");
+            return -1;
+        }
         float maxDot = float.NegativeInfinity;
         int upFaceIndex = -1;
 
@@ -69,15 +83,19 @@ public class Dice : MonoBehaviour
                 upFaceIndex = i;
             }
         }
-
+        isRolled = false;
         return faceNames[upFaceIndex];
     }
 
     private void Update()
     {
-        if (_rigidbody.linearVelocity.magnitude <= 0.1f)
+        if (_rigidbody.linearVelocity.magnitude < 0.1f)
         {
-            Debug.Log("위쪽 면: " + GetUpFace().ToString());
+            isStopped = true;
+        }
+        else
+        {
+            isStopped = false;
         }
     }
     private void FixedUpdate()
@@ -88,7 +106,9 @@ public class Dice : MonoBehaviour
         {
             RollDice();
             isRolling = false; // 주사위가 굴러간 후에는 다시 굴리지 않도록 설정
+            isRolled = true; // 주사위가 굴러졌음을 표시
         }
+
     }
 
     private void RollDice()
@@ -125,7 +145,7 @@ public class Dice : MonoBehaviour
             float force = collision.impulse.magnitude;
 
             // 힘과 토크 적용
-            _rigidbody.AddForce(pushDirection * force * Time.fixedDeltaTime, ForceMode.Impulse);
+            _rigidbody.AddForce(pushDirection * force * wallForce * Time.fixedDeltaTime, ForceMode.Impulse);
             _rigidbody.AddTorque(pushTorque * force, ForceMode.Impulse);
         }
     }

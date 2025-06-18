@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using CardBoardGame.Assets._Scripts.Utility;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class PlayerData
@@ -10,15 +11,17 @@ public class PlayerData
 [Serializable]
 public class GameData
 {
-    Difficulty difficulty;
-    public void SetDifficulty(Difficulty diff)
+    private Difficulty difficulty;
+    private Stage stage;
+    public Difficulty Difficulty
     {
-        difficulty = diff;
+        get { return difficulty; }
+        set { difficulty = value; }
     }
-    public Difficulty GetDifficulty()
+    public Stage Stage
     {
-        return difficulty;
-
+        get { return stage; }
+        set { stage = value; }
     }
     public PlayerData playerData;
 
@@ -37,8 +40,16 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
+
         // Initialize the current game data
         currentGameData = new GameData();
+
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            currentGameData.playerData = new PlayerData();
+            currentGameData.Difficulty = Difficulty.Easy;
+            Debug.Log("DataManager: Game data initialized with Easy difficulty.");
+        }
     }
 
 }
