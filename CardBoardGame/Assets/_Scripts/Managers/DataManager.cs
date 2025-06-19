@@ -43,13 +43,8 @@ public class DataManager : MonoBehaviour
 
         // Initialize the current game data
         currentGameData = new GameData();
-
-        if (SceneManager.GetActiveScene().name == "GameScene")
-        {
-            currentGameData.playerData = new PlayerData();
-            currentGameData.Difficulty = Difficulty.Easy;
-            Debug.Log("DataManager: Game data initialized with Easy difficulty.");
-        }
+        currentGameData.Difficulty = Difficulty.Easy;
+        currentGameData.Stage = Stage.Stage1;
     }
 
 }

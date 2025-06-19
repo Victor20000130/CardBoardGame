@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using CardBoardGame.Assets._Scripts.Utility;
+using UnityEngine.UI;
 [Serializable]
 public class GridData
 {
@@ -13,10 +14,16 @@ public class GridHandler : MonoBehaviour
 {
     [SerializeField] private Grid[] grid;
     [SerializeField] private GridData[] gridData;
-
-    public void InitializeGridData(MonsterGridSO monsterGridScriptableObject)
+    [SerializeField] private Grid gridPrefab;
+    [SerializeField] private Image boardEffect_IMG;
+    public void InitializeGridData(MonsterGridSO monsterGridSO, Difficulty diff)
     {
-        gridData = monsterGridScriptableObject.GetGridDatas(0);
+        //TODO : 그리드 동적 생성 로직 작성 예정
+        // InstantiateGrids(monsterGridSO.GetGridLength(diff));
+        // grid = new Grid[monsterGridSO.GetGridLength(diff)];
+        // gridData = new GridData[monsterGridSO.GetGridLength(diff)];
+
+        gridData = monsterGridSO.GetGridDatas(0);
         if (grid.Length != gridData.Length)
         {
             Debug.LogError("Grid and GridData arrays must have the same length.");
@@ -28,5 +35,22 @@ public class GridHandler : MonoBehaviour
             grid[i].GridData = gridData[i];
             // Additional initialization logic can be added here if needed
         }
+    }
+
+    private void InstantiateGrids(int length)
+    {
+        int gridLength = length;
+        grid = new Grid[gridLength];
+        for (int i = 0; i < gridLength; i++)
+        {
+            grid[i] = Instantiate(gridPrefab, transform, false);
+        }
+    }
+
+    public void GetCurrentGridData(int idx)
+    {
+        Debug.Log(idx);
+        boardEffect_IMG.sprite = grid[idx].gridSprite;
+        // return gridData[idx];
     }
 }

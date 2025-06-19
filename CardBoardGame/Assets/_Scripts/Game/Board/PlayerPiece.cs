@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class PlayerPiece : MonoBehaviour
 {
     private PieceHandler pieceHandler;
@@ -16,3 +17,4 @@ public class PlayerPiece : MonoBehaviour
     }
 
 }
+

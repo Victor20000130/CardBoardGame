@@ -9,7 +9,7 @@ public class StageHandler : MonoBehaviour
     [SerializeField] private GameObject selectStagePanel;
     private Difficulty curDiff;
     private Stage currStage;
-    private MonsterGridSO monsterGridScriptableObject;
+    private MonsterGridSO monsterGridSO;
     //TODO : 적이 죽었을 때 스테이지 넘어가기
     public Stage CurrentStage
     {
@@ -18,15 +18,9 @@ public class StageHandler : MonoBehaviour
         {
             currStage = value;
             Debug.Log($"Current Stage set to: {currStage}");
-            stageButtons[(int)CurrentStage].interactable = true;
+            stageButtons[(int)CurrentStage - 1].interactable = true;
         }
     }
-
-    private void Start()
-    {
-
-    }
-
     private void OnStageButtonClicked(Stage currStage)
     {
         switch (currStage)
@@ -51,6 +45,9 @@ public class StageHandler : MonoBehaviour
         }
         selectStagePanel.SetActive(false);
         Debug.Log($"StageHandler: Stage {currStage} button clicked.");
+
+        ManagerHandler.Instance.gameManager.StartGame();
+
     }
 
     public MonsterGridSO InitStageHandler(Difficulty diff, Stage stage)
@@ -79,23 +76,23 @@ public class StageHandler : MonoBehaviour
             case Difficulty.Easy:
                 Debug.Log("Initializing Easy Stage");
                 // Easy stage initialization logic
-                monsterGridScriptableObject = Resources.Load<MonsterGridSO>("Data/EasyMonsterGrid");
+                monsterGridSO = Resources.Load<MonsterGridSO>("Data/EasyMonsterGrid");
                 break;
             case Difficulty.Normal:
                 Debug.Log("Initializing Normal Stage");
                 // Normal stage initialization logic
-                monsterGridScriptableObject = Resources.Load<MonsterGridSO>("Data/NormalMonsterGrid");
+                monsterGridSO = Resources.Load<MonsterGridSO>("Data/NormalMonsterGrid");
                 break;
             case Difficulty.Hard:
                 Debug.Log("Initializing Hard Stage");
                 // Hard stage initialization logic
-                monsterGridScriptableObject = Resources.Load<MonsterGridSO>("Data/HardMonsterGrid");
+                monsterGridSO = Resources.Load<MonsterGridSO>("Data/HardMonsterGrid");
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(curDiff), curDiff, null);
         }
-        gridHandler.InitializeGridData(monsterGridScriptableObject);
+        gridHandler.InitializeGridData(monsterGridSO, curDiff);
         Debug.Log("StageHandler: Stage initialized with " + curDiff + " difficulty.");
-        return monsterGridScriptableObject;
+        return monsterGridSO;
     }
 }

@@ -2,7 +2,8 @@ namespace CardBoardGame.Assets._Scripts.Utility
 {
     public enum Stage
     {
-        Stage1 = 0,
+        None = 0,
+        Stage1,
         Stage2,
         Stage3,
         Stage4,

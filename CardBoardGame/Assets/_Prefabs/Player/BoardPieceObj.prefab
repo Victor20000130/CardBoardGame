@@ -393,6 +393,8 @@ MonoBehaviour:
   - {fileID: 1083016608217484307}
   - {fileID: 5172001851424124663}
   - {fileID: 1190678970032921415}
+  cornerIdx: 04000000080000000c00000000000000
+  playerPiece: {fileID: 0}
 --- !u!1 &6389864455232851904
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8045152281063376116, guid: 2ebfbf4c2b1973044a7141776d344467, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -252.6196
+      value: -281.63626
       objectReference: {fileID: 0}
     - target: {fileID: 8045152281063376116, guid: 2ebfbf4c2b1973044a7141776d344467, type: 3}
       propertyPath: m_LocalPosition.y

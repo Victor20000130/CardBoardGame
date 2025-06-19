@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c32777a3457d9fe4686c5dc870a605f7, type: 3}
   m_Name: EasyMonsterGrid
   m_EditorClassIdentifier: 
-  monsterScriptableObjects:
+  monsterSO:
   - {fileID: 11400000, guid: cdfdc6c1fcc12b74abf7494711b12064, type: 2}
   - {fileID: 11400000, guid: a64dd4c862c3d014a9b4c959d4326275, type: 2}
   - {fileID: 11400000, guid: 83d3463db85f2fe45a006c8de89059b8, type: 2}
   - {fileID: 11400000, guid: 0ed028cbd72f17e4cb256822c869a16f, type: 2}
   - {fileID: 11400000, guid: 658b7682d630f114e827fb4176108dcc, type: 2}
-  gridScriptableObjects:
+  gridSO:
   - {fileID: 11400000, guid: cce6b008ce960714eb880537a364c25d, type: 2}
+  - {fileID: 11400000, guid: bea5b270251d8ac4a9c4ba9cdb3a63c1, type: 2}
+  - {fileID: 11400000, guid: 42ef3f667b1cde447af36825f97f766e, type: 2}
