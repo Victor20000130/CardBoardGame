@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerScriptableObject", menuName = "Scriptable Objects/PlayerScriptableObject")]
-public class PlayerScriptableObject : ScriptableObject
+public class PlayerSO : ScriptableObject
 {
     [SerializeField] public string _name;
     [SerializeField] public int _health;

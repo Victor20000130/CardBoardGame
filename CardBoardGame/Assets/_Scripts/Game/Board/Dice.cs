@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class Dice : MonoBehaviour
 {
     private Rigidbody _rigidbody;
+
     [Header("주사위 설정")]
     public float jumpForce = 1.5f;
     public float rollForce = 10f;
@@ -14,6 +15,7 @@ public class Dice : MonoBehaviour
     public float maxForce = 5f;
     public float minTorque = -5f;
     public float maxTorque = 5f;
+    public float wallForce = 2;
     // 각 면의 이름(또는 번호)을 담을 배열
     private int[] faceNames = new int[6];
     [Header("주사위 눈금 설정")]
@@ -24,8 +26,8 @@ public class Dice : MonoBehaviour
     public int front;
     public int back;
 
-    private bool isRolling = false;
-
+    private bool isGrounded = true;
+    private bool isSended = true;
     // 주사위의 각 면이 로컬에서 바라보는 방향(노멀)
     private Vector3[] localNormals = new Vector3[]
     {
@@ -41,11 +43,6 @@ public class Dice : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         // 주사위의 각 면의 이름(또는 번호)을 설정합니다.
         faceNames = new int[] { up, down, left, right, front, back };
-    }
-    // GameUIHandler의 버튼 통해 주사위를 굴리는 버튼 클릭 이벤트를 처리합니다.
-    public void OnButtonClick()
-    {
-        isRolling = true;
     }
 
     /// <summary>
@@ -69,29 +66,33 @@ public class Dice : MonoBehaviour
                 upFaceIndex = i;
             }
         }
-
         return faceNames[upFaceIndex];
     }
 
     private void Update()
     {
-        if (_rigidbody.linearVelocity.magnitude <= 0.1f)
+        if (_rigidbody.linearVelocity.magnitude < 0.1f && isSended == false)
         {
-            Debug.Log("위쪽 면: " + GetUpFace().ToString());
-        }
-    }
-    private void FixedUpdate()
-    {
-        _rigidbody.linearVelocity = _rigidbody.linearVelocity + (Time.fixedDeltaTime * Physics.gravity);
-        transform.position += Time.fixedDeltaTime * _rigidbody.linearVelocity;
-        if (isRolling)
-        {
-            RollDice();
-            isRolling = false; // 주사위가 굴러간 후에는 다시 굴리지 않도록 설정
+            print("주사위 눈금 보냄");
+            ManagerHandler.Instance.gameManager.ReceiveDiceValue(GetUpFace());
+            isSended = true;
         }
     }
 
-    private void RollDice()
+    private void FixedUpdate()
+    {
+        if (isGrounded == false)
+        {
+            _rigidbody.linearVelocity = _rigidbody.linearVelocity + (Time.fixedDeltaTime * Physics.gravity);
+            transform.position += Time.fixedDeltaTime * _rigidbody.linearVelocity;
+        }
+
+    }
+
+    /// <summary>
+    /// FixedUpdate에서 호출해야 정상 작동
+    /// </summary>
+    public void RollDice()
     {
         // AddForce를 사용하여 주사위 방향 설정
         Vector3 randomDirection = new Vector3(UnityEngine.Random.Range(minForce, maxForce), 0, UnityEngine.Random.Range(minForce, maxForce)).normalized;
@@ -101,6 +102,7 @@ public class Dice : MonoBehaviour
         // AddTorque를 사용하여 주사위 회전
         Vector3 randomTorque = new Vector3(UnityEngine.Random.Range(minTorque, maxTorque), UnityEngine.Random.Range(minTorque, maxTorque), UnityEngine.Random.Range(minTorque, maxTorque));
         _rigidbody.AddTorque(randomTorque * rollTourque, ForceMode.Impulse);
+        isSended = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -125,8 +127,20 @@ public class Dice : MonoBehaviour
             float force = collision.impulse.magnitude;
 
             // 힘과 토크 적용
-            _rigidbody.AddForce(pushDirection * force * Time.fixedDeltaTime, ForceMode.Impulse);
+            _rigidbody.AddForce(pushDirection * force * wallForce * Time.fixedDeltaTime, ForceMode.Impulse);
             _rigidbody.AddTorque(pushTorque * force, ForceMode.Impulse);
+        }
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            isGrounded = false;
         }
     }
 }

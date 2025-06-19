@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    [SerializeField] private MonsterScriptableObject _monsterData;
+    [SerializeField] private MonsterSO _monsterData;
 
     public string Name => _monsterData._name;
     public int Health => _monsterData._health;

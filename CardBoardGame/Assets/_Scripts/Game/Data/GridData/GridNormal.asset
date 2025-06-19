@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: GridNormal
   m_EditorClassIdentifier: 
   gridData:
-  - gridType: 0
   - gridType: 1
-  - gridType: 6
   - gridType: 2
+  - gridType: 7
   - gridType: 3
-  - gridType: 1
-  - gridType: 6
-  - gridType: 2
-  - gridType: 5
-  - gridType: 1
-  - gridType: 6
-  - gridType: 2
   - gridType: 4
-  - gridType: 1
+  - gridType: 2
+  - gridType: 7
+  - gridType: 3
   - gridType: 6
   - gridType: 2
+  - gridType: 7
+  - gridType: 3
+  - gridType: 5
+  - gridType: 2
+  - gridType: 7
+  - gridType: 3

@@ -2,7 +2,7 @@ namespace CardBoardGame.Assets._Scripts.Utility
 {
     public enum Stage
     {
-        Stage1,
+        Stage1 = 0,
         Stage2,
         Stage3,
         Stage4,
@@ -30,12 +30,13 @@ namespace CardBoardGame.Assets._Scripts.Utility
     }
     public enum GridType
     {
-        Start = 0,
-        Day = 1,
-        Night = 2,
-        PlayerHeal = 3,
-        MonsterHeal = 4,
-        Draw = 5,
-        MiniGame = 6
+        None = 0,
+        Start = 1,
+        Day = 2,
+        Night = 3,
+        PlayerHeal = 4,
+        MonsterHeal = 5,
+        Draw = 6,
+        MiniGame = 7
     }
 }
