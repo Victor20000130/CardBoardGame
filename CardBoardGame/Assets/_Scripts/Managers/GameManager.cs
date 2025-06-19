@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Collections;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -10,12 +11,12 @@ public class GameManager : MonoBehaviour
     private StageHandler stageHandler;
     private BattleHandler battleHandler;
     private Dice dice;
-    private PlayerPiece playerPiece;
+    private PieceHandler pieceHandler;
     private int diceValue = -1;
-    private bool isGameStarted = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
+    private bool isRoll = false;
     public int GridLenght => currMonsterGridData.GetGridDatas((int)stageHandler.CurrentStage).Length;
+
     private void Awake()
     {
         SceneManager.sceneLoaded +=
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
                     stageHandler = FindAnyObjectByType<StageHandler>();
                     battleHandler = FindAnyObjectByType<BattleHandler>();
                     dice = FindAnyObjectByType<Dice>();
-                    playerPiece = FindAnyObjectByType<PlayerPiece>();
+                    pieceHandler = FindAnyObjectByType<PieceHandler>();
                     if (stageHandler == null)
                     {
                         Debug.LogError("StageHandler not found in the scene.");
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
                         Debug.LogError("Dice not found in the scene.");
                         return;
                     }
-                    if (playerPiece == null)
+                    if (pieceHandler == null)
                     {
                         Debug.LogError("PlayerPiece not found in the scene.");
                         return;
@@ -64,17 +65,38 @@ public class GameManager : MonoBehaviour
                                          ManagerHandler.Instance.dataManager.CurrentGameData.Stage);
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
-        diceValue = dice.GetUpFace();
-        if (diceValue != -1)
+        if (isRoll == true)
         {
-            // TODO 플레이어 말 움직임
+            isRoll = false;
+            dice.RollDice();
 
-            diceValue = -1;
         }
-
     }
 
+    public void ReceiveDiceValue(int diceValue)
+    {
+        this.diceValue = diceValue;
+        print($"받은 눈금 {this.diceValue}");
+        // pieceHandler.
+    }
+
+    public void StartGame()
+    {
+        StartCoroutine(StartEffectCoru());
+    }
+    WaitForSeconds waitForOneSeconds = new WaitForSeconds(1);
+    private IEnumerator StartEffectCoru()
+    {
+        print("게임시작 3초 전");
+        yield return waitForOneSeconds;
+        print("게임시작 2초 전");
+        yield return waitForOneSeconds;
+        print("게임시작 1초 전");
+        yield return waitForOneSeconds;
+        print("게임 시작");
+        yield return null;
+        isRoll = true;
+    }
 }

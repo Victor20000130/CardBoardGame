@@ -2,23 +2,17 @@ using UnityEngine;
 
 public class PlayerPiece : MonoBehaviour
 {
-    [SerializeField]
-    private Transform[] gridPositions;
+    private PieceHandler pieceHandler;
 
-
-
-
-    private void Start()
+    private void Awake()
     {
-        if (gridPositions.Length != ManagerHandler.Instance.gameManager.GridLenght)
+        pieceHandler = GetComponentInParent<PieceHandler>();
+        if (pieceHandler == null)
         {
-            Debug.LogError("보드 이동 위치와 현재 그리드 불일치");
+            Debug.LogError("PieceHandler can't found");
             return;
         }
-
+        pieceHandler.playerPiece = this;
     }
-    public void MoveNextGrid(int diceValue)
-    {
 
-    }
 }
