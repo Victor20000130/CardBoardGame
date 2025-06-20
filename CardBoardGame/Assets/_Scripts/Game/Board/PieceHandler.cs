@@ -10,7 +10,7 @@ public class PieceHandler : MonoBehaviour
     private Transform[] piecePositions;
     [SerializeField] int[] cornerIdx;
     private Dictionary<int, bool> cornerDic;
-    private int curIdx = 0;
+    private int nextMoveIdx = 0;
     private bool isMoveDone = false;
     public PlayerPiece playerPiece;
 
@@ -27,44 +27,41 @@ public class PieceHandler : MonoBehaviour
         print($"말 움직임 시작/밸류{diceValue}");
         while (diceValue != 0)
         {
-            curIdx++;
-            if (curIdx % piecePositions.Length == 0)
-            {
-                print("마지막 그리드 도착");
-                curIdx %= piecePositions.Length;
-            }
+            nextMoveIdx++;
 
+            if (nextMoveIdx % piecePositions.Length == 0)
+            {
+                nextMoveIdx %= piecePositions.Length;
+            }
+            print("1");
             // TODO : 다음 포지션 계산하는 로직
-            if (cornerDic.TryGetValue(curIdx, out bool value))
+            MoveNext();
+            yield return new WaitUntil(() => isMoveDone);
+            if (cornerDic.TryGetValue(nextMoveIdx, out bool value))
             {
-                MoveNextandTurn();
+                print(nextMoveIdx);
+                yield return StartCoroutine(Turn());
             }
-            else
-            {
-                MoveNext();
-            }
-            onPieceMove?.Invoke(curIdx);
             diceValue--;
 
-            yield return new WaitUntil(() => isMoveDone);
             isMoveDone = false;
         }
+        onPieceMove?.Invoke(nextMoveIdx);
+        playerPiece.RunStop();
+
     }
 
     private void MoveNext()
     {
-        playerPiece.gameObject.transform.DOMove(piecePositions[curIdx].position, 1f).onComplete += () => Move();
-    }
-    private void MoveNextandTurn()
-    {
-        playerPiece.gameObject.transform.DOMove(piecePositions[curIdx].position, 1f).onComplete += () => Turn();
+        playerPiece.Run();
+        playerPiece.gameObject.transform.DOMove(piecePositions[nextMoveIdx].position, 1f).onComplete += () => Move();
     }
 
-    private void Turn()
+    private IEnumerator Turn()
     {
-        //TODO : 애니메이션으로 턴 후 이동
-        isMoveDone = true;
-        print("Trun");
+        playerPiece.Turn();
+        yield return new WaitForSeconds(playerPiece.TurnClipLength);
+        playerPiece.transform.eulerAngles += new Vector3(90, 0, 0);
     }
     private void Move()
     {

@@ -1,11 +1,27 @@
 using System;
+using System.Collections;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Dice : MonoBehaviour
 {
+
     private Rigidbody _rigidbody;
+    private Renderer _renderer;
+    [SerializeField] private Transform startPosLeft;
+    [SerializeField] private Transform startPosRight;
+    [SerializeField] private Transform leftWall;
+    [SerializeField] private Transform rightWall;
+
+    private enum StartPos
+    {
+        Left,
+        Right,
+        None
+    }
+    StartPos startPos;
 
     [Header("주사위 설정")]
     public float jumpForce = 1.5f;
@@ -41,8 +57,10 @@ public class Dice : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _renderer = GetComponent<Renderer>();
         // 주사위의 각 면의 이름(또는 번호)을 설정합니다.
         faceNames = new int[] { up, down, left, right, front, back };
+        ResetPosition();
     }
 
     /// <summary>
@@ -68,25 +86,38 @@ public class Dice : MonoBehaviour
         }
         return faceNames[upFaceIndex];
     }
-
-    private void Update()
+    private IEnumerator FadeCorou()
     {
-        if (_rigidbody.linearVelocity.magnitude < 0.1f && isSended == false)
-        {
-            print("주사위 눈금 보냄");
-            ManagerHandler.Instance.gameManager.ReceiveDiceValue(GetUpFace());
-            isSended = true;
-        }
+        print("FadeCoroutine On");
+        yield return new WaitForSeconds(2f);
+        Material mat = _renderer.materials[0];
+        mat.DOFloat(1, "_Dissolve", 1.5f).onComplete += ResetPosition;
+        yield return null;
     }
-
-    private void FixedUpdate()
+    private void ResetPosition()
     {
-        if (isGrounded == false)
+        _rigidbody.useGravity = false;
+        _rigidbody.linearVelocity = Vector3.zero;
+        // transform.eulerAngles = Vector3.zero;
+        startPos = (StartPos)UnityEngine.Random.Range(0, 2);
+        switch (startPos)
         {
-            _rigidbody.linearVelocity = _rigidbody.linearVelocity + (Time.fixedDeltaTime * Physics.gravity);
-            transform.position += Time.fixedDeltaTime * _rigidbody.linearVelocity;
+            case StartPos.Left:
+                transform.position = startPosLeft.transform.position;
+                leftWall.gameObject.SetActive(false);
+                rightWall.gameObject.SetActive(true);
+                break;
+            case StartPos.Right:
+                transform.position = startPosRight.transform.position;
+                rightWall.gameObject.SetActive(false);
+                leftWall.gameObject.SetActive(true);
+                break;
+            default:
+                print($"확인되지 않은 랜덤 밸류 {startPos}");
+                break;
         }
-
+        Material mat = _renderer.materials[0];
+        mat.SetFloat("_Dissolve", 0f);
     }
 
     /// <summary>
@@ -95,8 +126,23 @@ public class Dice : MonoBehaviour
     public void RollDice()
     {
         // AddForce를 사용하여 주사위 방향 설정
-        Vector3 randomDirection = new Vector3(UnityEngine.Random.Range(minForce, maxForce), 0, UnityEngine.Random.Range(minForce, maxForce)).normalized;
-        randomDirection.y = jumpForce;
+        // Vector3 randomDirection = new Vector3(UnityEngine.Random.Range(minForce, maxForce), 0, UnityEngine.Random.Range(minForce, maxForce)).normalized;
+        _rigidbody.useGravity = true;
+        Vector3 randomDirection = new Vector3();
+        switch (startPos)
+        {
+            case StartPos.Left:
+                randomDirection = rightWall.position - transform.position;
+                break;
+            case StartPos.Right:
+                randomDirection = leftWall.position - transform.position;
+                break;
+            default:
+                print($"확인되지 않은 밸류 {startPos}");
+                break;
+        }
+        randomDirection = randomDirection.normalized;
+        // randomDirection.y = jumpForce;
         _rigidbody.AddForce(randomDirection * rollForce, ForceMode.Impulse);
 
         // AddTorque를 사용하여 주사위 회전
@@ -104,11 +150,42 @@ public class Dice : MonoBehaviour
         _rigidbody.AddTorque(randomTorque * rollTourque, ForceMode.Impulse);
         isSended = false;
     }
+    private void Update()
+    {
+        if (_rigidbody.linearVelocity.magnitude < 0.1f && isSended == false)
+        {
+            ManagerHandler.Instance.gameManager.ReceiveDiceValue(GetUpFace());
+            isSended = true;
+            StartCoroutine(FadeCorou());
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (isGrounded == false && _rigidbody.useGravity == true)
+        {
+            _rigidbody.linearVelocity = _rigidbody.linearVelocity + (Time.fixedDeltaTime * Physics.gravity);
+            transform.position += Time.fixedDeltaTime * _rigidbody.linearVelocity;
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
+            switch (startPos)
+            {
+                case StartPos.Left:
+                    leftWall.gameObject.SetActive(true);
+                    startPos = StartPos.None;
+                    break;
+                case StartPos.Right:
+                    rightWall.gameObject.SetActive(true);
+                    startPos = StartPos.None;
+                    break;
+                case StartPos.None:
+                    break;
+            }
             // 충돌 지점 및 법선 벡터
             ContactPoint contact = collision.contacts[0];
             Vector3 contactPoint = contact.point;
