@@ -49,7 +49,6 @@ public class GridHandler : MonoBehaviour
 
     public void GetCurrentGridData(int idx)
     {
-        Debug.Log(idx);
         boardEffect_IMG.sprite = grid[idx].gridSprite;
         // return gridData[idx];
     }

@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private BattleHandler battleHandler;
     private PieceHandler pieceHandler;
     private GridHandler gridHandler;
+    private CardHandler cardHandler;
     private Dice dice;
     private Action<int> onPieceMove;
 
@@ -109,6 +110,7 @@ public class GameManager : MonoBehaviour
         battleHandler = FindHandler<BattleHandler>("BattleHandler");
         pieceHandler = FindHandler<PieceHandler>("PieceHandler");
         gridHandler = FindHandler<GridHandler>("GridHandler");
+        cardHandler = FindHandler<CardHandler>("CardHandler");
         dice = FindHandler<Dice>("Dice");
     }
 
@@ -124,20 +126,22 @@ public class GameManager : MonoBehaviour
 
     public void ReceiveDiceValue(int diceValue)
     {
-        print($"받은 주사위 값: {diceValue}");
         StartCoroutine(pieceHandler.MoveCorou(diceValue, onPieceMove));
     }
 
     public void StartGame()
     {
         Time.timeScale = 1;
-        print($"TimeScale : {Time.timeScale}");
         StartCoroutine(StartEffectCoru());
     }
     private IEnumerator StartEffectCoru()
     {
-        print("게임 시작");
         yield return null;
         isRoll = true;
+    }
+    private bool OnPieceMoveEnd()
+    {
+
+        return true;
     }
 }

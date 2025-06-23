@@ -21,10 +21,10 @@ public class PieceHandler : MonoBehaviour
         {
             cornerDic.Add(corner, true);
         }
+
     }
     public IEnumerator MoveCorou(int diceValue, Action<int> onPieceMove)
     {
-        print($"말 움직임 시작/밸류{diceValue}");
         while (diceValue != 0)
         {
             nextMoveIdx++;
@@ -33,13 +33,11 @@ public class PieceHandler : MonoBehaviour
             {
                 nextMoveIdx %= piecePositions.Length;
             }
-            print("1");
             // TODO : 다음 포지션 계산하는 로직
             MoveNext();
             yield return new WaitUntil(() => isMoveDone);
             if (cornerDic.TryGetValue(nextMoveIdx, out bool value))
             {
-                print(nextMoveIdx);
                 yield return StartCoroutine(Turn());
             }
             diceValue--;
@@ -54,14 +52,13 @@ public class PieceHandler : MonoBehaviour
     private void MoveNext()
     {
         playerPiece.Run();
-        playerPiece.gameObject.transform.DOMove(piecePositions[nextMoveIdx].position, 1f).onComplete += () => Move();
+        playerPiece.gameObject.transform.DOMove(piecePositions[nextMoveIdx].position, 1f).SetEase(Ease.Linear).onComplete += () => Move();
     }
 
     private IEnumerator Turn()
     {
         playerPiece.Turn();
         yield return new WaitForSeconds(playerPiece.TurnClipLength);
-        playerPiece.transform.eulerAngles += new Vector3(90, 0, 0);
     }
     private void Move()
     {

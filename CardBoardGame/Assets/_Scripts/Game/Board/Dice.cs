@@ -24,7 +24,6 @@ public class Dice : MonoBehaviour
     StartPos startPos;
 
     [Header("주사위 설정")]
-    public float jumpForce = 1.5f;
     public float rollForce = 10f;
     public float rollTourque = 10f;
     public float minForce = -5f;
@@ -32,6 +31,7 @@ public class Dice : MonoBehaviour
     public float minTorque = -5f;
     public float maxTorque = 5f;
     public float wallForce = 2;
+    private float defaultWallForce;
     // 각 면의 이름(또는 번호)을 담을 배열
     private int[] faceNames = new int[6];
     [Header("주사위 눈금 설정")]
@@ -60,6 +60,7 @@ public class Dice : MonoBehaviour
         _renderer = GetComponent<Renderer>();
         // 주사위의 각 면의 이름(또는 번호)을 설정합니다.
         faceNames = new int[] { up, down, left, right, front, back };
+        defaultWallForce = wallForce;
         ResetPosition();
     }
 
@@ -88,7 +89,6 @@ public class Dice : MonoBehaviour
     }
     private IEnumerator FadeCorou()
     {
-        print("FadeCoroutine On");
         yield return new WaitForSeconds(2f);
         Material mat = _renderer.materials[0];
         mat.DOFloat(1, "_Dissolve", 1.5f).onComplete += ResetPosition;
@@ -118,6 +118,7 @@ public class Dice : MonoBehaviour
         }
         Material mat = _renderer.materials[0];
         mat.SetFloat("_Dissolve", 0f);
+        wallForce = defaultWallForce;
     }
 
     /// <summary>
@@ -126,7 +127,6 @@ public class Dice : MonoBehaviour
     public void RollDice()
     {
         // AddForce를 사용하여 주사위 방향 설정
-        // Vector3 randomDirection = new Vector3(UnityEngine.Random.Range(minForce, maxForce), 0, UnityEngine.Random.Range(minForce, maxForce)).normalized;
         _rigidbody.useGravity = true;
         Vector3 randomDirection = new Vector3();
         switch (startPos)
@@ -142,7 +142,6 @@ public class Dice : MonoBehaviour
                 break;
         }
         randomDirection = randomDirection.normalized;
-        // randomDirection.y = jumpForce;
         _rigidbody.AddForce(randomDirection * rollForce, ForceMode.Impulse);
 
         // AddTorque를 사용하여 주사위 회전
@@ -152,7 +151,9 @@ public class Dice : MonoBehaviour
     }
     private void Update()
     {
-        if (_rigidbody.linearVelocity.magnitude < 0.1f && isSended == false)
+        if (_rigidbody.linearVelocity.magnitude < 0.1f &&
+            _rigidbody.angularVelocity.magnitude < 0.1F &&
+            isSended == false)
         {
             ManagerHandler.Instance.gameManager.ReceiveDiceValue(GetUpFace());
             isSended = true;
@@ -202,10 +203,13 @@ public class Dice : MonoBehaviour
             Vector3 pushTorque = Vector3.Cross(leverArm, normal).normalized;
 
             float force = collision.impulse.magnitude;
-
             // 힘과 토크 적용
             _rigidbody.AddForce(pushDirection * force * wallForce * Time.fixedDeltaTime, ForceMode.Impulse);
             _rigidbody.AddTorque(pushTorque * force, ForceMode.Impulse);
+            if (wallForce > 1)
+            {
+                wallForce--;
+            }
         }
         if (collision.gameObject.CompareTag("Floor"))
         {
