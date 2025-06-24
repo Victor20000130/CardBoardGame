@@ -67,5 +67,15 @@ namespace CardBoardGame.Assets._Scripts.Utility
         Queen,
         King
     }
-
+    public enum HandlerType
+    {
+        None,
+        BattleHandler,
+        CardHandler,
+        GameUIHandler,
+        GridHandler,
+        PieceHandler,
+        StageHandler,
+        DiceHandler
+    }
 }

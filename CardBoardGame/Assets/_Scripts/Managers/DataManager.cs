@@ -28,7 +28,17 @@ public class GameData
 }
 public class DataManager : MonoBehaviour
 {
+    [SerializeField]
+    private StageSO[] monsterGridSO;
+
+    public StageSO EasyStageSO => monsterGridSO[0];
+    public StageSO NormalStageSO => monsterGridSO[1];
+    public StageSO HardStageSO => monsterGridSO[2];
+
     private GameData currentGameData;
+
+    public int TotalCardCount = 52;
+
     public GameData CurrentGameData
     {
         get { return currentGameData; }

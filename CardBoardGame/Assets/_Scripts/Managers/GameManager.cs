@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using CardBoardGame.Assets._Scripts.Utility;
 using Unity.Collections;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -10,13 +12,15 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
 
-    private MonsterGridSO currMonsterGridData;
+    private StageSO currMonsterGridData;
+    private Dictionary<HandlerType, MonoBehaviour> handlers = new Dictionary<HandlerType, MonoBehaviour>();
+
     private StageHandler stageHandler;
     private BattleHandler battleHandler;
     private PieceHandler pieceHandler;
     private GridHandler gridHandler;
     private CardHandler cardHandler;
-    private Dice dice;
+    private DiceHandler dice;
     private Action<int> onPieceMove;
     private bool isRoll = false;
     public int GridLenght => currMonsterGridData.GetGridDatas((int)stageHandler.CurrentStage).Length;
@@ -90,43 +94,42 @@ public class GameManager : MonoBehaviour
 
         InitializeHandlers();
 
-        if (stageHandler == null || battleHandler == null || dice == null || pieceHandler == null || gridHandler == null)
-        {
-            Debug.LogError("GameManager: 필수 핸들러가 누락되었습니다.");
-            return;
-        }
+        // if (stageHandler == null || battleHandler == null || dice == null || pieceHandler == null || gridHandler == null)
+        // {
+        //     Debug.LogError("GameManager: 필수 핸들러가 누락되었습니다.");
+        //     return;
+        // }
 
-        currMonsterGridData = stageHandler.InitStageHandler(
-            ManagerHandler.Instance.dataManager.CurrentGameData.Difficulty,
-            ManagerHandler.Instance.dataManager.CurrentGameData.Stage);
         onPieceMove += gridHandler.GetCurrentGridData;
+
         Debug.Log("GameManager: 핸들러 초기화 완료");
     }
 
     private void InitializeHandlers()
     {
-        stageHandler = FindHandler<StageHandler>("StageHandler");
-        battleHandler = FindHandler<BattleHandler>("BattleHandler");
-        pieceHandler = FindHandler<PieceHandler>("PieceHandler");
-        gridHandler = FindHandler<GridHandler>("GridHandler");
-        cardHandler = FindHandler<CardHandler>("CardHandler");
-        dice = FindHandler<Dice>("Dice");
+        Handler[] handlers = FindObjectsByType<Handler>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Handler handler in handlers)
+        {
+            handler.Initialize();
+            this.handlers.Add(handler.HandlerType, handler);
+            print(handler.gameObject.name);
+        }
     }
 
-    private T FindHandler<T>(string handlerName) where T : MonoBehaviour
-    {
-        T handler = FindAnyObjectByType<T>();
-        if (handler == null)
-        {
-            Debug.LogWarning($"{handlerName}를 찾을 수 없습니다. 비활성화 된 오브젝트에서 찾습니다.");
-            handler = FindAnyObjectByType<T>(FindObjectsInactive.Include);
-            if (handler == null)
-            {
-                Debug.LogError($"{handlerName}를 찾을 수 없습니다.");
-            }
-        }
-        return handler;
-    }
+    // private T FindHandler<T>(string handlerName) where T : MonoBehaviour
+    // {
+    //     T handler = FindAnyObjectByType<T>();
+    //     if (handler == null)
+    //     {
+    //         Debug.LogWarning($"{handlerName}를 찾을 수 없습니다. 비활성화 된 오브젝트에서 찾습니다.");
+    //         handler = FindAnyObjectByType<T>(FindObjectsInactive.Include);
+    //         if (handler == null)
+    //         {
+    //             Debug.LogError($"{handlerName}를 찾을 수 없습니다.");
+    //         }
+    //     }
+    //     return handler;
+    // }
 
     public void ReceiveDiceValue(int diceValue)
     {
@@ -143,5 +146,4 @@ public class GameManager : MonoBehaviour
         yield return null;
         isRoll = true;
     }
-
 }
