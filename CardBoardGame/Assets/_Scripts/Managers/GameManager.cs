@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
     private CardHandler cardHandler;
     private Dice dice;
     private Action<int> onPieceMove;
-
     private bool isRoll = false;
     public int GridLenght => currMonsterGridData.GetGridDatas((int)stageHandler.CurrentStage).Length;
 
@@ -119,7 +118,12 @@ public class GameManager : MonoBehaviour
         T handler = FindAnyObjectByType<T>();
         if (handler == null)
         {
-            Debug.LogError($"{handlerName}를 찾을 수 없습니다.");
+            Debug.LogWarning($"{handlerName}를 찾을 수 없습니다. 비활성화 된 오브젝트에서 찾습니다.");
+            handler = FindAnyObjectByType<T>(FindObjectsInactive.Include);
+            if (handler == null)
+            {
+                Debug.LogError($"{handlerName}를 찾을 수 없습니다.");
+            }
         }
         return handler;
     }
@@ -139,9 +143,5 @@ public class GameManager : MonoBehaviour
         yield return null;
         isRoll = true;
     }
-    private bool OnPieceMoveEnd()
-    {
 
-        return true;
-    }
 }

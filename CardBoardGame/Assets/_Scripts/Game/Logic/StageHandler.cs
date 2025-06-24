@@ -21,6 +21,12 @@ public class StageHandler : MonoBehaviour
             stageButtons[(int)CurrentStage - 1].interactable = true;
         }
     }
+
+    private void Awake()
+    {
+        selectStagePanel.SetActive(true);
+    }
+
     private void OnStageButtonClicked(Stage currStage)
     {
         switch (currStage)

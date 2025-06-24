@@ -40,4 +40,32 @@ namespace CardBoardGame.Assets._Scripts.Utility
         Draw = 6,
         MiniGame = 7
     }
+
+    public enum Shape
+    {
+        None,
+        Spade,
+        Club,
+        Diamond,
+        Heart
+    }
+
+    public enum Number
+    {
+        None,
+        One,
+        Two,
+        Three,
+        Four,
+        Five,
+        Six,
+        Seven,
+        Eight,
+        Nine,
+        Ten,
+        Jack,
+        Queen,
+        King
+    }
+
 }

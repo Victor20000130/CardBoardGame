@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e052845966b1724999a8bc5c46fa861, type: 3}
   m_Name: CardSO
   m_EditorClassIdentifier: 
-  cards:
+  sprites:
   - {fileID: 5442603023577128489, guid: b04a99528f1b21c469980910b43156c7, type: 3}
   - {fileID: 2855525728102553943, guid: b04a99528f1b21c469980910b43156c7, type: 3}
   - {fileID: 165722518185688671, guid: b04a99528f1b21c469980910b43156c7, type: 3}
@@ -65,3 +65,6 @@ MonoBehaviour:
   - {fileID: -2251206978428280474, guid: b04a99528f1b21c469980910b43156c7, type: 3}
   - {fileID: -5810224209032014743, guid: b04a99528f1b21c469980910b43156c7, type: 3}
   - {fileID: 2324901020803207016, guid: b04a99528f1b21c469980910b43156c7, type: 3}
+  cards:
+  - shape: 0
+    number: 0
