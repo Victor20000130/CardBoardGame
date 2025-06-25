@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c89953842902ff548ae226e8bd011c8c, type: 3}
   m_Name: EasyMonsterStage_1
   m_EditorClassIdentifier: 
-  _name: Wather
-  _health: 250
+  _name: Watcher
+  _maxHP: 250
   _damage: 5
   _turn: 5

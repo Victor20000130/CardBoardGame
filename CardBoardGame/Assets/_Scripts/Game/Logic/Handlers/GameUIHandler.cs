@@ -3,9 +3,17 @@ using UnityEngine;
 
 public class GameUIHandler : Handler
 {
-    public override void Initialize()
+
+    private void Awake()
     {
-        base.Initialize();
+
+    }
+    protected override void OnInitialize()
+    {
+    }
+
+    protected override void SetHnadlerType()
+    {
         handlerType = HandlerType.GameUIHandler;
     }
 }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using CardBoardGame.Assets._Scripts.Utility;
 using Unity.Collections;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,18 +11,19 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
 
-    private StageSO currMonsterGridData;
-    private Dictionary<HandlerType, MonoBehaviour> handlers = new Dictionary<HandlerType, MonoBehaviour>();
-
-    private StageHandler stageHandler;
-    private BattleHandler battleHandler;
-    private PieceHandler pieceHandler;
-    private GridHandler gridHandler;
-    private CardHandler cardHandler;
-    private DiceHandler dice;
+    private StageSO curStageSO;
+    private Dictionary<HandlerType, Handler> handlers = new Dictionary<HandlerType, Handler>();
+    private StageHandler StageHandler => GetHandler<StageHandler>(HandlerType.StageHandler);
+    private PieceHandler PieceHandler => GetHandler<PieceHandler>(HandlerType.PieceHandler);
+    private GridHandler GridHandler => GetHandler<GridHandler>(HandlerType.GridHandler);
+    private DiceHandler DiceHandler => GetHandler<DiceHandler>(HandlerType.DiceHandler);
+    private BattleHandler BattleHandler => GetHandler<BattleHandler>(HandlerType.BattleHandler);
+    // private MiniGameHandler MiniGameHandler => GetHandler<MiniGameHandler>(HandlerType.MiniGameHandler);
     private Action<int> onPieceMove;
     private bool isRoll = false;
-    public int GridLenght => currMonsterGridData.GetGridDatas((int)stageHandler.CurrentStage).Length;
+
+    // 그리드가 스테이지마다 동적으로 변할 경우 사용
+    // public int GridLenght => currMonsterGridData.GetGridDatas((int)StageHandler.CurrentStage).Length;
 
     private void Awake()
     {
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         if (isRoll == true)
         {
             isRoll = false;
-            dice.RollDice();
+            DiceHandler.RollDice();
         }
     }
 
@@ -79,28 +79,23 @@ public class GameManager : MonoBehaviour
                 onPieceMove = null;
                 break;
             default:
-                Debug.LogError($"GameManager: 예상치 못한 씬 Index: {scene.buildIndex}");
+                Debug.LogError($"GM: 예상치 못한 씬 Index: {scene.buildIndex}");
                 break;
         }
     }
 
     private void HandleLobbyScene()
     {
-        Debug.Log("로비 씬 초기화");
+        Debug.Log("GM 로비 씬 초기화");
     }
     private void HandleGameScene(int sceneInx)
     {
+        Debug.Log("GM HandleGameScene");
         Debug.Log($"{sceneInx}번 게임 씬 초기화");
 
         InitializeHandlers();
 
-        // if (stageHandler == null || battleHandler == null || dice == null || pieceHandler == null || gridHandler == null)
-        // {
-        //     Debug.LogError("GameManager: 필수 핸들러가 누락되었습니다.");
-        //     return;
-        // }
-
-        onPieceMove += gridHandler.GetCurrentGridData;
+        onPieceMove += GridHandler.GetCurrentGridData;
 
         Debug.Log("GameManager: 핸들러 초기화 완료");
     }
@@ -110,38 +105,67 @@ public class GameManager : MonoBehaviour
         Handler[] handlers = FindObjectsByType<Handler>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (Handler handler in handlers)
         {
-            handler.Initialize();
+            handler.SetHandlerType();
             this.handlers.Add(handler.HandlerType, handler);
-            print(handler.gameObject.name);
+        }
+        StageHandler.Initialize();
+    }
+
+    /// <summary>
+    /// HandlerType과 T에 따라서 해당되는 Handler를 상속받는 자식클래스를 반환합니다.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="handlerType"></param>
+    /// <returns></returns>
+    private T GetHandler<T>(HandlerType handlerType) where T : Handler
+    {
+        if (handlers.TryGetValue(handlerType, out Handler handler))
+        {
+            return handler as T;
+        }
+        else
+        {
+            Debug.LogError($"Handler of type {handlerType} not found.");
+            return null;
         }
     }
 
-    // private T FindHandler<T>(string handlerName) where T : MonoBehaviour
-    // {
-    //     T handler = FindAnyObjectByType<T>();
-    //     if (handler == null)
-    //     {
-    //         Debug.LogWarning($"{handlerName}를 찾을 수 없습니다. 비활성화 된 오브젝트에서 찾습니다.");
-    //         handler = FindAnyObjectByType<T>(FindObjectsInactive.Include);
-    //         if (handler == null)
-    //         {
-    //             Debug.LogError($"{handlerName}를 찾을 수 없습니다.");
-    //         }
-    //     }
-    //     return handler;
-    // }
-
     public void ReceiveDiceValue(int diceValue)
     {
-        StartCoroutine(pieceHandler.MoveCorou(diceValue, onPieceMove));
+        StartCoroutine(PieceHandler.MoveCorou(diceValue, onPieceMove));
     }
-
+    public void ReceiveGridData(GridData gridData)
+    {
+        switch (gridData.gridType)
+        {
+            case GridType.Day:
+            case GridType.Night:
+            case GridType.PlayerHeal:
+            case GridType.MonsterHeal:
+            case GridType.Draw:
+                BattleHandler.GetGridType(gridData.gridType);
+                break;
+            case GridType.MiniGame:
+                // MiniGameHandler.GetGridType(gridData.gridType);
+                //TODO MiniGameHandler 제작 예정
+                break;
+            default:
+                Debug.LogError($"잘못된 그리드 타입 {gridData.gridType}");
+                break;
+        }
+        print($"GridType {gridData.gridType}, idx {gridData.Idx}");
+        //TODO 스테이지별 자동 저장이 아닌 그리드 이동마다 저장할 시 그리드 데이터 저장(데이터 매니저 호출)
+    }
     public void StartGame()
     {
         Time.timeScale = 1;
-        StartCoroutine(StartEffectCoru());
+        foreach (Handler handler in handlers.Values)
+        {
+            handler.Initialize();
+        }
+        StartCoroutine(DiceRollCoroutine());
     }
-    private IEnumerator StartEffectCoru()
+    private IEnumerator DiceRollCoroutine()
     {
         yield return null;
         isRoll = true;

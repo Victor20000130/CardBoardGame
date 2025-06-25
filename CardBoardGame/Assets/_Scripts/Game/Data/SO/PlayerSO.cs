@@ -6,4 +6,5 @@ public class PlayerSO : ScriptableObject
     [SerializeField] public string _name;
     [SerializeField] public int _health;
     [SerializeField] public int _changeCardCount;
+    [SerializeField] public bool isNight;
 }

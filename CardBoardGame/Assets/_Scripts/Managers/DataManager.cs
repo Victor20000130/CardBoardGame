@@ -29,11 +29,11 @@ public class GameData
 public class DataManager : MonoBehaviour
 {
     [SerializeField]
-    private StageSO[] monsterGridSO;
+    private StageSO[] StageSO;
 
-    public StageSO EasyStageSO => monsterGridSO[0];
-    public StageSO NormalStageSO => monsterGridSO[1];
-    public StageSO HardStageSO => monsterGridSO[2];
+    public StageSO EasyStageSO => StageSO[0];
+    public StageSO NormalStageSO => StageSO[1];
+    public StageSO HardStageSO => StageSO[2];
 
     private GameData currentGameData;
 
@@ -50,11 +50,41 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
-        // Initialize the current game data
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        switch (scene.buildIndex)
+        {
+            case 0:
+                HandleLobbyScene();
+                break;
+            case 1:
+            case 2:
+            case 3:
+                HandleGameScene(scene.buildIndex);
+                break;
+            default:
+                Debug.LogError($"DM: 예상치 못한 씬 Index: {scene.buildIndex}");
+                break;
+        }
+        // ForTest();
+    }
+    private void HandleLobbyScene()
+    {
+        Debug.Log("dm 로비 씬 초기화");
         currentGameData = new GameData();
+    }
+
+    private void HandleGameScene(int sceneInx)
+    {
+        Debug.Log("DM HandleGameScene");
+    }
+    private void ForTest()
+    {
+        // Initialize the current game data
         currentGameData.Difficulty = Difficulty.Easy;
         currentGameData.Stage = Stage.Stage1;
     }
-
 }

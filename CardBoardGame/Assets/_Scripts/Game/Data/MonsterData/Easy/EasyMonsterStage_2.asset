@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EasyMonsterStage_2
   m_EditorClassIdentifier: 
   _name: Lizard
-  _health: 500
+  _maxHP: 500
   _damage: 6
   _turn: 4

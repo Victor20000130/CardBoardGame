@@ -21,13 +21,7 @@ public class CardHandler : Handler
     private Button throwButton;
     private void Awake()
     {
-        cardSO = Resources.Load<CardSO>("Card/CardSO");
-        cardSO.InitCardSO();
-        deck = new List<int>();
-        for (int i = 0; i < 52; i++) deck.Add(i);
-        ButtonInitialize();
-        UserCardInit();
-        MonsterCardInit();
+
     }
 
     public void Shuffle()
@@ -57,12 +51,14 @@ public class CardHandler : Handler
         // monsterCard 처리
         for (int i = 0; i < monsterCard.Length; i++)
         {
+            monsterCard[i].Initialize();
             monsterCard[i].Button.image.sprite = cardSO.cards[deck[currIdx]].sprite;
             currIdx++;
         }
         // userCard 처리
         for (int i = 0; i < userCard.Length; i++)
         {
+            userCard[i].Initialize();
             userCard[i].Button.image.sprite = cardSO.cards[deck[currIdx]].sprite;
             currIdx++;
         }
@@ -92,9 +88,18 @@ public class CardHandler : Handler
 
     }
 
-    public override void Initialize()
+    protected override void OnInitialize()
     {
-        base.Initialize();
+        cardSO = Resources.Load<CardSO>("Card/CardSO");
+        cardSO.InitCardSO();
+        deck = new List<int>();
+        for (int i = 0; i < 52; i++) deck.Add(i);
+        ButtonInitialize();
+        Shuffle();
+    }
+
+    protected override void SetHnadlerType()
+    {
         handlerType = HandlerType.CardHandler;
     }
 }

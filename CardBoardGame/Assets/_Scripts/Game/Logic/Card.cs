@@ -10,11 +10,6 @@ public class Card : MonoBehaviour
     }
     private bool isClicked;
     public ColorBlock clickedColors;
-    private void Awake()
-    {
-        _button = GetComponent<Button>();
-        _button.onClick.AddListener(OnClick);
-    }
     public void OnClick()
     {
         isClicked = !isClicked;
@@ -26,7 +21,11 @@ public class Card : MonoBehaviour
         {
             _button.colors = ColorBlock.defaultColorBlock;
         }
-
+    }
+    public void Initialize()
+    {
+        _button = GetComponent<Button>();
+        _button.onClick.AddListener(OnClick);
     }
 }
 

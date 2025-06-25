@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e0094a0cd5a2b499d8f2643c411e83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterGridSO:
+  StageSO:
   - {fileID: 11400000, guid: b727cb1d6134bdd41a6584ce58920775, type: 2}
   - {fileID: 11400000, guid: a8e9a89c137e25d468eb0fee8370fd0d, type: 2}
   - {fileID: 11400000, guid: d6993be2d6214334e9b2dd165e2cdab6, type: 2}

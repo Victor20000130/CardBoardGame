@@ -7,6 +7,6 @@ namespace CardBoardGame.Assets._Scripts.Utility
 {
     public interface IInitializable
     {
-        void Initialize();
+        void SetHandlerType();
     }
 }

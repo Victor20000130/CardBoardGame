@@ -5,10 +5,34 @@ public class BattleHandler : Handler
 {
     [SerializeField] private Animator playerAnim;
     [SerializeField] private Animator monsterAnim;
-
-    public override void Initialize()
+    [SerializeField] private PlayerSO playerSO;
+    private MonsterSO curMonsterSO;
+    public MonsterSO CurMonsterSO
     {
-        base.Initialize();
+        get => curMonsterSO;
+        set => curMonsterSO = value;
+    }
+    private void Awake()
+    {
+
+    }
+    protected override void OnInitialize()
+    {
+        SODataLoad();
+    }
+
+    private void SODataLoad()
+    {
+        playerSO = Resources.Load<PlayerSO>("Data/PlayerSO");
+    }
+
+    public void GetGridType(GridType gridType)
+    {
+
+    }
+
+    protected override void SetHnadlerType()
+    {
         handlerType = HandlerType.BattleHandler;
     }
 }

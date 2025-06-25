@@ -1,26 +1,34 @@
 using CardBoardGame.Assets._Scripts.Utility;
 using UnityEngine;
 
-public class Handler : MonoBehaviour, IInitializable
+public abstract class Handler : MonoBehaviour
 {
     protected HandlerType handlerType;
     public HandlerType HandlerType => handlerType;
+    protected bool isSetHandlerType = false;
     protected bool isInitialized = false;
     protected void Start()
     {
-        if (handlerType == HandlerType.None)
-        {
-            Debug.LogError("Handler Type is None");
-        }
+
     }
-    public virtual void Initialize()
+    public void SetHandlerType()
+    {
+        if (isSetHandlerType)
+        {
+            return;
+        }
+        isSetHandlerType = true;
+        SetHnadlerType();
+    }
+    public void Initialize()
     {
         if (isInitialized)
         {
-            Debug.Log("Already Initialized");
             return;
         }
         isInitialized = true;
-        gameObject.SetActive(true);
+        OnInitialize();
     }
+    protected abstract void OnInitialize();
+    protected abstract void SetHnadlerType();
 }

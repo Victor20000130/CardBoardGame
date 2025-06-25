@@ -8,6 +8,10 @@ public class GridData
 
     [SerializeField]
     public GridType gridType;
+
+    // 런타임 때 필요한 데이터
+    private int idx;
+    public int Idx { get => idx; set => idx = value; }
 }
 
 public class GridHandler : Handler
@@ -16,6 +20,9 @@ public class GridHandler : Handler
     [SerializeField] private GridData[] gridData;
     [SerializeField] private Grid gridPrefab;
     [SerializeField] private Image boardEffect_IMG;
+    private GridData curGridData = new GridData();
+    public GridData CurGridData => curGridData;
+
     public void InitializeGridData(StageSO monsterGridSO, Difficulty diff)
     {
         //TODO : 그리드 동적 생성 로직 작성 예정
@@ -37,25 +44,31 @@ public class GridHandler : Handler
         }
     }
 
-    private void InstantiateGrids(int length)
-    {
-        int gridLength = length;
-        grid = new Grid[gridLength];
-        for (int i = 0; i < gridLength; i++)
-        {
-            grid[i] = Instantiate(gridPrefab, transform, false);
-        }
-    }
+    // 그리드가 동적으로 변할 경우 사용
+    // private void InstantiateGrids(int length)
+    // {
+    //     int gridLength = length;
+    //     grid = new Grid[gridLength];
+    //     for (int i = 0; i < gridLength; i++)
+    //     {
+    //         grid[i] = Instantiate(gridPrefab, transform, false);
+    //     }
+    // }
 
     public void GetCurrentGridData(int idx)
     {
         boardEffect_IMG.sprite = grid[idx].gridSprite;
-        // return gridData[idx];
+        curGridData.gridType = grid[idx].GridData.gridType;
+        curGridData.Idx = idx;
+        ManagerHandler.Instance.gameManager.ReceiveGridData(curGridData);
     }
 
-    public override void Initialize()
+    protected override void OnInitialize()
     {
-        base.Initialize();
+    }
+
+    protected override void SetHnadlerType()
+    {
         handlerType = HandlerType.GridHandler;
     }
 }

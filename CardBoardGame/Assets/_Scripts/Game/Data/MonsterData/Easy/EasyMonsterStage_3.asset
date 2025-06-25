@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EasyMonsterStage_3
   m_EditorClassIdentifier: 
   _name: Mutant
-  _health: 750
+  _maxHP: 750
   _damage: 7
   _turn: 2

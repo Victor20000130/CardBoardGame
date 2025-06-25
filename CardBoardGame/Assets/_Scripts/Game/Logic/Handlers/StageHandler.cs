@@ -18,6 +18,10 @@ public class StageHandler : Handler
         {
             currStage = value;
             Debug.Log($"Current Stage set to: {currStage}");
+            if (currStage == Stage.None)
+            {
+                return;
+            }
             stageButtons[(int)CurrentStage - 1].interactable = true;
         }
     }
@@ -25,16 +29,6 @@ public class StageHandler : Handler
     private void Awake()
     {
         selectStagePanel.SetActive(true);
-    }
-    public override void Initialize()
-    {
-        base.Initialize();
-        handlerType = HandlerType.StageHandler;
-
-        // 난이도를 설정하고 스테이지를 초기화합니다.
-        GetStageData();
-        InitializeStageButtons();
-        InitializeStage();
     }
 
     private void GetStageData()
@@ -51,22 +45,26 @@ public class StageHandler : Handler
     }
     private void OnStageButtonClicked(Stage currStage)
     {
+        if (currStage == Stage.None)
+        {
+            currStage = Stage.Stage1;
+        }
         switch (currStage)
         {
             case Stage.Stage1:
-                Debug.Log("Stage 1 button clicked.");
+                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage1;
                 break;
             case Stage.Stage2:
-                Debug.Log("Stage 2 button clicked.");
+                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage2;
                 break;
             case Stage.Stage3:
-                Debug.Log("Stage 3 button clicked.");
+                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage3;
                 break;
             case Stage.Stage4:
-                Debug.Log("Stage 4 button clicked.");
+                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage4;
                 break;
             case Stage.Stage5:
-                Debug.Log("Stage 5 button clicked.");
+                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage5;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(currStage), currStage, null);
@@ -98,6 +96,20 @@ public class StageHandler : Handler
         }
         gridHandler.InitializeGridData(monsterGridSO, curDiff);
         Debug.Log("StageHandler: Stage initialized with " + curDiff + " difficulty.");
+    }
+
+    protected override void OnInitialize()
+    {
+
+        // 난이도를 설정하고 스테이지를 초기화합니다.
+        GetStageData();
+        InitializeStageButtons();
+        InitializeStage();
+    }
+
+    protected override void SetHnadlerType()
+    {
+        handlerType = HandlerType.StageHandler;
     }
     // public MonsterGridSO InitStageHandler(Difficulty diff, Stage stage)
     // {

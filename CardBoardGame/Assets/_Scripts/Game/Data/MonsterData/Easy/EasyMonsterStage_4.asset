@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EasyMonsterStage_4
   m_EditorClassIdentifier: 
   _name: Creep
-  _health: 1000
+  _maxHP: 1000
   _damage: 8
   _turn: 3

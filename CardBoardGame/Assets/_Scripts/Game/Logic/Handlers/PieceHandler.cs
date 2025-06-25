@@ -45,7 +45,8 @@ public class PieceHandler : Handler
 
             isMoveDone = false;
         }
-        onPieceMove?.Invoke(nextMoveIdx);
+        int arriveGridIdx = nextMoveIdx;
+        onPieceMove?.Invoke(arriveGridIdx);
         playerPiece.RunStop();
 
     }
@@ -65,10 +66,12 @@ public class PieceHandler : Handler
     {
         isMoveDone = true;
     }
-
-    public override void Initialize()
+    protected override void OnInitialize()
     {
-        base.Initialize();
+    }
+
+    protected override void SetHnadlerType()
+    {
         handlerType = HandlerType.PieceHandler;
     }
 }

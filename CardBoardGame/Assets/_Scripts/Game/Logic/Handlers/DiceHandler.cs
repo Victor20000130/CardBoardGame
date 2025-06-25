@@ -65,12 +65,13 @@ public class DiceHandler : Handler
         ResetPosition();
     }
 
-    public override void Initialize()
+    protected override void OnInitialize()
     {
-        base.Initialize();
+    }
+    protected override void SetHnadlerType()
+    {
         handlerType = HandlerType.DiceHandler;
     }
-
     /// <summary>
     /// 주사위의 위쪽 면을 반환합니다.
     /// </summary>
@@ -231,4 +232,5 @@ public class DiceHandler : Handler
             isGrounded = false;
         }
     }
+
 }
