@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
 {
 
     private StageSO curStageSO;
+    public StageSO StageSO
+    {
+        get => curStageSO;
+        set => StageSO = value;
+    }
     private Dictionary<HandlerType, Handler> handlers = new Dictionary<HandlerType, Handler>();
     private StageHandler StageHandler => GetHandler<StageHandler>(HandlerType.StageHandler);
     private PieceHandler PieceHandler => GetHandler<PieceHandler>(HandlerType.PieceHandler);
@@ -107,8 +112,8 @@ public class GameManager : MonoBehaviour
         {
             handler.SetHandlerType();
             this.handlers.Add(handler.HandlerType, handler);
+            handler.Initialize();
         }
-        StageHandler.Initialize();
     }
 
     /// <summary>
@@ -136,38 +141,24 @@ public class GameManager : MonoBehaviour
     }
     public void ReceiveGridData(GridData gridData)
     {
-        switch (gridData.gridType)
-        {
-            case GridType.Day:
-            case GridType.Night:
-            case GridType.PlayerHeal:
-            case GridType.MonsterHeal:
-            case GridType.Draw:
-                BattleHandler.GetGridType(gridData.gridType);
-                break;
-            case GridType.MiniGame:
-                // MiniGameHandler.GetGridType(gridData.gridType);
-                //TODO MiniGameHandler 제작 예정
-                break;
-            default:
-                Debug.LogError($"잘못된 그리드 타입 {gridData.gridType}");
-                break;
-        }
+        BattleHandler.SetGridType(gridData.gridType);
         print($"GridType {gridData.gridType}, idx {gridData.Idx}");
         //TODO 스테이지별 자동 저장이 아닌 그리드 이동마다 저장할 시 그리드 데이터 저장(데이터 매니저 호출)
     }
     public void StartGame()
     {
         Time.timeScale = 1;
-        foreach (Handler handler in handlers.Values)
-        {
-            handler.Initialize();
-        }
+        SendMonsterSO();
         StartCoroutine(DiceRollCoroutine());
     }
     private IEnumerator DiceRollCoroutine()
     {
         yield return null;
         isRoll = true;
+    }
+
+    private void SendMonsterSO()
+    {
+        BattleHandler.ReceiveMonsterSO(StageHandler.CurMonsterSO);
     }
 }

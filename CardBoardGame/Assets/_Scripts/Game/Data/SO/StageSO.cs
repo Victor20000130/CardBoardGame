@@ -5,6 +5,10 @@ using UnityEngine;
 public class StageSO : ScriptableObject
 {
     [SerializeField] private MonsterSO[] monsterSO;
+    public MonsterSO[] MonsterSO
+    {
+        get => monsterSO;
+    }
     [SerializeField] private GridSO[] gridSO;
     public int GridDataLength => gridSO[0].GridDataLength;
 

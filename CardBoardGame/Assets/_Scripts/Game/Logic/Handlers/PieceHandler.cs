@@ -15,15 +15,6 @@ public class PieceHandler : Handler
     private bool isMoveDone = false;
     public PlayerPiece playerPiece;
 
-    private void Awake()
-    {
-        cornerDic = new Dictionary<int, bool>();
-        foreach (int corner in cornerIdx)
-        {
-            cornerDic.Add(corner, true);
-        }
-
-    }
     public IEnumerator MoveCorou(int diceValue, Action<int> onPieceMove)
     {
         while (diceValue != 0)
@@ -68,6 +59,11 @@ public class PieceHandler : Handler
     }
     protected override void OnInitialize()
     {
+        cornerDic = new Dictionary<int, bool>();
+        foreach (int corner in cornerIdx)
+        {
+            cornerDic.Add(corner, true);
+        }
     }
 
     protected override void SetHnadlerType()

@@ -25,7 +25,7 @@ public class DifficultyPanel : LobbyPanel
 
     private void SetDifficulty(Difficulty diff)
     {
-        ManagerHandler.Instance.dataManager.CurrentGameData.Difficulty = diff;
+        ManagerHandler.Instance.dataManager.CurGameData.Difficulty = diff;
         print($"Difficulty set to: {diff}");
         // TODO : 데이터 저장관리 로직 완성 시 호출
         // SetDataPanelActive(true);

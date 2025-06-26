@@ -34,17 +34,16 @@ public class DataManager : MonoBehaviour
     public StageSO EasyStageSO => StageSO[0];
     public StageSO NormalStageSO => StageSO[1];
     public StageSO HardStageSO => StageSO[2];
-
-    private GameData currentGameData;
+    private GameData curGameData;
 
     public int TotalCardCount = 52;
-
-    public GameData CurrentGameData
+    public bool testInGameScene;
+    public GameData CurGameData
     {
-        get { return currentGameData; }
+        get { return curGameData; }
         set
         {
-            currentGameData = value;
+            curGameData = value;
         }
     }
 
@@ -74,17 +73,63 @@ public class DataManager : MonoBehaviour
     private void HandleLobbyScene()
     {
         Debug.Log("dm 로비 씬 초기화");
-        currentGameData = new GameData();
+        curGameData = new GameData();
     }
 
     private void HandleGameScene(int sceneInx)
     {
         Debug.Log("DM HandleGameScene");
+        if (testInGameScene)
+        {
+            ForTest();
+
+        }
     }
     private void ForTest()
     {
+        Debug.LogWarning("테스트 메서드 동작중");
         // Initialize the current game data
-        currentGameData.Difficulty = Difficulty.Easy;
-        currentGameData.Stage = Stage.Stage1;
+        curGameData = new GameData();
+        curGameData.Difficulty = Difficulty.Easy;
+        curGameData.Stage = Stage.Stage1;
     }
+    // public StageSO SendStageSO()
+    // {
+    //     switch (CurGameData.Difficulty)
+    //     {
+    //         case Difficulty.Easy:
+    //             CurStageSO = EasyStageSO;
+    //             break;
+    //         case Difficulty.Normal:
+    //             CurStageSO = NormalStageSO;
+    //             break;
+    //         case Difficulty.Hard:
+    //             CurStageSO = HardStageSO;
+    //             break;
+    //         default:
+    //             Debug.LogError("난이도 설정 오류");
+    //             break;
+    //     }
+    // }
+
+    // private StageSO SendMonsterSO()
+    // {
+    //     switch (CurGameData.Stage)
+    //     {
+    //         case Stage.Stage1:
+    //             CurStageSO[0];
+    //             break;
+    //         case Stage.Stage2:
+    //             break;
+    //         case Stage.Stage3:
+    //             break;
+    //         case Stage.Stage4:
+    //             break;
+    //         case Stage.Stage5:
+    //             break;
+    //         default:
+    //             break;
+
+    //     }
+    // }
 }

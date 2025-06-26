@@ -29,15 +29,15 @@ public class CardSO : ScriptableObject
 
     private Shape InitShape(string name)
     {
-        switch (name.ToLower())
+        switch (name)
         {
-            case "spade":
+            case "_Spade":
                 return Shape.Spade;
-            case "diamond":
+            case "_Diamond":
                 return Shape.Diamond;
-            case "club":
+            case "_Club":
                 return Shape.Club;
-            case "heart":
+            case "_Heart":
                 return Shape.Heart;
             default:
                 Debug.LogWarning($"Unknown shape name: {name}");

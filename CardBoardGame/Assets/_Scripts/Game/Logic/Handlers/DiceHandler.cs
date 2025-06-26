@@ -55,7 +55,7 @@ public class DiceHandler : Handler
         Vector3.forward, // 5번 면
         Vector3.back    // 6번 면
     };
-    private void Awake()
+    protected override void OnInitialize()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _renderer = GetComponent<Renderer>();
@@ -63,10 +63,6 @@ public class DiceHandler : Handler
         faceNames = new int[] { up, down, left, right, front, back };
         defaultWallForce = wallForce;
         ResetPosition();
-    }
-
-    protected override void OnInitialize()
-    {
     }
     protected override void SetHnadlerType()
     {

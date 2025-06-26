@@ -16,9 +16,9 @@ public class GridData
 
 public class GridHandler : Handler
 {
-    [SerializeField] private Grid[] grid;
+    [SerializeField] private BoardGrid[] grid;
     [SerializeField] private GridData[] gridData;
-    [SerializeField] private Grid gridPrefab;
+    [SerializeField] private BoardGrid gridPrefab;
     [SerializeField] private Image boardEffect_IMG;
     private GridData curGridData = new GridData();
     public GridData CurGridData => curGridData;

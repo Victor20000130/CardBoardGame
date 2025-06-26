@@ -8,17 +8,18 @@ public class StageHandler : Handler
     [SerializeField] private Button[] stageButtons;
     [SerializeField] private GameObject selectStagePanel;
     private Difficulty curDiff;
-    private Stage currStage;
-    private StageSO monsterGridSO;
+    private Stage curStage;
+    private StageSO curStageSO;
+    public MonsterSO CurMonsterSO;
     //TODO : 적이 죽었을 때 스테이지 넘어가기
     public Stage CurrentStage
     {
-        get { return currStage; }
+        get { return curStage; }
         set
         {
-            currStage = value;
-            Debug.Log($"Current Stage set to: {currStage}");
-            if (currStage == Stage.None)
+            curStage = value;
+            Debug.Log($"Current Stage set to: {curStage}");
+            if (curStage == Stage.None)
             {
                 return;
             }
@@ -33,8 +34,8 @@ public class StageHandler : Handler
 
     private void GetStageData()
     {
-        curDiff = ManagerHandler.Instance.dataManager.CurrentGameData.Difficulty;
-        CurrentStage = ManagerHandler.Instance.dataManager.CurrentGameData.Stage;
+        curDiff = ManagerHandler.Instance.dataManager.CurGameData.Difficulty;
+        CurrentStage = ManagerHandler.Instance.dataManager.CurGameData.Stage;
     }
     private void InitializeStageButtons()
     {
@@ -43,34 +44,39 @@ public class StageHandler : Handler
             button.onClick.AddListener(() => OnStageButtonClicked(CurrentStage));
         }
     }
-    private void OnStageButtonClicked(Stage currStage)
+    private void OnStageButtonClicked(Stage curStage)
     {
-        if (currStage == Stage.None)
+        if (curStage == Stage.None)
         {
-            currStage = Stage.Stage1;
+            curStage = Stage.Stage1;
         }
-        switch (currStage)
+        switch (curStage)
         {
             case Stage.Stage1:
-                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage1;
+                ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage1;
+                CurMonsterSO = curStageSO.MonsterSO[0];
                 break;
             case Stage.Stage2:
-                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage2;
+                ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage2;
+                CurMonsterSO = curStageSO.MonsterSO[1];
                 break;
             case Stage.Stage3:
-                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage3;
+                ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage3;
+                CurMonsterSO = curStageSO.MonsterSO[2];
                 break;
             case Stage.Stage4:
-                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage4;
+                ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage4;
+                CurMonsterSO = curStageSO.MonsterSO[3];
                 break;
             case Stage.Stage5:
-                ManagerHandler.Instance.dataManager.CurrentGameData.Stage = Stage.Stage5;
+                ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage5;
+                CurMonsterSO = curStageSO.MonsterSO[4];
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(currStage), currStage, null);
+                throw new ArgumentOutOfRangeException(nameof(curStage), curStage, null);
         }
         selectStagePanel.SetActive(false);
-        Debug.Log($"StageHandler: Stage {currStage} button clicked.");
+        Debug.Log($"StageHandler: Stage {curStage} button clicked.");
 
         ManagerHandler.Instance.gameManager.StartGame();
 
@@ -81,20 +87,20 @@ public class StageHandler : Handler
         {
             case Difficulty.Easy:
                 Debug.Log("Initializing Easy Stage");
-                monsterGridSO = ManagerHandler.Instance.dataManager.EasyStageSO;
+                curStageSO = ManagerHandler.Instance.dataManager.EasyStageSO;
                 break;
             case Difficulty.Normal:
                 Debug.Log("Initializing Normal Stage");
-                monsterGridSO = ManagerHandler.Instance.dataManager.NormalStageSO;
+                curStageSO = ManagerHandler.Instance.dataManager.NormalStageSO;
                 break;
             case Difficulty.Hard:
                 Debug.Log("Initializing Hard Stage");
-                monsterGridSO = ManagerHandler.Instance.dataManager.HardStageSO;
+                curStageSO = ManagerHandler.Instance.dataManager.HardStageSO;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(curDiff), curDiff, null);
         }
-        gridHandler.InitializeGridData(monsterGridSO, curDiff);
+        gridHandler.InitializeGridData(curStageSO, curDiff);
         Debug.Log("StageHandler: Stage initialized with " + curDiff + " difficulty.");
     }
 

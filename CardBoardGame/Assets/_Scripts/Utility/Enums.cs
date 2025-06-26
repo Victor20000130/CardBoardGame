@@ -37,7 +37,7 @@ namespace CardBoardGame.Assets._Scripts.Utility
         Night = 3,
         PlayerHeal = 4,
         MonsterHeal = 5,
-        Draw = 6,
+        Buff = 6,
         MiniGame = 7
     }
 

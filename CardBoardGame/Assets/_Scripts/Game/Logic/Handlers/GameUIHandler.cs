@@ -10,6 +10,7 @@ public class GameUIHandler : Handler
     }
     protected override void OnInitialize()
     {
+
     }
 
     protected override void SetHnadlerType()

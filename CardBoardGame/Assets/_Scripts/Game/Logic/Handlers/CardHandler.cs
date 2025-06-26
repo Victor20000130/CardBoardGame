@@ -29,7 +29,10 @@ public class CardHandler : Handler
         currIdx = 0;
         var shuffler = new CardShuffle();
         shuffler.Shuffle(deck);
+        print(1);
         SetCards();
+        print(3);
+
     }
 
     public void SetCards()
@@ -49,6 +52,7 @@ public class CardHandler : Handler
         // 위 방식을 써도 충분하지만, 굳이 추가로 배열을 생성할 필요가 없음.
         #endregion
         // monsterCard 처리
+        print(2);
         for (int i = 0; i < monsterCard.Length; i++)
         {
             monsterCard[i].Initialize();

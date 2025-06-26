@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CardSO
   m_EditorClassIdentifier: 
   cards: []
-  spadeName: Spade
-  diamondName: Diamond
-  clubName: Club
-  heartName: Heart
+  spadeName: _Spade
+  diamondName: _Diamond
+  clubName: _Club
+  heartName: _Heart
   minRange: 1
   maxRange: 13
