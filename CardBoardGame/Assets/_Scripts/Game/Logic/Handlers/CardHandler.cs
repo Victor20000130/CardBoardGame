@@ -19,6 +19,8 @@ public class CardHandler : Handler
     private Button attackButton;
     [SerializeField]
     private Button throwButton;
+    [SerializeField]
+    private GameObject cardPanel;
     private void Awake()
     {
 
@@ -56,20 +58,22 @@ public class CardHandler : Handler
         for (int i = 0; i < monsterCard.Length; i++)
         {
             monsterCard[i].Initialize();
-            monsterCard[i].Button.image.sprite = cardSO.cards[deck[currIdx]].sprite;
+            // monsterCard[i].Button.image.sprite = cardSO.cards[deck[currIdx]].sprite;
+            monsterCard[i].CardData = cardSO.cards[deck[currIdx]];
             currIdx++;
         }
         // userCard 처리
         for (int i = 0; i < userCard.Length; i++)
         {
             userCard[i].Initialize();
-            userCard[i].Button.image.sprite = cardSO.cards[deck[currIdx]].sprite;
+            // userCard[i].Button.image.sprite = cardSO.cards[deck[currIdx]].sprite;
+            userCard[i].CardData = cardSO.cards[deck[currIdx]];
             currIdx++;
         }
     }
-    public void CardHandlerOnOff()
+    public void CardPanelOnOff()
     {
-        gameObject.SetActive(!gameObject.activeSelf);
+        cardPanel.SetActive(!cardPanel.activeSelf);
     }
 
     private void ButtonInitialize()

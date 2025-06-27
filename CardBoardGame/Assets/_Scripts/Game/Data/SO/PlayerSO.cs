@@ -7,10 +7,9 @@ public class PlayerSO : ScriptableObject
     public int MaxHP;
     public int CurHP;
     public int ChangeCardCount;
-    public bool IsNight;
+    public bool IsStart;
     public bool IsHeal;
     public bool IsBuff;
-    public bool IsMiniGame;
 
     public void Initialize(PlayerSO copyTarget)
     {
@@ -18,6 +17,8 @@ public class PlayerSO : ScriptableObject
         copyTarget.MaxHP = MaxHP;
         copyTarget.CurHP = CurHP;
         copyTarget.ChangeCardCount = ChangeCardCount;
-        copyTarget.IsNight = IsNight;
+        copyTarget.IsStart = IsStart;
+        copyTarget.IsHeal = IsHeal;
+        copyTarget.IsBuff = IsBuff;
     }
 }

@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Watcher
   _maxHP: 250
+  _curHP: 250
   _damage: 5
   _turn: 5
+  IsHeal: 0

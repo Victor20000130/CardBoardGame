@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Lizard
   _maxHP: 500
+  _curHP: 500
   _damage: 6
   _turn: 4
+  IsHeal: 0

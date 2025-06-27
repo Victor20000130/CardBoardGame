@@ -23,8 +23,10 @@ public class GameManager : MonoBehaviour
     private GridHandler GridHandler => GetHandler<GridHandler>(HandlerType.GridHandler);
     private DiceHandler DiceHandler => GetHandler<DiceHandler>(HandlerType.DiceHandler);
     private BattleHandler BattleHandler => GetHandler<BattleHandler>(HandlerType.BattleHandler);
+    private CardHandler CardHandler => GetHandler<CardHandler>(HandlerType.CardHandler);
     // private MiniGameHandler MiniGameHandler => GetHandler<MiniGameHandler>(HandlerType.MiniGameHandler);
     private Action<int> onPieceMove;
+
     private bool isRoll = false;
 
     // 그리드가 스테이지마다 동적으로 변할 경우 사용
@@ -141,7 +143,7 @@ public class GameManager : MonoBehaviour
     }
     public void ReceiveGridData(GridData gridData)
     {
-        BattleHandler.SetGridType(gridData.gridType);
+        BattleHandler.SendGridType(gridData.gridType, CardHandler);
         print($"GridType {gridData.gridType}, idx {gridData.Idx}");
         //TODO 스테이지별 자동 저장이 아닌 그리드 이동마다 저장할 시 그리드 데이터 저장(데이터 매니저 호출)
     }

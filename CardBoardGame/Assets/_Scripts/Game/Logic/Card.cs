@@ -10,6 +10,17 @@ public class Card : MonoBehaviour
     }
     private bool isClicked;
     public ColorBlock clickedColors;
+    private CardData _cardData;
+    public CardData CardData
+    {
+        get => _cardData;
+        set
+        {
+            _cardData = value;
+            _button.image.sprite = _cardData.sprite;
+        }
+
+    }
     public void OnClick()
     {
         isClicked = !isClicked;

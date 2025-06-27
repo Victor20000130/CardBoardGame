@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Mutant
   _maxHP: 750
+  _curHP: 750
   _damage: 7
   _turn: 2
+  IsHeal: 0

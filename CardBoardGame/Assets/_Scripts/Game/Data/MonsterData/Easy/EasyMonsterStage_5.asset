@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Crab
   _maxHP: 1500
+  _curHP: 1500
   _damage: 9
   _turn: 4
+  IsHeal: 0

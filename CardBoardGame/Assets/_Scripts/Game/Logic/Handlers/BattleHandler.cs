@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using CardBoardGame.Assets._Scripts.Utility;
 using UnityEngine;
 
@@ -18,12 +19,19 @@ public class BattleHandler : Handler
     protected override void OnInitialize()
     {
         SODataLoad();
+        player = FindAnyObjectByType<Player>();
+        monster = FindAnyObjectByType<Monster>();
+
     }
 
     public void ReceiveMonsterSO(MonsterSO monsterSO)
     {
         curMonsterSO = ScriptableObject.CreateInstance<MonsterSO>();
         monsterSO.Copy(curMonsterSO);
+        player.PlayerSO = curPlayerSO;
+        monster.MonsterSO = curMonsterSO;
+        player.Initialize();
+        monster.Initialize();
     }
 
     private void SODataLoad()
@@ -34,27 +42,23 @@ public class BattleHandler : Handler
         Debug.Log(curPlayerSO.Name);
     }
 
-    public void SetGridType(GridType gridType)
+    public void SendGridType(GridType gridType, CardHandler cardHandler)
     {
         switch (gridType)
         {
+            case GridType.Start:
+                break;
             case GridType.Day:
-                curPlayerSO.IsNight = false;
                 break;
             case GridType.Night:
-                curPlayerSO.IsNight = true;
                 break;
             case GridType.PlayerHeal:
-                curPlayerSO.IsHeal = true;
                 break;
             case GridType.MonsterHeal:
-                curMonsterSO.IsHeal = true;
                 break;
             case GridType.Buff:
-                curPlayerSO.IsBuff = true;
                 break;
             case GridType.MiniGame:
-                curPlayerSO.IsMiniGame = true;
                 // MiniGameHandler.GetGridType(gridData.gridType);
                 //TODO MiniGameHandler 제작 예정
                 break;
@@ -62,8 +66,16 @@ public class BattleHandler : Handler
                 Debug.LogError($"잘못된 그리드 타입 {gridType}");
                 break;
         }
+        StartCoroutine(ApplyEffect(gridType, cardHandler));
     }
 
+    private IEnumerator ApplyEffect(GridType gridType, CardHandler cardHandler)
+    {
+        print($"적용되는 효과 : {gridType}");
+        player.applyEffectAct?.Invoke(gridType);
+        monster.applyEffectAct?.Invoke(gridType);
+        yield return new WaitForSeconds(3f);
+    }
     protected override void SetHnadlerType()
     {
         handlerType = HandlerType.BattleHandler;

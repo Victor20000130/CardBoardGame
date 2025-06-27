@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Creep
   _maxHP: 1000
+  _curHP: 1000
   _damage: 8
   _turn: 3
+  IsHeal: 0
