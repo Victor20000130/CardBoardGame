@@ -9,8 +9,11 @@ public class Card : MonoBehaviour
         get { return _button; }
     }
     private bool isClicked;
+    public bool IsClicked => isClicked;
     public ColorBlock clickedColors;
     private CardData _cardData;
+    private CardHandler cardHandler;
+
     public CardData CardData
     {
         get => _cardData;
@@ -27,16 +30,20 @@ public class Card : MonoBehaviour
         if (isClicked)
         {
             _button.colors = clickedColors;
+            cardHandler.SelectedCards.Add(_cardData);
         }
         else
         {
             _button.colors = ColorBlock.defaultColorBlock;
+            cardHandler.SelectedCards.Remove(_cardData);
         }
+        cardHandler.OnSelectedCard(isClicked);
     }
-    public void Initialize()
+    public void Initialize(CardHandler cardHandler)
     {
         _button = GetComponent<Button>();
         _button.onClick.AddListener(OnClick);
+        this.cardHandler = cardHandler;
     }
 }
 

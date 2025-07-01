@@ -44,7 +44,7 @@ public class Player : Unit
     protected override void Heal()
     {
         print("플레이어 회복 효과");
-        _playerSO.CurHP += _playerSO.CurHP + (_playerSO.MaxHP / 10);
+        _playerSO.CurHP = _playerSO.CurHP + (_playerSO.MaxHP / 10);
         _hpTMP.text = _playerSO.CurHP.ToString();
     }
 

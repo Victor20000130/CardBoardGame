@@ -22,7 +22,7 @@ public class CardSO : ScriptableObject
             cards[initCount].sprite = Resources.Load<Sprite>("Card/" + name + i.ToString());
             cards[initCount].shape = InitShape(name);
             cards[initCount].number = (Number)i;
-            Debug.Log($"Init Card {name}, {i}, {initCount}");
+            // Debug.Log($"Init Card {name}, {i}, {initCount}");
             initCount++;
         }
     }

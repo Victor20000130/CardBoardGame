@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour
             this.handlers.Add(handler.HandlerType, handler);
             handler.Initialize();
         }
+
     }
 
     /// <summary>
@@ -143,14 +144,34 @@ public class GameManager : MonoBehaviour
     }
     public void ReceiveGridData(GridData gridData)
     {
-        BattleHandler.SendGridType(gridData.gridType, CardHandler);
+        BattleHandler.SendGridType(gridData.gridType);
         print($"GridType {gridData.gridType}, idx {gridData.Idx}");
+
+        StartCoroutine(CardGameCoroutine());
+
+        switch (gridData.gridType)
+        {
+            case GridType.MiniGame:
+                // MiniGameHandler.GetGridType(gridData.gridType);
+                //TODO MiniGameHandler 제작 예정
+                break;
+            default:
+                break;
+        }
+
         //TODO 스테이지별 자동 저장이 아닌 그리드 이동마다 저장할 시 그리드 데이터 저장(데이터 매니저 호출)
     }
+
+    private IEnumerator CardGameCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        CardHandler.CardGameActivation(true);
+    }
+
     public void StartGame()
     {
-        Time.timeScale = 1;
         SendMonsterSO();
+        Time.timeScale = 1;
         StartCoroutine(DiceRollCoroutine());
     }
     private IEnumerator DiceRollCoroutine()
@@ -161,6 +182,10 @@ public class GameManager : MonoBehaviour
 
     private void SendMonsterSO()
     {
+        if (StageHandler.CurMonsterSO == null)
+        {
+            Debug.LogError("CurMonsterSO is Null");
+        }
         BattleHandler.ReceiveMonsterSO(StageHandler.CurMonsterSO);
     }
 }

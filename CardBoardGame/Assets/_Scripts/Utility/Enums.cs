@@ -53,7 +53,7 @@ namespace CardBoardGame.Assets._Scripts.Utility
     public enum Number
     {
         None,
-        One,
+        Ace,
         Two,
         Three,
         Four,
@@ -78,8 +78,9 @@ namespace CardBoardGame.Assets._Scripts.Utility
         StageHandler,
         DiceHandler
     }
-    public enum PokerHands
+    public enum HandRankings
     {
+        None,
         Solo,           //숫자가 가장 높은 카드 1장
         Dyad,           //숫자가 같은 카드 2장
         Dyad_Set,       //다이어드 2개

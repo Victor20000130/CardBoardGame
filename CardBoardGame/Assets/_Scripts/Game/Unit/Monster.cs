@@ -15,12 +15,17 @@ public class Monster : Unit
     private float _damage;
     protected override void OnInitialize()
     {
-        if (unitObjSetter == null)
+        try
         {
-            unitObjSetter = this.gameObject.GetComponentInParent<UnitObjectSetter>();
+            _hpTMP = unitObjSetter.HpTMP;
         }
-
-        _hpTMP = unitObjSetter.HpTMP;
+        catch
+        {
+            if (unitObjSetter == null)
+            {
+                unitObjSetter = this.gameObject.GetComponentInParent<UnitObjectSetter>();
+            }
+        }
         monsterDMGTMP = unitObjSetter.MonsterDMG_TMP;
         monsterTurnTMP = unitObjSetter.MonsterTurn_TMP;
         _hpTMP.text = _monsterSO._curHP.ToString();

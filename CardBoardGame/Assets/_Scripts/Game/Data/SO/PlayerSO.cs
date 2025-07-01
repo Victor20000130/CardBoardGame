@@ -11,7 +11,7 @@ public class PlayerSO : ScriptableObject
     public bool IsHeal;
     public bool IsBuff;
 
-    public void Initialize(PlayerSO copyTarget)
+    public void Copy(PlayerSO copyTarget)
     {
         copyTarget.Name = Name;
         copyTarget.MaxHP = MaxHP;

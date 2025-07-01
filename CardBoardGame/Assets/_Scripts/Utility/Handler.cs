@@ -7,10 +7,6 @@ public abstract class Handler : MonoBehaviour
     public HandlerType HandlerType => handlerType;
     protected bool isSetHandlerType = false;
     protected bool isInitialized = false;
-    protected void Start()
-    {
-
-    }
     public void SetHandlerType()
     {
         if (isSetHandlerType)
