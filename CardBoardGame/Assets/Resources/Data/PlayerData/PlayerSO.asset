@@ -15,8 +15,7 @@ MonoBehaviour:
   Name: User1
   MaxHP: 100
   CurHP: 100
-  ChangeCardCount: 3
-  IsNight: 0
+  CanThrowCount: 3
+  IsStart: 0
   IsHeal: 0
   IsBuff: 0
-  IsMiniGame: 0

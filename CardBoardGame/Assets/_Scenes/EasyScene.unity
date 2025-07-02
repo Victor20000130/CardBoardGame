@@ -1841,6 +1841,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7410037569983041114, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
+      propertyPath: IsUserCard
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8293152810042817252, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_Name
       value: UserCard_3
@@ -3880,63 +3884,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 606920899}
   m_CullTransparentMesh: 1
---- !u!1001 &617971385
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1647140208}
-    m_Modifications:
-    - target: {fileID: 4250979012264786362, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_Name
-      value: EasyMonster_1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -690.971
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -161.10019
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
 --- !u!4 &679478394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 425328, guid: aeb4794909bc89d43b72ad784903e0f5, type: 3}
@@ -5727,6 +5674,7 @@ MonoBehaviour:
   attackButton: {fileID: 1944023137}
   throwButton: {fileID: 906348110}
   cardPanel: {fileID: 1055079886}
+  CanThrowCount: 0
 --- !u!1 &1020026729
 GameObject:
   m_ObjectHideFlags: 0
@@ -8024,6 +7972,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7410037569983041114, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
+      propertyPath: IsUserCard
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8293152810042817252, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_Name
       value: UserCard_5
@@ -8130,6 +8082,10 @@ PrefabInstance:
     - target: {fileID: 2819317737649158858, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410037569983041114, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
+      propertyPath: IsUserCard
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8293152810042817252, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_Name
@@ -9578,7 +9534,6 @@ Transform:
   - {fileID: 175202071}
   - {fileID: 1757710305}
   - {fileID: 792715458}
-  - {fileID: 6227983060432160391}
   - {fileID: 1393860548}
   - {fileID: 263907477}
   - {fileID: 80165374}
@@ -9989,7 +9944,7 @@ MonoBehaviour:
   player: {fileID: 0}
   monster: {fileID: 0}
   originPlayerSO: {fileID: 0}
-  originMonsterSO: {fileID: 0}
+  ElementEffectSO: {fileID: 11400000, guid: d83e3c155a6ef8340a36acd67b7cea12, type: 2}
 --- !u!1001 &1721099856
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10348,6 +10303,10 @@ PrefabInstance:
     - target: {fileID: 2819317737649158858, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410037569983041114, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
+      propertyPath: IsUserCard
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8293152810042817252, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_Name
@@ -11083,19 +11042,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1944023138}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CardDispenser, Assembly-CSharp
-        m_MethodName: Shuffle
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1944023138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11221,6 +11168,10 @@ PrefabInstance:
     - target: {fileID: 2819317737649158858, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410037569983041114, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
+      propertyPath: IsUserCard
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8293152810042817252, guid: a809afc2b87e7704e9f429c1c81a91ad, type: 3}
       propertyPath: m_Name
@@ -16689,11 +16640,6 @@ Transform:
   - {fileID: 2810981281409029378}
   m_Father: {fileID: 2841772861421941901}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &6227983060432160391 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6227983059973634110, guid: 81140451d3fcaca4cb8096ff6477c0ba, type: 3}
-  m_PrefabInstance: {fileID: 617971385}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6263787670585311435
 GameObject:
   m_ObjectHideFlags: 0

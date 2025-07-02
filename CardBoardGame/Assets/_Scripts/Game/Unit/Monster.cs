@@ -1,3 +1,4 @@
+using System;
 using CardBoardGame.Assets._Scripts.Utility;
 using TMPro;
 using UnityEngine;
@@ -15,17 +16,7 @@ public class Monster : Unit
     private float _damage;
     protected override void OnInitialize()
     {
-        try
-        {
-            _hpTMP = unitObjSetter.HpTMP;
-        }
-        catch
-        {
-            if (unitObjSetter == null)
-            {
-                unitObjSetter = this.gameObject.GetComponentInParent<UnitObjectSetter>();
-            }
-        }
+        _hpTMP = unitObjSetter.HpTMP;
         monsterDMGTMP = unitObjSetter.MonsterDMG_TMP;
         monsterTurnTMP = unitObjSetter.MonsterTurn_TMP;
         _hpTMP.text = _monsterSO._curHP.ToString();

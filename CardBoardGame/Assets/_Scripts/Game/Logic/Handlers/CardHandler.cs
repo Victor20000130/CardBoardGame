@@ -8,40 +8,50 @@ using System.Linq;
 
 public class CardHandler : Handler
 {
+    // 카드 조합 관련 상수
+    private const int MaxHandCount = 5;
+    private const int MaxPairCount = 2;
+    private const int MaxTripleCount = 3;
+    private const int MaxQuadCount = 4;
+
     private CardSO cardSO;
     private List<int> deck;
     private int currIdx = 0;
-    [SerializeField]
-    private Card[] monsterCard;
-    [SerializeField]
-    private Card[] userCard;
+    [SerializeField] private Card[] monsterCard;
+    [SerializeField] private Card[] userCard;
+    [SerializeField] private Button attackButton;
+    [SerializeField] private Button throwButton;
+    [SerializeField] private GameObject cardPanel;
 
-    [SerializeField]
-    private Button attackButton;
-    [SerializeField]
-    private Button throwButton;
-    [SerializeField]
-    private GameObject cardPanel;
     private HandRankings handRankings;
     private int selectedCount = 0;
 
-    private List<CardData> selectedCards = new List<CardData>(5);
-    public List<CardData> SelectedCards
+    private List<Card> selectedCards = new List<Card>(MaxHandCount);
+    public List<Card> SelectedCards => selectedCards;
+    private List<Card> throwedCards = new List<Card>(MaxPairCount + 1);
+    private List<Card> selectedUserCards = new List<Card>(MaxHandCount);
+    public List<Card> SelectedUserCards => selectedUserCards;
+
+    public int CanThrowCount = 0;
+
+    protected override void OnInitialize()
     {
-        get => selectedCards;
-        set => selectedCards = value;
+        cardSO = Resources.Load<CardSO>("Data/UtilityData/CardSO");
+        cardSO.InitCardSO();
+        deck = Enumerable.Range(0, 52).ToList();
+        Shuffle();
+        SetAllCardsInteractable(false);
+        InitializeButtons();
     }
-
-    private void Awake()
+    protected override void SetHnadlerType()
     {
-
+        handlerType = HandlerType.CardHandler;
     }
 
     public void Shuffle()
     {
         currIdx = 0;
-        var shuffler = new CardShuffle();
-        shuffler.Shuffle(deck);
+        new CardShuffle().Shuffle(deck);
         SetCards();
     }
 
@@ -62,275 +72,266 @@ public class CardHandler : Handler
         // 위 방식을 써도 충분하지만, 굳이 추가로 배열을 생성할 필요가 없음.
         #endregion
         // monsterCard 처리
-        print(2);
-        for (int i = 0; i < monsterCard.Length; i++)
+        foreach (var card in monsterCard)
         {
-            monsterCard[i].Initialize(this);
-            monsterCard[i].CardData = cardSO.cards[deck[currIdx]];
-            currIdx++;
+            card.Initialize(this);
+            card.CardData = cardSO.cards[deck[currIdx++]];
         }
-        // userCard 처리
-        for (int i = 0; i < userCard.Length; i++)
+        foreach (var card in userCard)
         {
-            userCard[i].Initialize(this);
-            userCard[i].CardData = cardSO.cards[deck[currIdx]];
-            currIdx++;
+            card.Initialize(this);
+            card.CardData = cardSO.cards[deck[currIdx++]];
         }
     }
-    public void ReSetCards()
+    public void CardPanelOnOff() => cardPanel.SetActive(!cardPanel.activeSelf);
+
+    private void InitializeButtons()
     {
-        for (int i = 0; i < monsterCard.Length; i++)
-        {
-            monsterCard[i].CardData = cardSO.cards[deck[currIdx]];
-            currIdx++;
-        }
-        for (int i = 0; i < userCard.Length; i++)
-        {
-            userCard[i].CardData = cardSO.cards[deck[currIdx]];
-            currIdx++;
-        }
-    }
-    public void CardPanelOnOff()
-    {
-        cardPanel.SetActive(!cardPanel.activeSelf);
+        SetAllCardsInteractable(false);
+        attackButton.onClick.AddListener(HandRankingCalc);
+        attackButton.interactable = false;
+        throwButton.onClick.AddListener(OnCardThrow);
+        throwButton.interactable = false;
     }
 
-    private void ButtonInitialize()
+    public void SetAllCardsInteractable(bool isOn)
     {
-        foreach (Card card in userCard)
+        foreach (var card in userCard)
         {
-
+            card.Button.interactable = isOn;
         }
-        foreach (Card card in monsterCard)
+        foreach (var card in monsterCard)
         {
-
+            card.Button.interactable = isOn;
         }
     }
-    private void UserCardInit()
-    {
 
-    }
-    private void MonsterCardInit()
+    private void OnCardThrow()
     {
-
-    }
-
-    protected override void OnInitialize()
-    {
-        cardSO = Resources.Load<CardSO>("Card/CardSO");
-        cardSO.InitCardSO();
-        deck = new List<int>();
-        for (int i = 0; i < 52; i++) deck.Add(i);
-        ButtonInitialize();
-        Shuffle();
-        CardGameActivation(false);
-    }
-
-    protected override void SetHnadlerType()
-    {
-        handlerType = HandlerType.CardHandler;
-    }
-
-    public void CardGameActivation(bool isOn)
-    {
-        attackButton.interactable = isOn;
-        throwButton.interactable = isOn;
+        throwedCards.Clear();
+        foreach (var card in selectedCards.Where(c => c.IsUserCard))
+        {
+            card.CardData = cardSO.cards[deck[currIdx++]];
+            card.SetDefault();
+            throwedCards.Add(card);
+        }
+        foreach (var card in throwedCards)
+        {
+            card.deSelectAction?.Invoke();
+        }
+        throwedCards.Clear();
+        throwButton.interactable = false;
+        attackButton.interactable = false;
+        CanThrowCount--;
     }
 
     public void OnSelectedCard(bool isOn)
     {
         if (isOn)
         {
-            if (selectedCount == 1)
+            selectedCount++;
+            if (selectedUserCards.Count > 0)
             {
                 attackButton.interactable = true;
             }
-
-            selectedCount++;
+            if (selectedUserCards.Count == 1 && CanThrowCount > 0)
+            {
+                throwButton.interactable = true;
+            }
+            if (selectedUserCards.Count == 4)
+            {
+                throwButton.interactable = false;
+            }
         }
         else
         {
-
             selectedCount--;
             if (selectedCount == 4)
             {
-                IsSelectMax(false);
+                SetSelectMax(false);
+            }
+
+            if (selectedUserCards.Count == 3 && CanThrowCount > 0)
+            {
+                throwButton.interactable = true;
             }
         }
 
         if (selectedCount == 5)
         {
-            IsSelectMax(true);
+            SetSelectMax(true);
         }
 
-        if (selectedCount == 0)
+        if (selectedUserCards.Count == 0)
         {
             attackButton.interactable = false;
         }
-        HandRankingCalc();
+
+        if (selectedUserCards.Count == 0)
+        {
+            throwButton.interactable = false;
+        }
+        // HandRankingCalc();   
     }
 
-    private void IsSelectMax(bool isTrue)
+    private void SetSelectMax(bool isMax)
     {
-        if (isTrue)
-        {
-            ActivationCards(monsterCard, false);
-            ActivationCards(userCard, false);
-        }
-        else
-        {
-            ActivationCards(monsterCard, true);
-            ActivationCards(userCard, true);
-        }
+        SetCardsInteractable(monsterCard, !isMax);
+        SetCardsInteractable(userCard, !isMax);
     }
 
-    private void ActivationCards(Card[] cards, bool isOn)
+    private void SetCardsInteractable(Card[] cards, bool isOn)
     {
-        foreach (Card card in cards)
+        foreach (var card in cards)
         {
-            if (card.IsClicked == false)
+            if (!card.IsClicked)
             {
                 card.Button.interactable = isOn;
             }
         }
     }
 
+    /// <summary>
+    /// 선택된 카드의 핸드 랭킹을 판별하고 결과를 전달
+    /// </summary>
     private void HandRankingCalc()
     {
-
-        switch (selectedCount)
+        var rankingChecks = new (HandRankings ranking, Func<bool> checker)[]
         {
-            case 0:
-                handRankings = HandRankings.None;
+            (HandRankings.Aion, IsAion),
+            (HandRankings.Atropos, IsAtropos),
+            (HandRankings.Nemesis, IsNemesis),
+            (HandRankings.Legion, IsLegion),
+            (HandRankings.Soma, IsSoma),
+            (HandRankings.Tetrad, IsTetrad),
+            (HandRankings.Triad, IsTriad),
+            (HandRankings.Dyad_Set, IsDyad_Set),
+            (HandRankings.Dyad, IsDyad),
+            (HandRankings.Solo, () => selectedCount == 1),
+            (HandRankings.None, () => selectedCount == 0)
+        };
+
+        handRankings = HandRankings.None;
+
+        foreach (var (ranking, checker) in rankingChecks)
+        {
+            if (checker())
+            {
+                handRankings = ranking;
                 break;
-            case 1:
-                handRankings = HandRankings.Solo;
-                break;
+            }
         }
-        if (IsDyad())
+
+        ElementType elementType = ElementType.None;
+        if (IsSameShape())
         {
-            handRankings = HandRankings.Dyad;
+            switch (selectedCards[0].CardData.shape)
+            {
+                case Shape.Spade:
+                    elementType = ElementType.Embers;
+                    break;
+                case Shape.Club:
+                    elementType = ElementType.Spray;
+                    break;
+                case Shape.Diamond:
+                    elementType = ElementType.Nuri;
+                    break;
+                case Shape.Heart:
+                    elementType = ElementType.Fair_Wind;
+                    break;
+            }
         }
-        if (IsDyad_Set())
-        {
-            handRankings = HandRankings.Dyad_Set;
-        }
-        if (IsTriad())
-        {
-            handRankings = HandRankings.Triad;
-        }
-        if (IsTetrad())
-        {
-            handRankings = HandRankings.Tetrad;
-        }
-        if (IsSoma())
-        {
-            handRankings = HandRankings.Soma;
-        }
-        if (IsLegion())
-        {
-            handRankings = HandRankings.Legion;
-        }
-        if (IsNemesis())
-        {
-            handRankings = HandRankings.Nemesis;
-        }
-        if (IsAtropos())
-        {
-            handRankings = HandRankings.Atropos;
-        }
-        if (IsAion())
-        {
-            handRankings = HandRankings.Aion;
-        }
-        print(handRankings);
-    }
-    // 아래는 각 랭킹별 판별 메서드
-    private bool IsDyad()
-    {
-        if (selectedCount < 2)
-        {
-            return false;
-        }
-        return selectedCards
-            .GroupBy(card => card.number)
-            .Any(g => g.Count() == 2);
+
+        Debug.Log(handRankings);
+        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, elementType, selectedCards.Count - 1);
+        cardPanel.SetActive(false);
     }
 
-    private bool IsTriad()
+    // --- 카드 특수 효과 ---
+
+    /// <summary> 특수효과 검출 전 전부 같은 모양인지 확인 </summary>
+    private bool IsSameShape()
     {
-        if (selectedCount < 3)
+        var firstShape = selectedCards[0].CardData.shape;
+
+        if (!selectedCards.All(c => c.CardData.shape == firstShape))
         {
             return false;
         }
-        return selectedCards
-            .GroupBy(card => card.number)
-            .Any(g => g.Count() == 3);
+        return true;
     }
 
-    private bool IsDyad_Set()
-    {
-        if (selectedCount < 4)
-        {
-            return false;
-        }
-        // 같은 숫자의 카드가 2장씩 2쌍
-        return selectedCards
-            .GroupBy(card => card.number)
-            .Count(g => g.Count() == 2) == 2;
-    }
+    // --- 핸드 랭킹 판별 메서드들 ---
 
-    private bool IsTetrad()
-    {
-        if (selectedCount < 4)
-        {
-            return false;
-        }
-        return selectedCards
-            .GroupBy(card => card.number)
-            .Any(g => g.Count() == 4);
-    }
-    private bool IsSoma()
-    {
-        if (selectedCount < 5)
-        {
-            return false;
-        }
-        return selectedCards
-            .GroupBy(card => card.shape)
-            .Any(g => g.Count() == 5);
-    }
+    /// <summary> 같은 숫자 2장(페어) </summary>
+    private bool IsDyad() =>
+        selectedCount >= MaxPairCount &&
+        selectedCards.GroupBy(c => c.CardData.number)
+                     .Any(g => g.Count() == MaxPairCount);
+
+    /// <summary> 같은 숫자 3장(트리플) </summary>
+    private bool IsTriad() =>
+        selectedCount >= MaxTripleCount &&
+        selectedCards.GroupBy(c => c.CardData.number)
+                     .Any(g => g.Count() == MaxTripleCount);
+
+    /// <summary> 2장짜리 페어가 2쌍 </summary>
+    private bool IsDyad_Set() =>
+        selectedCount >= MaxQuadCount &&
+        selectedCards.GroupBy(c => c.CardData.number)
+                     .Count(g => g.Count() == MaxPairCount) == MaxPairCount;
+
+    /// <summary> 같은 숫자 4장(쿼드) </summary>
+    private bool IsTetrad() =>
+        selectedCount >= MaxQuadCount &&
+        selectedCards.GroupBy(c => c.CardData.number)
+                     .Any(g => g.Count() == MaxQuadCount);
+
+    /// <summary> 같은 문양 5장(플러시) </summary>
+    private bool IsSoma() =>
+        selectedCount == MaxHandCount &&
+        selectedCards.GroupBy(c => c.CardData.shape)
+                     .Any(g => g.Count() == MaxHandCount);
+
+    /// <summary> 3장+2장(풀하우스) </summary>
     private bool IsLegion()
     {
-        if (selectedCount < 5)
+        if (selectedCount != MaxHandCount)
         {
             return false;
         }
-        return selectedCards
-                .GroupBy(card => card.number)
-                .Any(g => g.Count() == 3) &&
-                    selectedCards
-                .GroupBy(card => card.number)
-                .Any(g => g.Count() == 2);
+
+        var groups = selectedCards.GroupBy(c => c.CardData.number)
+                                 .Select(g => g.Count())
+                                 .ToList();
+
+        return groups.Contains(MaxTripleCount) && groups.Contains(MaxPairCount);
     }
+
+    /// <summary> 같은 문양, 연속된 숫자 5장(스트레이트 플러시) </summary>
     private bool IsNemesis()
     {
-        // 모든 카드의 문양이 같은지 확인
-        if (selectedCount < 5)
-        {
-            return false;
-        }
-        var firstShape = selectedCards[0].shape;
-        bool allSameShape = selectedCards.All(card => card.shape == firstShape);
-        if (!allSameShape)
+        if (selectedCount != MaxHandCount)
         {
             return false;
         }
 
-        // 숫자를 오름차순 정렬
-        var numbers = selectedCards.Select(card => (int)card.number).OrderBy(n => n).ToList();
+        if (selectedCards.Count == 0)
+        {
+            return false;
+        }
 
-        // 연속되는지 확인
+        var firstShape = selectedCards[0].CardData.shape;
+
+        if (!selectedCards.All(c => c.CardData.shape == firstShape))
+        {
+            return false;
+        }
+
+        var numbers = selectedCards.Select(c => (int)c.CardData.number)
+                                  .OrderBy(n => n)
+                                  .ToList();
+
         for (int i = 1; i < numbers.Count; i++)
         {
             if (numbers[i] != numbers[i - 1] + 1)
@@ -342,63 +343,72 @@ public class CardHandler : Handler
         return true;
     }
 
+    /// <summary> 모두 다른 문양, 모두 Ace 또는 모두 King </summary>
     private bool IsAtropos()
     {
-        if (selectedCount < 4)
+        if (selectedCount != MaxHandCount)
         {
             return false;
         }
-        // shape가 모두 다른지 확인
-        bool allShapeDistinct = selectedCards.Select(card => card.shape).Distinct().Count() == 5;
+
+        if (selectedCards.Count == 0)
+        {
+            return false;
+        }
+
+        bool allShapeDistinct = selectedCards.Select(c => c.CardData.shape)
+                                             .Distinct()
+                                             .Count() == MaxHandCount;
         if (!allShapeDistinct)
         {
             return false;
         }
-        // 모든 카드의 number가 Ace 또는 King 중 하나인지 확인
-        bool allAce = selectedCards.All(card => card.number == Number.Ace);
-        bool allKing = selectedCards.All(card => card.number == Number.King);
 
-        return allAce || allKing;
+        return selectedCards.All(c => c.CardData.number == Number.Ace) ||
+               selectedCards.All(c => c.CardData.number == Number.King);
     }
 
+    /// <summary> 모두 같은 문양, 모두 King </summary>
     private bool IsAion()
     {
-        if (selectedCount < 5)
+        if (selectedCount != MaxHandCount)
         {
             return false;
         }
-        // 5장 모두 같은 문양인지 확인
-        bool allShapeSame = selectedCards.
-                        GroupBy(card => card.shape).
-                        Any(g => g.Count() == 5);
+
+        if (selectedCards.Count == 0)
+        {
+            return false;
+        }
+
+        bool allShapeSame =
+        selectedCards.All(c => c.CardData.shape == selectedCards[0].CardData.shape);
+
         if (!allShapeSame)
         {
             return false;
         }
-        // 5장 모두 King인지 확인
-        bool allKing = selectedCards.All(card => card.number == Number.King);
-        return allKing;
-
+        return selectedCards.All(c => c.CardData.number == Number.King);
     }
 }
 
+// 카드 셔플 유틸리티
 public class CardShuffle
 {
-    private Random random;
+    private readonly Random random;
+
     public CardShuffle() : this(Environment.TickCount) { }
+
     public CardShuffle(int seed)
     {
         random = new Random(seed);
     }
-
     public void Shuffle<T>(IList<T> deck)
     {
         for (int i = deck.Count - 1; i > 0; i--)
         {
             int j = random.Next(i + 1);
-            T temp = deck[i];
-            deck[i] = deck[j];
-            deck[j] = temp;
+            (deck[i], deck[j]) = (deck[j], deck[i]);
         }
     }
 }

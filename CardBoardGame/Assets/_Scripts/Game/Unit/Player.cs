@@ -52,6 +52,5 @@ public class Player : Unit
     {
         print("플레이어 버프 효과");
         isDamageDouble = true;
-
     }
 }

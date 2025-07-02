@@ -4,12 +4,22 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "StageScriptableObject", menuName = "Scriptable Objects/StageScriptableObject")]
 public class StageSO : ScriptableObject
 {
-    [SerializeField] private MonsterSO[] monsterSO;
-    public MonsterSO[] MonsterSO
-    {
-        get => monsterSO;
-    }
-    [SerializeField] private GridSO[] gridSO;
+    [SerializeField]
+    private MonsterSO[] monsterSO;
+
+    public MonsterSO[] MonsterSO => monsterSO;
+
+    [SerializeField]
+    private GridSO[] gridSO;
+
+    [SerializeField]
+    private RankPerDamageSO rankPerDamageSO;
+    public RankPerDamageSO RankPerDamageSO => rankPerDamageSO;
+
+    [SerializeField]
+    private ElementEffectSO elementEffectSO;
+    public ElementEffectSO ElementEffectSO => elementEffectSO;
+
     public int GridDataLength => gridSO[0].GridDataLength;
 
     /// <summary>

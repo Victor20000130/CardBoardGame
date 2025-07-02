@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public StageSO StageSO
     {
         get => curStageSO;
-        set => StageSO = value;
+        set => curStageSO = value;
     }
     private Dictionary<HandlerType, Handler> handlers = new Dictionary<HandlerType, Handler>();
     private StageHandler StageHandler => GetHandler<StageHandler>(HandlerType.StageHandler);
@@ -115,8 +115,8 @@ public class GameManager : MonoBehaviour
             handler.SetHandlerType();
             this.handlers.Add(handler.HandlerType, handler);
             handler.Initialize();
+            print(handler.gameObject.name);
         }
-
     }
 
     /// <summary>
@@ -142,9 +142,10 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(PieceHandler.MoveCorou(diceValue, onPieceMove));
     }
+
     public void ReceiveGridData(GridData gridData)
     {
-        BattleHandler.SendGridType(gridData.gridType);
+        BattleHandler.ReceiveGridType(gridData.gridType);
         print($"GridType {gridData.gridType}, idx {gridData.Idx}");
 
         StartCoroutine(CardGameCoroutine());
@@ -165,13 +166,14 @@ public class GameManager : MonoBehaviour
     private IEnumerator CardGameCoroutine()
     {
         yield return new WaitForSeconds(1f);
-        CardHandler.CardGameActivation(true);
+        CardHandler.SetAllCardsInteractable(true);
     }
 
     public void StartGame()
     {
         SendMonsterSO();
         Time.timeScale = 1;
+        CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
         StartCoroutine(DiceRollCoroutine());
     }
     private IEnumerator DiceRollCoroutine()
@@ -187,5 +189,11 @@ public class GameManager : MonoBehaviour
             Debug.LogError("CurMonsterSO is Null");
         }
         BattleHandler.ReceiveMonsterSO(StageHandler.CurMonsterSO);
+    }
+
+    public void ReceiveCardResult(HandRankings handRankings, ElementType elementType, int elementLevel)
+    {
+        BattleHandler.RecieveDamageValue(
+            StageSO.RankPerDamageSO.GetDamage(handRankings), elementType, elementLevel);
     }
 }

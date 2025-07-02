@@ -92,4 +92,31 @@ namespace CardBoardGame.Assets._Scripts.Utility
         Atropos,        //무늬가 다른, 최고 또는 최소 숫자카드 4장
         Aion            //무늬가 같은 최고 숫자카드 5장
     }
+
+    public enum ElementType
+    {
+        None,
+        Embers,
+        Spray,
+        Nuri,
+        Fair_Wind
+    }
+
+    public enum EffectType
+    {
+        None,
+        Attack,
+        Heal,
+        Shield,
+        AdditionalCard
+    }
+    public enum Operator
+    {
+        None,
+        Plus,
+        Minus,
+        Percent,
+        Divide,
+        Multiply
+    }
 }

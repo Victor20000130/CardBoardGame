@@ -16,16 +16,25 @@ public abstract class Unit : MonoBehaviour
         get => _hpTMP;
         set => _hpTMP = value;
     }
-
+    [SerializeField]
     protected UnitObjectSetter unitObjSetter;
-
+    protected void Start()
+    {
+        if (unitObjSetter == null)
+        {
+            unitObjSetter = gameObject.GetComponentInParent<UnitObjectSetter>();
+        }
+        if (unitObjSetter == null)
+        {
+            Debug.LogError($"{gameObject.name} UnitOBJSetter is Null");
+        }
+        _anim = GetComponent<Animator>();
+    }
     public void Initialize()
     {
-        unitObjSetter = gameObject.GetComponentInParent<UnitObjectSetter>();
+
         // 차후 체력바 기능 넣고 싶으면 작업
         // hpBar = unitObjSetter.HpBar;
-        _anim = GetComponent<Animator>();
-
         OnInitialize();
     }
 
