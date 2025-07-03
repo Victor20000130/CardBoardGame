@@ -5,7 +5,8 @@ public class PlayerSO : ScriptableObject
 {
     public string Name;
     public int MaxHP;
-    public int CurHP;
+    public float CurHP;
+    public float Barriar;
     public int CanThrowCount;
     public bool IsStart;
     public bool IsHeal;
@@ -16,6 +17,7 @@ public class PlayerSO : ScriptableObject
         copyTarget.Name = Name;
         copyTarget.MaxHP = MaxHP;
         copyTarget.CurHP = CurHP;
+        copyTarget.Barriar = Barriar;
         copyTarget.CanThrowCount = CanThrowCount;
         copyTarget.IsStart = IsStart;
         copyTarget.IsHeal = IsHeal;

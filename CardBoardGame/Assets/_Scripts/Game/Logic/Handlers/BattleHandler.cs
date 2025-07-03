@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using CardBoardGame.Assets._Scripts.Utility;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public class BattleHandler : Handler
     [SerializeField] private ElementEffectSO ElementEffectSO;
     private PlayerSO PlayerSO;
     private MonsterSO curMonsterSO;
+    private Dictionary<ElementType, ElementEffect> effectDic = new Dictionary<ElementType, ElementEffect>();
+
     public MonsterSO CurMonsterSO
     {
         get => curMonsterSO;
@@ -37,7 +40,7 @@ public class BattleHandler : Handler
         {
             ElementEffectSO = Resources.Load<ElementEffectSO>("Data/UtilityData/ElementEffectSO");
         }
-        ElementEffectSO.Initialize();
+        ElementEffectSO.Initialize(effectDic);
     }
 
     public void ReceiveMonsterSO(MonsterSO monsterSO)
@@ -70,16 +73,42 @@ public class BattleHandler : Handler
         handlerType = HandlerType.BattleHandler;
     }
 
-    public void RecieveDamageValue(float originDamage, ElementType elementType, int elementLevel)
+    public void RecieveDamageValue(float originDamage, ElementType elemType, int elemLevel)
     {
         float damage = originDamage;
         // TODO 연산식 서순에 따라 데미지 다르게
-        ElementEffectSO.GetEffectValue(elementType, damage, elementLevel);
+
+        //TODO 이펙트 기획 변경완료 후 작업
+        // ApplyEffect(effectDic[elemType], damage, elemLevel);
 
         if (player.IsDamageDouble)
         {
             damage *= 2;
             player.IsDamageDouble = false;
+        }
+
+    }
+
+    private void ApplyEffect(ElementEffect curEffect, float damage, int elemLevel)
+    {
+
+        switch (curEffect.EffectType)
+        {
+            case EffectType.None:
+                break;
+            case EffectType.Attack:
+                damage += curEffect.EffectCalc(damage, elemLevel);
+                break;
+            case EffectType.Heal:
+                PlayerSO.CurHP += curEffect.EffectCalc(PlayerSO.MaxHP, elemLevel);
+                break;
+            case EffectType.Shield:
+                PlayerSO.Barriar += curEffect.EffectCalc(PlayerSO.CurHP, elemLevel);
+                break;
+            case EffectType.AdditionalCard:
+                int temp = 0;
+                temp += curEffect.EffectCalc(temp, elemLevel);
+                break;
         }
     }
 

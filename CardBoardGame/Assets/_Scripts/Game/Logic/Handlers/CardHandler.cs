@@ -243,7 +243,7 @@ public class CardHandler : Handler
         }
 
         Debug.Log(handRankings);
-        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, elementType, selectedCards.Count - 1);
+        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, elementType, selectedCards.Count - 2);
         cardPanel.SetActive(false);
     }
 

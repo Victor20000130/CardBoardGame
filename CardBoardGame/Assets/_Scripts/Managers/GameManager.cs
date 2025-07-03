@@ -193,7 +193,9 @@ public class GameManager : MonoBehaviour
 
     public void ReceiveCardResult(HandRankings handRankings, ElementType elementType, int elementLevel)
     {
-        BattleHandler.RecieveDamageValue(
-            StageSO.RankPerDamageSO.GetDamage(handRankings), elementType, elementLevel);
+        print($"elementLevel {elementLevel}");
+        float damage = StageSO.RankPerDamageSO.GetDamage(handRankings);
+
+        BattleHandler.RecieveDamageValue(damage, elementType, elementLevel);
     }
 }

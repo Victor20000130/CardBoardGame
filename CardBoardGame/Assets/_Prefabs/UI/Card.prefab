@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6078282237198555734}
   - component: {fileID: 2987359954877349371}
   - component: {fileID: 7410037569983041114}
+  - component: {fileID: 8923217692010076667}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -133,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2fe91273114af4db565e177e4fe8e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsUserCard: 0
   clickedColors:
     m_NormalColor: {r: 0.514151, g: 0.55671424, b: 1, a: 1}
     m_HighlightedColor: {r: 0.3890578, g: 0.3820755, b: 1, a: 1}
@@ -141,3 +143,26 @@ MonoBehaviour:
     m_DisabledColor: {r: 0.21568628, g: 0.21176471, b: 0.7921569, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
+--- !u!223 &8923217692010076667
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8293152810042817252}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
