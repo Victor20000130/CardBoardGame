@@ -9,7 +9,7 @@ public class BattleHandler : Handler
     [SerializeField] private Monster monster;
     [SerializeField] private PlayerSO originPlayerSO;
     [SerializeField] private readonly MonsterSO originMonsterSO;
-    public ElementEffectSO ElementEffectSO;
+    [SerializeField] private ElementEffectSO ElementEffectSO;
     private PlayerSO PlayerSO;
     private MonsterSO curMonsterSO;
     public MonsterSO CurMonsterSO
@@ -37,6 +37,7 @@ public class BattleHandler : Handler
         {
             ElementEffectSO = Resources.Load<ElementEffectSO>("Data/UtilityData/ElementEffectSO");
         }
+        ElementEffectSO.Initialize();
     }
 
     public void ReceiveMonsterSO(MonsterSO monsterSO)
@@ -73,7 +74,7 @@ public class BattleHandler : Handler
     {
         float damage = originDamage;
         // TODO 연산식 서순에 따라 데미지 다르게
-        ElementEffectOn(ref damage, elementType, elementLevel);
+        ElementEffectSO.GetEffectValue(elementType, damage, elementLevel);
 
         if (player.IsDamageDouble)
         {
@@ -82,27 +83,4 @@ public class BattleHandler : Handler
         }
     }
 
-    private void ElementEffectOn(ref float damage, ElementType elementTypes, int elementLevel)
-    {
-        switch (elementTypes)
-        {
-            case ElementType.None:
-                print("적용된 효과 없음");
-                return;
-            case ElementType.Embers:
-
-                break;
-            case ElementType.Spray:
-
-                break;
-            case ElementType.Nuri:
-
-                break;
-            case ElementType.Fair_Wind:
-
-                break;
-        }
-        print($"{elementTypes} 효과 적용");
-
-    }
 }

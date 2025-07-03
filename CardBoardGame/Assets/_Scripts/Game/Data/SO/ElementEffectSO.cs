@@ -11,13 +11,64 @@ public class ElementEffectSO : ScriptableObject
     private List<ElementEffect> elementEffects;
     public List<ElementEffect> ElementEffects => elementEffects;
 
-    public float GetEffectValue(int value)
-    {
+    private Dictionary<ElementType, ElementEffect> effectDic;
 
+    public float GetEffectValue(ElementType elementType, float value, int elementLevel)
+    {
+        switch (elementType)
+        {
+            case ElementType.None:
+                Debug.Log("적용된 효과 없음");
+                break;
+            case ElementType.Embers:
+
+                break;
+            case ElementType.Spray:
+
+                break;
+            case ElementType.Nuri:
+
+                break;
+            case ElementType.Fair_Wind:
+
+                break;
+        }
+        Debug.Log($"{elementType} 효과 적용");
 
         return value;
     }
+    public int GetEffectValue(ElementType elementType, int value, int elementLevel)
+    {
+        switch (elementType)
+        {
+            case ElementType.None:
+                Debug.Log("적용된 효과 없음");
+                break;
+            case ElementType.Embers:
 
+                break;
+            case ElementType.Spray:
+
+                break;
+            case ElementType.Nuri:
+
+                break;
+            case ElementType.Fair_Wind:
+
+                break;
+        }
+        Debug.Log($"{elementType} 효과 적용");
+        return value;
+    }
+
+    public void Initialize()
+    {
+        effectDic = new Dictionary<ElementType, ElementEffect>();
+        foreach (ElementEffect elementEffect in elementEffects)
+        {
+            effectDic.Add(elementEffect.ElementType, elementEffect);
+        }
+    }
 }
 
 [Serializable]
