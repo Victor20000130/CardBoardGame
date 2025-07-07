@@ -6,19 +6,17 @@ using UnityEngine;
 
 public class BattleHandler : Handler
 {
+    private const int StackPerLevel = 10;
+    private const int PercentBase = 100;
     [SerializeField] private Player player;
     [SerializeField] private Monster monster;
     [SerializeField] private PlayerSO originPlayerSO;
-    [SerializeField] private readonly MonsterSO originMonsterSO;
     [SerializeField] private ElementEffectSO ElementEffectSO;
     private PlayerSO PlayerSO;
-    private MonsterSO curMonsterSO;
-    private Dictionary<ElementType, ElementEffect> effectDic = new Dictionary<ElementType, ElementEffect>();
-
-    public MonsterSO CurMonsterSO
+    private MonsterSO originMonsterSO;
+    public MonsterSO OriginMonsterSO
     {
-        get => curMonsterSO;
-        set => curMonsterSO = value;
+        get => originMonsterSO;
     }
     public int CanThrowCount => player.PlayerSO.CanThrowCount;
 
@@ -40,14 +38,13 @@ public class BattleHandler : Handler
         {
             ElementEffectSO = Resources.Load<ElementEffectSO>("Data/UtilityData/ElementEffectSO");
         }
-        ElementEffectSO.Initialize(effectDic);
     }
 
     public void ReceiveMonsterSO(MonsterSO monsterSO)
     {
-        curMonsterSO = monsterSO;
-        monster.MonsterSO = curMonsterSO;
-        print(curMonsterSO);
+        originMonsterSO = monsterSO;
+        monster.MonsterSO = ScriptableObject.CreateInstance<MonsterSO>();
+        originMonsterSO.Copy(monster.MonsterSO);
         monster.Initialize();
     }
 
@@ -73,41 +70,88 @@ public class BattleHandler : Handler
         handlerType = HandlerType.BattleHandler;
     }
 
-    public void RecieveDamageValue(float originDamage, ElementType elemType, int elemLevel)
+    public IEnumerator RecieveDamageValue(float originDamage, Dictionary<Shape, int> spEffectDic)
     {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
+        yield return null;
         float damage = originDamage;
-        // TODO 연산식 서순에 따라 데미지 다르게
 
-        //TODO 이펙트 기획 변경완료 후 작업
-        // ApplyEffect(effectDic[elemType], damage, elemLevel);
+        //TODO 연산식: (카드 + 특수효과 적용) + 미니게임효과 + 마블효과(보드판)
+
+        ApplySPEffects(spEffectDic, ref damage, ref player.PlayerSO.CurHP);
 
         if (player.IsDamageDouble)
         {
             damage *= 2;
             player.IsDamageDouble = false;
+            player.SlashPlay();
+        }
+        else
+        {
+            player.Attack();
         }
 
-    }
+        yield return waitForSeconds;
 
-    private void ApplyEffect(ElementEffect curEffect, float damage, int elemLevel)
-    {
+        monster.TakeDamage(damage);
 
-        switch (curEffect.EffectType)
+        monster.MonsterSO._turn--;
+
+        if (monster.MonsterSO._turn == 0)
         {
-            case EffectType.None:
+            monster.ReflectUI();
+            yield return waitForSeconds;
+
+            monster.Attack();
+
+            yield return waitForSeconds;
+
+            player.TakeDamage(monster.MonsterSO._damage);
+
+            monster.MonsterSO._turn = originMonsterSO._turn;
+        }
+
+        player.ReflectUI();
+        monster.ReflectUI();
+
+    }
+    private void ApplySPEffects(Dictionary<Shape, int> spEffectDic, ref float damage, ref float hp)
+    {
+        int emberLevel = spEffectDic[Shape.Spade] / StackPerLevel;
+        print(emberLevel);
+        print(damage);
+        if (emberLevel > 5)
+        {
+            emberLevel = 5;
+        }
+        switch (emberLevel)
+        {
+            case 0:
+                print("ember 적용안함");
                 break;
-            case EffectType.Attack:
-                damage += curEffect.EffectCalc(damage, elemLevel);
+            case 1:
+                print("ember 1");
+                damage += damage * (10 / PercentBase);
+                print(damage * (10 / PercentBase));
+                print(damage);
                 break;
-            case EffectType.Heal:
-                PlayerSO.CurHP += curEffect.EffectCalc(PlayerSO.MaxHP, elemLevel);
+            case 2:
+                print("ember 2");
+                damage += damage * (15 / PercentBase);
                 break;
-            case EffectType.Shield:
-                PlayerSO.Barriar += curEffect.EffectCalc(PlayerSO.CurHP, elemLevel);
+            case 3:
+                print("ember 3");
+                damage += damage * (20 / PercentBase);
                 break;
-            case EffectType.AdditionalCard:
-                int temp = 0;
-                temp += curEffect.EffectCalc(temp, elemLevel);
+            case 4:
+                print("ember 4");
+                damage += damage * (25 / PercentBase);
+                break;
+            case 5:
+                print("ember 5");
+                damage += damage * (30 / PercentBase);
+                break;
+            default:
                 break;
         }
     }

@@ -17,22 +17,27 @@ MonoBehaviour:
     effectType: 1
     _operator: 3
     levelPerValue:
+    - 0
     - 10
+    - 15
+    - 20
+    - 25
     - 30
-    - 50
-    - 100
   - elementType: 2
     effectType: 2
     _operator: 3
     levelPerValue:
+    - 0
     - 1
-    - 2
     - 3
     - 5
+    - 7
+    - 10
   - elementType: 3
     effectType: 3
     _operator: 3
     levelPerValue:
+    - 0
     - 5
     - 10
     - 15
@@ -41,7 +46,19 @@ MonoBehaviour:
     effectType: 4
     _operator: 1
     levelPerValue:
+    - 0
     - 1
     - 2
+    - 2
     - 3
-    - 4
+    - 3
+  - elementType: 4
+    effectType: 5
+    _operator: 1
+    levelPerValue:
+    - 0
+    - 0
+    - 0
+    - 1
+    - 1
+    - 2

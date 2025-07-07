@@ -53,4 +53,20 @@ public class Player : Unit
         print("플레이어 버프 효과");
         isDamageDouble = true;
     }
+
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+        _playerSO.CurHP -= damage;
+    }
+
+    public void SlashPlay()
+    {
+        _anim.SetTrigger("Slash");
+    }
+
+    public override void ReflectUI()
+    {
+        _hpTMP.text = _playerSO.CurHP.ToString();
+    }
 }

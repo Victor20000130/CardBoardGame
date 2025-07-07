@@ -80,4 +80,29 @@ public class Monster : Unit
         print("몬스터 버프 효과");
         MonsterSO._turn += 1;
     }
+
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+        MonsterSO._curHP -= damage;
+    }
+
+    public override void Attack()
+    {
+        int rand = UnityEngine.Random.Range(0, 2);
+        if (rand == 0)
+        {
+            _anim.SetTrigger("Attack1");
+        }
+        else
+        {
+            _anim.SetTrigger("Attack2");
+        }
+    }
+
+    public override void ReflectUI()
+    {
+        _hpTMP.text = MonsterSO._curHP.ToString();
+        monsterTurnTMP.text = MonsterSO._turn.ToString();
+    }
 }

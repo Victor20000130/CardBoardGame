@@ -1,5 +1,6 @@
 using System;
 using CardBoardGame.Assets._Scripts.Utility;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,5 +43,17 @@ public abstract class Unit : MonoBehaviour
     protected abstract void OnApplayEffect(GridType gridType);
     protected abstract void Heal();
     protected abstract void Buff();
+
+    public abstract void ReflectUI();
+
+    public virtual void TakeDamage(float damage)
+    {
+        _anim.SetTrigger("Damaged");
+    }
+
+    public virtual void Attack()
+    {
+        _anim.SetTrigger("Attack");
+    }
 
 }

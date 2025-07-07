@@ -30,9 +30,18 @@ public class CardHandler : Handler
     public List<Card> SelectedCards => selectedCards;
     private List<Card> throwedCards = new List<Card>(MaxPairCount + 1);
     private List<Card> selectedUserCards = new List<Card>(MaxHandCount);
+    private (HandRankings rankings, Func<bool> checker)[] rankingChecks;
     public List<Card> SelectedUserCards => selectedUserCards;
 
     public int CanThrowCount = 0;
+
+    private Dictionary<Shape, int> spEffectDic =
+        new Dictionary<Shape, int>() {
+        { Shape.Spade, 0 },
+        { Shape.Club, 0 },
+        { Shape.Diamond, 0 },
+        { Shape.Heart, 0 }
+        };
 
     protected override void OnInitialize()
     {
@@ -42,6 +51,20 @@ public class CardHandler : Handler
         Shuffle();
         SetAllCardsInteractable(false);
         InitializeButtons();
+
+        rankingChecks = new (HandRankings, Func<bool>)[]
+        {
+        (HandRankings.Aion, IsAion),
+        (HandRankings.Atropos, IsAtropos),
+        (HandRankings.Nemesis, IsNemesis),
+        (HandRankings.Legion, IsLegion),
+        (HandRankings.Soma, IsSoma),
+        (HandRankings.Tetrad, IsTetrad),
+        (HandRankings.Triad, IsTriad),
+        (HandRankings.Dyad_Set, IsDyad_Set),
+        (HandRankings.Dyad, IsDyad),
+        (HandRankings.Solo, () => selectedCount == 1),
+        };
     }
     protected override void SetHnadlerType()
     {
@@ -196,20 +219,6 @@ public class CardHandler : Handler
     /// </summary>
     private void HandRankingCalc()
     {
-        var rankingChecks = new (HandRankings ranking, Func<bool> checker)[]
-        {
-            (HandRankings.Aion, IsAion),
-            (HandRankings.Atropos, IsAtropos),
-            (HandRankings.Nemesis, IsNemesis),
-            (HandRankings.Legion, IsLegion),
-            (HandRankings.Soma, IsSoma),
-            (HandRankings.Tetrad, IsTetrad),
-            (HandRankings.Triad, IsTriad),
-            (HandRankings.Dyad_Set, IsDyad_Set),
-            (HandRankings.Dyad, IsDyad),
-            (HandRankings.Solo, () => selectedCount == 1),
-            (HandRankings.None, () => selectedCount == 0)
-        };
 
         handRankings = HandRankings.None;
 
@@ -222,34 +231,57 @@ public class CardHandler : Handler
             }
         }
 
-        ElementType elementType = ElementType.None;
-        if (IsSameShape())
+        if (handRankings == HandRankings.None)
         {
-            switch (selectedCards[0].CardData.shape)
-            {
-                case Shape.Spade:
-                    elementType = ElementType.Embers;
-                    break;
-                case Shape.Club:
-                    elementType = ElementType.Spray;
-                    break;
-                case Shape.Diamond:
-                    elementType = ElementType.Nuri;
-                    break;
-                case Shape.Heart:
-                    elementType = ElementType.Fair_Wind;
-                    break;
-            }
+            handRankings = HandRankings.Solo;
         }
 
+        foreach (Card card in selectedCards)
+        {
+            switch (card.CardData.shape)
+            {
+                case Shape.Spade:
+                    spEffectDic[Shape.Spade]++;
+                    break;
+                case Shape.Club:
+                    spEffectDic[Shape.Club]++;
+                    break;
+                case Shape.Diamond:
+                    spEffectDic[Shape.Diamond]++;
+                    break;
+                case Shape.Heart:
+                    spEffectDic[Shape.Heart]++;
+                    break;
+            }
+            card.SetDefault();
+        }
+
+        Debug.Log($"현재까지 사용된 카드: Spade: {spEffectDic[Shape.Spade]}, Club: {spEffectDic[Shape.Club]}, Dia: {spEffectDic[Shape.Diamond]}, Heart: {spEffectDic[Shape.Heart]}");
         Debug.Log(handRankings);
-        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, elementType, selectedCards.Count - 2);
+
+        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, spEffectDic);
+
         cardPanel.SetActive(false);
+
+        CardListsClear();
+
+        Shuffle();
+
+        attackButton.interactable = false;
+        throwButton.interactable = false;
+    }
+
+    private void CardListsClear()
+    {
+        selectedCards.Clear();
+        selectedUserCards.Clear();
+        throwedCards.Clear();
     }
 
     // --- 카드 특수 효과 ---
 
     /// <summary> 특수효과 검출 전 전부 같은 모양인지 확인 </summary>
+    [Obsolete]
     private bool IsSameShape()
     {
         var firstShape = selectedCards[0].CardData.shape;

@@ -108,7 +108,8 @@ namespace CardBoardGame.Assets._Scripts.Utility
         Attack,
         Heal,
         Shield,
-        AdditionalCard
+        AdditionalCard,
+        ThrowCount
     }
     public enum Operator
     {

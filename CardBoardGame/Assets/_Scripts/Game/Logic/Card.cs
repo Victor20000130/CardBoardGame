@@ -30,7 +30,6 @@ public class Card : MonoBehaviour
     private void OnClick()
     {
         isClicked = !isClicked;
-        print(isClicked);
         if (isClicked)
         {
             _button.colors = clickedColors;
@@ -61,7 +60,6 @@ public class Card : MonoBehaviour
     public void SetDefault()
     {
         isClicked = !isClicked;
-        print(isClicked);
         if (isClicked)
         {
             _button.colors = clickedColors;
