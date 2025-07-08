@@ -107,7 +107,8 @@ namespace CardBoardGame.Assets._Scripts.Utility
         None,
         Attack,
         Heal,
-        Shield,
+        ShieldBaseCurrentHP,
+        ShieldBaseLostHP,
         AdditionalCard,
         ThrowCount
     }

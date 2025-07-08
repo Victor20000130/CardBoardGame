@@ -7,31 +7,56 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ElementEffectSO", menuName = "Scriptable Objects/ElementEffectSO")]
 public class ElementEffectSO : ScriptableObject
 {
+    private const int LevelPerUsedCards = 10;
+    private const float PercentBase = 100;
+
+    [SerializeField]
+    private ElementType elementType;
+    public ElementType ElementType => elementType;
     [SerializeField]
     private List<ElementEffect> elementEffects;
     public List<ElementEffect> ElementEffects => elementEffects;
 
-    /// <summary>
-    /// Dictionary<ElementType, ElementEffect> dictionary를 생성하여 초기화
-    /// </summary>
-    /// <param name="effectDic"></param>
-    public void Initialize(Dictionary<ElementType, ElementEffect> effectDic)
+    public float CardEffectCalc(float value, int level)
     {
-        foreach (ElementEffect elementEffect in elementEffects)
+        level /= LevelPerUsedCards;
+        Debug.Log($"Type: {ElementType}, Value: {value}, Level: {level}");
+        foreach (ElementEffect elem in elementEffects)
         {
-            effectDic.Add(elementEffect.ElementType, elementEffect);
+            switch (elem.Operator)
+            {
+                case Operator.None:
+                    Debug.Log($"적용된 연산식: {elem.Operator} ");
+                    break;
+                case Operator.Plus:
+                    Debug.Log($"적용된 연산식: {elem.Operator}, LevelPerValue: {elem.LevelPerValue}");
+                    Debug.Log($"결과값: {value + elem.LevelPerValue[level]}");
+                    return value += elem.LevelPerValue[level];
+                case Operator.Minus:
+                    Debug.Log($"적용된 연산식: {elem.Operator} ");
+                    Debug.Log($"결과값: {value - elem.LevelPerValue[level]}");
+                    return value -= elem.LevelPerValue[level];
+                case Operator.Multiply:
+                    Debug.Log($"적용된 연산식: {elem.Operator} ");
+                    Debug.Log($"결과값: {value * elem.LevelPerValue[level]}");
+                    return value *= elem.LevelPerValue[level];
+                case Operator.Divide:
+                    Debug.Log($"적용된 연산식: {elem.Operator} ");
+                    Debug.Log($"결과값: {value / elem.LevelPerValue[level]}");
+                    return value /= elem.LevelPerValue[level];
+                case Operator.Percent:
+                    Debug.Log($"적용된 연산식: {elem.Operator} ");
+                    Debug.Log($"결과값: {value * (elem.LevelPerValue[level] / PercentBase)}");
+                    return value *= elem.LevelPerValue[level] / PercentBase;
+            }
         }
+        return 0;
     }
-
 }
 
 [Serializable]
 public class ElementEffect
 {
-    private const int PercentBase = 100;
-    [SerializeField]
-    private ElementType elementType;
-    public ElementType ElementType => elementType;
 
     [SerializeField]
     private EffectType effectType;
@@ -45,51 +70,35 @@ public class ElementEffect
     private List<float> levelPerValue;
     public List<float> LevelPerValue => levelPerValue;
 
-    public float EffectCalc(float value, int levelPerValue)
-    {
-        Debug.Log($"현재 속성 {elementType}/적용된 연산식 {_operator}/value {value}/levelPerVal {levelPerValue}");
-        float returnValue = value;
-        switch (_operator)
-        {
-            case Operator.None:
-                break;
-            case Operator.Plus:
-                return value += levelPerValue;
-            case Operator.Minus:
-                return value -= levelPerValue;
-            case Operator.Multiply:
-                return value *= levelPerValue;
-            case Operator.Divide:
-                return value /= levelPerValue;
-            case Operator.Percent:
+    // public float EffectCalc(float value, int level)
+    // {
+    //     switch (_operator)
+    //     {
+    //         case Operator.None:
+    //             Debug.Log($"적용된 연산식: {_operator} ");
+    //             break;
+    //         case Operator.Plus:
+    //             Debug.Log($"적용된 연산식: {_operator} ");
+    //             Debug.Log($"결과값: {value + levelPerValue[level]}");
+    //             return value += levelPerValue[level];
+    //         case Operator.Minus:
+    //             Debug.Log($"적용된 연산식: {_operator} ");
+    //             Debug.Log($"결과값: {value - levelPerValue[level]}");
+    //             return value -= levelPerValue[level];
+    //         case Operator.Multiply:
+    //             Debug.Log($"적용된 연산식: {_operator} ");
+    //             Debug.Log($"결과값: {value * levelPerValue[level]}");
+    //             return value *= levelPerValue[level];
+    //         case Operator.Divide:
+    //             Debug.Log($"적용된 연산식: {_operator} ");
+    //             Debug.Log($"결과값: {value / levelPerValue[level]}");
+    //             return value /= levelPerValue[level];
+    //         case Operator.Percent:
+    //             Debug.Log($"적용된 연산식: {_operator} ");
+    //             Debug.Log($"결과값: {value * (levelPerValue[level] / PercentBase)}");
+    //             return value *= levelPerValue[level] / PercentBase;
+    //     }
+    //     return 0;
+    // }
 
-                return value *= levelPerValue / PercentBase;
-        }
-        Debug.LogError("연산식 적용 실패");
-        return 0;
-    }
-
-    public int EffectCalc(int value, int levelPerValue)
-    {
-        Debug.Log($"현재 속성 {elementType}/적용된 연산식 {_operator}/value {value}/levelPerVal {levelPerValue}");
-        float returnValue = value;
-        switch (_operator)
-        {
-            case Operator.None:
-                break;
-            case Operator.Plus:
-                return value += levelPerValue;
-            case Operator.Minus:
-                return value -= levelPerValue;
-            case Operator.Multiply:
-                return value *= levelPerValue;
-            case Operator.Divide:
-                return value /= levelPerValue;
-            case Operator.Percent:
-
-                return value *= levelPerValue / PercentBase;
-        }
-        Debug.LogError("연산식 적용 실패");
-        return 0;
-    }
 }

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Pentagonal hexecontahedron
+* source:	https://sketchfab.com/3d-models/pentagonal-hexecontahedron-820762e957d54234bc8c6d973aef4811
+* author:	Eleghandi (https://sketchfab.com/Eleghandi)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Pentagonal hexecontahedron" (https://sketchfab.com/3d-models/pentagonal-hexecontahedron-820762e957d54234bc8c6d973aef4811) by Eleghandi (https://sketchfab.com/Eleghandi) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

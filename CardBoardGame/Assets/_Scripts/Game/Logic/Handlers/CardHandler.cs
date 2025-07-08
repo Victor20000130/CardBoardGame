@@ -8,6 +8,8 @@ using System.Linq;
 
 public class CardHandler : Handler
 {
+    private const int MaxCardCounting = 50;
+
     // 카드 조합 관련 상수
     private const int MaxHandCount = 5;
     private const int MaxPairCount = 2;
@@ -22,7 +24,6 @@ public class CardHandler : Handler
     [SerializeField] private Button attackButton;
     [SerializeField] private Button throwButton;
     [SerializeField] private GameObject cardPanel;
-
     private HandRankings handRankings;
     private int selectedCount = 0;
 
@@ -35,14 +36,30 @@ public class CardHandler : Handler
 
     public int CanThrowCount = 0;
 
-    private Dictionary<Shape, int> spEffectDic =
+    private Dictionary<Shape, int> usedCardDic =
         new Dictionary<Shape, int>() {
         { Shape.Spade, 0 },
         { Shape.Club, 0 },
         { Shape.Diamond, 0 },
         { Shape.Heart, 0 }
         };
+    public int SpadeUsedCard
+    {
+        get => usedCardDic[Shape.Spade];
+    }
 
+    public int ClubUsedCard
+    {
+        get => usedCardDic[Shape.Club];
+    }
+    public int DiamondUsedCard
+    {
+        get => usedCardDic[Shape.Diamond];
+    }
+    public int HeartUsedCard
+    {
+        get => usedCardDic[Shape.Heart];
+    }
     protected override void OnInitialize()
     {
         cardSO = Resources.Load<CardSO>("Data/UtilityData/CardSO");
@@ -241,25 +258,37 @@ public class CardHandler : Handler
             switch (card.CardData.shape)
             {
                 case Shape.Spade:
-                    spEffectDic[Shape.Spade]++;
+                    if (++usedCardDic[Shape.Spade] > MaxCardCounting)
+                    {
+                        usedCardDic[Shape.Spade] = MaxCardCounting;
+                    }
                     break;
                 case Shape.Club:
-                    spEffectDic[Shape.Club]++;
+                    if (++usedCardDic[Shape.Club] > MaxCardCounting)
+                    {
+                        usedCardDic[Shape.Club] = MaxCardCounting;
+                    }
                     break;
                 case Shape.Diamond:
-                    spEffectDic[Shape.Diamond]++;
+                    if (++usedCardDic[Shape.Diamond] > MaxCardCounting)
+                    {
+                        usedCardDic[Shape.Diamond] = MaxCardCounting;
+                    }
                     break;
                 case Shape.Heart:
-                    spEffectDic[Shape.Heart]++;
+                    if (++usedCardDic[Shape.Heart] > MaxCardCounting)
+                    {
+                        usedCardDic[Shape.Heart] = MaxCardCounting;
+                    }
                     break;
             }
             card.SetDefault();
         }
 
-        Debug.Log($"현재까지 사용된 카드: Spade: {spEffectDic[Shape.Spade]}, Club: {spEffectDic[Shape.Club]}, Dia: {spEffectDic[Shape.Diamond]}, Heart: {spEffectDic[Shape.Heart]}");
+        Debug.Log($"현재까지 사용된 카드: Spade: {usedCardDic[Shape.Spade]}, Club: {usedCardDic[Shape.Club]}, Dia: {usedCardDic[Shape.Diamond]}, Heart: {usedCardDic[Shape.Heart]}");
         Debug.Log(handRankings);
 
-        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, spEffectDic);
+        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, usedCardDic);
 
         cardPanel.SetActive(false);
 

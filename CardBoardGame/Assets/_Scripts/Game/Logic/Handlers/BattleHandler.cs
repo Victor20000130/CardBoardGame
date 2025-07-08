@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class BattleHandler : Handler
 {
-    private const int StackPerLevel = 10;
-    private const int PercentBase = 100;
     [SerializeField] private Player player;
     [SerializeField] private Monster monster;
     [SerializeField] private PlayerSO originPlayerSO;
-    [SerializeField] private ElementEffectSO ElementEffectSO;
+    [SerializeField] private ElementEffectSO[] elemEffectsSO;
+
+    private Dictionary<ElementType, ElementEffectSO> elemEffectDic = new Dictionary<ElementType, ElementEffectSO>();
     private PlayerSO PlayerSO;
     private MonsterSO originMonsterSO;
     public MonsterSO OriginMonsterSO
@@ -20,13 +20,6 @@ public class BattleHandler : Handler
     }
     public int CanThrowCount => player.PlayerSO.CanThrowCount;
 
-    private void Start()
-    {
-        Debug.Log(PlayerSO);
-        player.PlayerSO = PlayerSO;
-        player.Initialize();
-    }
-
     protected override void OnInitialize()
     {
         player = FindAnyObjectByType<Player>();
@@ -34,9 +27,15 @@ public class BattleHandler : Handler
         originPlayerSO = Resources.Load<PlayerSO>("Data/PlayerData/PlayerSO");
         PlayerSO = ScriptableObject.CreateInstance<PlayerSO>();
         originPlayerSO.Copy(PlayerSO);
-        if (ElementEffectSO == null)
+
+        player.PlayerSO = PlayerSO;
+        player.Initialize();
+
+        elemEffectsSO = Resources.LoadAll<ElementEffectSO>("Data/UtilityData/EffectSO/");
+
+        foreach (ElementEffectSO elem in elemEffectsSO)
         {
-            ElementEffectSO = Resources.Load<ElementEffectSO>("Data/UtilityData/ElementEffectSO");
+            elemEffectDic.Add(elem.ElementType, elem);
         }
     }
 
@@ -70,7 +69,7 @@ public class BattleHandler : Handler
         handlerType = HandlerType.BattleHandler;
     }
 
-    public IEnumerator RecieveDamageValue(float originDamage, Dictionary<Shape, int> spEffectDic)
+    public IEnumerator RecieveDamageValue(float originDamage, Dictionary<Shape, int> usedCardDic)
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
         yield return null;
@@ -78,7 +77,7 @@ public class BattleHandler : Handler
 
         //TODO 연산식: (카드 + 특수효과 적용) + 미니게임효과 + 마블효과(보드판)
 
-        ApplySPEffects(spEffectDic, ref damage, ref player.PlayerSO.CurHP);
+        damage += elemEffectDic[ElementType.Embers].CardEffectCalc(damage, usedCardDic[Shape.Spade]);
 
         if (player.IsDamageDouble)
         {
@@ -108,52 +107,29 @@ public class BattleHandler : Handler
 
             player.TakeDamage(monster.MonsterSO._damage);
 
+            yield return waitForSeconds;
+
+            if (player.PlayerSO.CurHP < player.PlayerSO.MaxHP)
+            {
+                player.PlayerSO.CurHP = elemEffectDic[ElementType.Spray].CardEffectCalc(player.PlayerSO.CurHP, usedCardDic[Shape.Club]);
+
+                if (player.PlayerSO.CurHP > player.PlayerSO.MaxHP)
+                {
+                    player.PlayerSO.CurHP = player.PlayerSO.MaxHP;
+                }
+            }
+
             monster.MonsterSO._turn = originMonsterSO._turn;
         }
 
         player.ReflectUI();
         monster.ReflectUI();
 
-    }
-    private void ApplySPEffects(Dictionary<Shape, int> spEffectDic, ref float damage, ref float hp)
-    {
-        int emberLevel = spEffectDic[Shape.Spade] / StackPerLevel;
-        print(emberLevel);
-        print(damage);
-        if (emberLevel > 5)
-        {
-            emberLevel = 5;
-        }
-        switch (emberLevel)
-        {
-            case 0:
-                print("ember 적용안함");
-                break;
-            case 1:
-                print("ember 1");
-                damage += damage * (10 / PercentBase);
-                print(damage * (10 / PercentBase));
-                print(damage);
-                break;
-            case 2:
-                print("ember 2");
-                damage += damage * (15 / PercentBase);
-                break;
-            case 3:
-                print("ember 3");
-                damage += damage * (20 / PercentBase);
-                break;
-            case 4:
-                print("ember 4");
-                damage += damage * (25 / PercentBase);
-                break;
-            case 5:
-                print("ember 5");
-                damage += damage * (30 / PercentBase);
-                break;
-            default:
-                break;
-        }
+        ManagerHandler.Instance.gameManager.AfterBattleRoutine();
     }
 
+    public void StageEnterEffect()
+    {
+
+    }
 }

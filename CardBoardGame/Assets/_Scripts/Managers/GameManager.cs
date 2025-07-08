@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     private DiceHandler DiceHandler => GetHandler<DiceHandler>(HandlerType.DiceHandler);
     private BattleHandler BattleHandler => GetHandler<BattleHandler>(HandlerType.BattleHandler);
     private CardHandler CardHandler => GetHandler<CardHandler>(HandlerType.CardHandler);
+    private GameUIHandler GameUIHandler => GetHandler<GameUIHandler>(HandlerType.GameUIHandler);
+
     // private MiniGameHandler MiniGameHandler => GetHandler<MiniGameHandler>(HandlerType.MiniGameHandler);
     private Action<int> onPieceMove;
 
@@ -103,6 +105,9 @@ public class GameManager : MonoBehaviour
         InitializeHandlers();
 
         onPieceMove += GridHandler.GetCurrentGridData;
+        GameUIHandler.GetCardHandler(CardHandler);
+        CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
+        Time.timeScale = 1;
 
         Debug.Log("GameManager: 핸들러 초기화 완료");
     }
@@ -115,7 +120,6 @@ public class GameManager : MonoBehaviour
             handler.SetHandlerType();
             this.handlers.Add(handler.HandlerType, handler);
             handler.Initialize();
-            print(handler.gameObject.name);
         }
     }
 
@@ -172,8 +176,6 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         SendMonsterSO();
-        Time.timeScale = 1;
-        CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
         StartCoroutine(DiceRollCoroutine());
     }
     private IEnumerator DiceRollCoroutine()
@@ -191,10 +193,19 @@ public class GameManager : MonoBehaviour
         BattleHandler.ReceiveMonsterSO(StageHandler.CurMonsterSO);
     }
 
-    public void ReceiveCardResult(HandRankings handRankings, Dictionary<Shape, int> spEffectDic)
+    public void ReceiveCardResult(HandRankings handRankings, Dictionary<Shape, int> usedCardDic)
     {
+        GameUIHandler.CardPanelBTN.interactable = false;
+
         float damage = StageSO.RankPerDamageSO.GetDamage(handRankings);
-        StartCoroutine(BattleHandler.RecieveDamageValue(damage, spEffectDic));
+
+        StartCoroutine(BattleHandler.RecieveDamageValue(damage, usedCardDic));
+
         CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
+    }
+
+    public void AfterBattleRoutine()
+    {
+        GameUIHandler.CardPanelBTN.interactable = true;
     }
 }
