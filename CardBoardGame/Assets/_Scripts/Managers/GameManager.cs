@@ -199,6 +199,8 @@ public class GameManager : MonoBehaviour
 
         float damage = StageSO.RankPerDamageSO.GetDamage(handRankings);
 
+        GameUIHandler.ElemEffLevelOn(usedCardDic);
+
         StartCoroutine(BattleHandler.RecieveDamageValue(damage, usedCardDic));
 
         CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
