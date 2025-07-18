@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = System.Random;
 using System.Linq;
+using DG.Tweening;
 
 public class CardHandler : Handler
 {
@@ -23,7 +24,15 @@ public class CardHandler : Handler
     [SerializeField] private Card[] userCard;
     [SerializeField] private Button attackButton;
     [SerializeField] private Button throwButton;
+    [SerializeField] private Button numberOrderButton;
+    [SerializeField] private Button shapeOrderButton;
     [SerializeField] private GameObject cardPanel;
+    [SerializeField] private RectTransform drawnCard;
+    [SerializeField] private RectTransform ownCard;
+
+    private CurveLayout drawnCardCurveLayOut;
+    private CurveLayout ownCardCurveLayOut;
+
     private HandRankings handRankings;
     private int selectedCount = 0;
 
@@ -35,6 +44,7 @@ public class CardHandler : Handler
     public List<Card> SelectedUserCards => selectedUserCards;
 
     public int CanThrowCount = 0;
+    public float CardsHideY = 1000;
 
     private Dictionary<Shape, int> usedCardDic =
         new Dictionary<Shape, int>() {
@@ -62,6 +72,10 @@ public class CardHandler : Handler
     }
     protected override void OnInitialize()
     {
+
+        drawnCardCurveLayOut = drawnCard.GetComponent<CurveLayout>();
+        ownCardCurveLayOut = ownCard.GetComponent<CurveLayout>();
+
         cardSO = Resources.Load<CardSO>("Data/UtilityData/CardSO");
         cardSO.InitCardSO();
         deck = Enumerable.Range(0, 52).ToList();
@@ -129,9 +143,67 @@ public class CardHandler : Handler
     {
         SetAllCardsInteractable(false);
         attackButton.onClick.AddListener(HandRankingCalc);
+        attackButton.onClick.AddListener(CardsHide);
         attackButton.interactable = false;
         throwButton.onClick.AddListener(OnCardThrow);
         throwButton.interactable = false;
+
+        numberOrderButton.onClick.AddListener(SortCardsByNumber);
+
+        numberOrderButton.onClick.AddListener(drawnCardCurveLayOut.SortLayout);
+        numberOrderButton.onClick.AddListener(ownCardCurveLayOut.SortLayout);
+
+        shapeOrderButton.onClick.AddListener(SortCardsByShape);
+
+        shapeOrderButton.onClick.AddListener(drawnCardCurveLayOut.SortLayout);
+        shapeOrderButton.onClick.AddListener(ownCardCurveLayOut.SortLayout);
+
+    }
+    /// <summary>
+    /// ownCard의 경우 -로 적용
+    /// </summary>
+    private void CardsHide()
+    {
+        drawnCard.DOAnchorPosY(CardsHideY, 1f).SetEase(Ease.InOutBack);
+        ownCard.DOAnchorPosY(-CardsHideY, 1f).SetEase(Ease.InOutBack);
+    }
+    public void CardsDOTween()
+    {
+        drawnCard.DOAnchorPosY(0, 2f).SetEase(Ease.InOutBack);
+        ownCard.DOAnchorPosY(0, 2f).SetEase(Ease.InOutBack);
+    }
+    private void SortCardsByShape()
+    {
+        // userCard를 문양(Shape) 기준으로 오름차순 정렬
+        var sortedUser = userCard.OrderBy(card => card.CardData.shape).ToArray();
+        for (int i = 0; i < sortedUser.Length; i++)
+        {
+            sortedUser[i].transform.SetSiblingIndex(i);
+        }
+
+        // monsterCard도 동일하게 오름차순 정렬
+        var sortedMonster = monsterCard.OrderBy(card => card.CardData.shape).ToArray();
+        for (int i = 0; i < sortedMonster.Length; i++)
+        {
+            sortedMonster[i].transform.SetSiblingIndex(i);
+        }
+    }
+
+    private void SortCardsByNumber()
+    {
+        // userCard를 숫자(Number) 기준으로 오름차순 정렬
+        var sortedUser = userCard.OrderBy(card => card.CardData.number).ToArray();
+        for (int i = 0; i < sortedUser.Length; i++)
+        {
+            sortedUser[i].transform.SetSiblingIndex(i);
+        }
+
+        // monsterCard도 동일하게 오름차순 정렬
+        var sortedMonster = monsterCard.OrderBy(card => card.CardData.number).ToArray();
+        for (int i = 0; i < sortedMonster.Length; i++)
+        {
+            sortedMonster[i].transform.SetSiblingIndex(i);
+        }
     }
 
     public void SetAllCardsInteractable(bool isOn)
@@ -289,8 +361,6 @@ public class CardHandler : Handler
         Debug.Log(handRankings);
 
         ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, usedCardDic);
-
-        cardPanel.SetActive(false);
 
         CardListsClear();
 

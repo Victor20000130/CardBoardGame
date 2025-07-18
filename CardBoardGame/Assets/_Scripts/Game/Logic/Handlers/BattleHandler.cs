@@ -11,7 +11,7 @@ public class BattleHandler : Handler
     [SerializeField] private PlayerSO originPlayerSO;
     [SerializeField] private ElementEffectSO[] elemEffectsSO;
 
-    private Dictionary<ElementType, ElementEffectSO> elemEffectDic = new Dictionary<ElementType, ElementEffectSO>();
+    private readonly Dictionary<ElementType, ElementEffectSO> elemEffectDic = new();
     private PlayerSO PlayerSO;
     private MonsterSO originMonsterSO;
     public MonsterSO OriginMonsterSO
@@ -71,7 +71,7 @@ public class BattleHandler : Handler
 
     public IEnumerator RecieveDamageValue(float originDamage, Dictionary<Shape, int> usedCardDic)
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
+        WaitForSeconds waitForSeconds = new(1f);
         yield return null;
         float damage = originDamage;
 

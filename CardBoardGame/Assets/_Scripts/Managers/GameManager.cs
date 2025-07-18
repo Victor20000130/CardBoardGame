@@ -169,6 +169,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CardGameCoroutine()
     {
+        CardHandler.CardsDOTween();
         yield return new WaitForSeconds(1f);
         CardHandler.SetAllCardsInteractable(true);
     }
@@ -209,5 +210,6 @@ public class GameManager : MonoBehaviour
     public void AfterBattleRoutine()
     {
         GameUIHandler.CardPanelBTN.interactable = true;
+        CardHandler.CardsDOTween();
     }
 }

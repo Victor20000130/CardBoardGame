@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Card : MonoBehaviour
+public class Card : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler
 {
     private Button _button;
     public Button Button
@@ -27,6 +28,7 @@ public class Card : MonoBehaviour
         }
 
     }
+
     private void OnClick()
     {
         isClicked = !isClicked;
@@ -83,5 +85,15 @@ public class Card : MonoBehaviour
         this.cardHandler = cardHandler;
         deSelectAction += DeSelectAction;
     }
+
+    // public void OnPointerEnter(PointerEventData eventData)
+    // {
+    //     _Canvas.sortingOrder++;
+    // }
+
+    // public void OnPointerExit(PointerEventData eventData)
+    // {
+    //     _Canvas.sortingOrder--;
+    // }
 }
 

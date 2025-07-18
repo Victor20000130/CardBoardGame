@@ -45,9 +45,9 @@ namespace CardBoardGame.Assets._Scripts.Utility
     {
         None,
         Spade,
-        Club,
         Diamond,
-        Heart
+        Heart,
+        Club
     }
 
     public enum Number
