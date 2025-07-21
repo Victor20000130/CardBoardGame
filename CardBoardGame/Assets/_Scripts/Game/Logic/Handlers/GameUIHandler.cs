@@ -8,10 +8,6 @@ public class GameUIHandler : Handler
     private const int LevelPerUsedCards = 10;
 
     [SerializeField]
-    private Button cardPanelBTN;
-    public Button CardPanelBTN => cardPanelBTN;
-
-    [SerializeField]
     private Material levelOnMat;
     [SerializeField]
     private Material levelOffMat;
@@ -34,11 +30,6 @@ public class GameUIHandler : Handler
     protected override void SetHnadlerType()
     {
         handlerType = HandlerType.GameUIHandler;
-    }
-
-    public void GetCardHandler(CardHandler cardPanel)
-    {
-        cardPanelBTN.onClick.AddListener(cardPanel.CardPanelOnOff);
     }
 
     public void ElemEffLevelOn(Dictionary<Shape, int> usedCardDic)

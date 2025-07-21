@@ -81,10 +81,20 @@ public class Monster : Unit
         MonsterSO._turn += 1;
     }
 
-    public override void TakeDamage(float damage)
+    public override bool TakeDamage(float damage)
     {
-        base.TakeDamage(damage);
+        bool isDie;
+
+        isDie = base.TakeDamage(damage);
+
         MonsterSO._curHP -= damage;
+
+        if (MonsterSO._curHP <= 0f)
+        {
+            isDie = true;
+            _anim.SetTrigger("Die");
+        }
+        return isDie;
     }
 
     public override void Attack()

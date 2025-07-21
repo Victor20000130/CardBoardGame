@@ -24,12 +24,13 @@ public class StageHandler : Handler
                 return;
             }
             stageButtons[(int)CurrentStage - 1].interactable = true;
+            SelectStagePanelOpen();
         }
     }
 
     private void Awake()
     {
-        selectStagePanel.SetActive(true);
+        SelectStagePanelOpen();
     }
 
     private void GetStageData()
@@ -120,6 +121,12 @@ public class StageHandler : Handler
     {
         handlerType = HandlerType.StageHandler;
     }
+
+    private void SelectStagePanelOpen()
+    {
+        selectStagePanel.SetActive(true);
+    }
+
     // public MonsterGridSO InitStageHandler(Difficulty diff, Stage stage)
     // {
     //     // 난이도를 설정하고 스테이지를 초기화합니다.

@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     private CardHandler CardHandler => GetHandler<CardHandler>(HandlerType.CardHandler);
     private GameUIHandler GameUIHandler => GetHandler<GameUIHandler>(HandlerType.GameUIHandler);
 
-    // private MiniGameHandler MiniGameHandler => GetHandler<MiniGameHandler>(HandlerType.MiniGameHandler);
+    private MiniGameHandler MiniGameHandler => GetHandler<MiniGameHandler>(HandlerType.MiniGameHandler);
     private Action<int> onPieceMove;
 
     private bool isRoll = false;
@@ -105,9 +105,7 @@ public class GameManager : MonoBehaviour
         InitializeHandlers();
 
         onPieceMove += GridHandler.GetCurrentGridData;
-        GameUIHandler.GetCardHandler(CardHandler);
         CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
-        Time.timeScale = 1;
 
         Debug.Log("GameManager: 핸들러 초기화 완료");
     }
@@ -152,15 +150,14 @@ public class GameManager : MonoBehaviour
         BattleHandler.ReceiveGridType(gridData.gridType);
         print($"GridType {gridData.gridType}, idx {gridData.Idx}");
 
-        StartCoroutine(CardGameCoroutine());
-
         switch (gridData.gridType)
         {
             case GridType.MiniGame:
-                // MiniGameHandler.GetGridType(gridData.gridType);
+                MiniGameHandler.StartMiniGame(gridData.gridType);
                 //TODO MiniGameHandler 제작 예정
                 break;
             default:
+                StartCoroutine(CardGameCoroutine());
                 break;
         }
 
@@ -177,11 +174,11 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         SendMonsterSO();
-        StartCoroutine(DiceRollCoroutine());
+        DiceRollCoroutine();
     }
-    private IEnumerator DiceRollCoroutine()
+
+    public void DiceRollCoroutine()
     {
-        yield return null;
         isRoll = true;
     }
 
@@ -196,7 +193,6 @@ public class GameManager : MonoBehaviour
 
     public void ReceiveCardResult(HandRankings handRankings, Dictionary<Shape, int> usedCardDic)
     {
-        GameUIHandler.CardPanelBTN.interactable = false;
 
         float damage = StageSO.RankPerDamageSO.GetDamage(handRankings);
 
@@ -209,7 +205,35 @@ public class GameManager : MonoBehaviour
 
     public void AfterBattleRoutine()
     {
-        GameUIHandler.CardPanelBTN.interactable = true;
         CardHandler.CardsDOTween();
     }
+
+    public void NextStage(bool isMonsterDie)
+    {
+        if (isMonsterDie == false)
+        {
+            return;
+        }
+        print("Monster Die");
+        int nextStage = (int)StageHandler.CurrentStage++;
+        if (Enum.IsDefined(typeof(Stage), nextStage))
+        {
+            StageHandler.CurrentStage = (Stage)nextStage;
+        }
+        else
+        {
+            print("다음 스테이지 없음");
+            //TODO 난이도 해금
+        }
+    }
+
+    public void GameOver(bool isPlayerDie)
+    {
+        if (isPlayerDie == false)
+        {
+            return;
+        }
+        print("Player Die");
+    }
+
 }

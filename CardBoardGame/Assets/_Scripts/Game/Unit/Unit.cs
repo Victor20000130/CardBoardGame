@@ -46,11 +46,11 @@ public abstract class Unit : MonoBehaviour
 
     public abstract void ReflectUI();
 
-    public virtual void TakeDamage(float damage)
+    public virtual bool TakeDamage(float damage)
     {
         _anim.SetTrigger("Damaged");
+        return false;
     }
-
     public virtual void Attack()
     {
         _anim.SetTrigger("Attack");

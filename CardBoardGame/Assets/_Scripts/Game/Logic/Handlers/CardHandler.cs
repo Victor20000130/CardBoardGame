@@ -165,7 +165,7 @@ public class CardHandler : Handler
     private void CardsHide()
     {
         drawnCard.DOAnchorPosY(CardsHideY, 1f).SetEase(Ease.InOutBack);
-        ownCard.DOAnchorPosY(-CardsHideY, 1f).SetEase(Ease.InOutBack);
+        ownCard.DOAnchorPosY(-CardsHideY, 1f).SetEase(Ease.InOutBack).OnComplete(Shuffle);
     }
     public void CardsDOTween()
     {
@@ -363,8 +363,6 @@ public class CardHandler : Handler
         ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, usedCardDic);
 
         CardListsClear();
-
-        Shuffle();
 
         attackButton.interactable = false;
         throwButton.interactable = false;

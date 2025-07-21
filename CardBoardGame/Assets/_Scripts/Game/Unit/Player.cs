@@ -54,10 +54,18 @@ public class Player : Unit
         isDamageDouble = true;
     }
 
-    public override void TakeDamage(float damage)
+    public override bool TakeDamage(float damage)
     {
-        base.TakeDamage(damage);
+        bool isDie;
+        isDie = base.TakeDamage(damage);
         _playerSO.CurHP -= damage;
+        if (_playerSO.CurHP <= 0f)
+        {
+            isDie = true;
+            _anim.SetTrigger("Die");
+        }
+        return isDie;
+
     }
 
     public void SlashPlay()

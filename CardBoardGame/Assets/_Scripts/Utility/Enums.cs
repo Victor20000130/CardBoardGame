@@ -76,7 +76,8 @@ namespace CardBoardGame.Assets._Scripts.Utility
         GridHandler,
         PieceHandler,
         StageHandler,
-        DiceHandler
+        DiceHandler,
+        MiniGameHandler
     }
     public enum HandRankings
     {

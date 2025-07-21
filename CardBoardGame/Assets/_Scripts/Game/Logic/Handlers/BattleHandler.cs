@@ -20,6 +20,9 @@ public class BattleHandler : Handler
     }
     public int CanThrowCount => player.PlayerSO.CanThrowCount;
 
+    private bool isMonsterDie = false;
+    private bool isPlayerDie = false;
+
     protected override void OnInitialize()
     {
         player = FindAnyObjectByType<Player>();
@@ -92,7 +95,14 @@ public class BattleHandler : Handler
 
         yield return waitForSeconds;
 
-        monster.TakeDamage(damage);
+        isMonsterDie = monster.TakeDamage(damage * 10);
+        if (isMonsterDie)
+        {
+            ReflectUI();
+            yield return waitForSeconds;
+            ManagerHandler.Instance.gameManager.NextStage(isMonsterDie);
+            yield break;
+        }
 
         monster.MonsterSO._turn--;
 
@@ -105,7 +115,15 @@ public class BattleHandler : Handler
 
             yield return waitForSeconds;
 
-            player.TakeDamage(monster.MonsterSO._damage);
+            isPlayerDie = player.TakeDamage(monster.MonsterSO._damage);
+
+            if (isPlayerDie)
+            {
+                yield return waitForSeconds;
+                ManagerHandler.Instance.gameManager.GameOver(isPlayerDie);
+                print("Player Die");
+                yield break;
+            }
 
             yield return waitForSeconds;
 
@@ -120,16 +138,22 @@ public class BattleHandler : Handler
             }
 
             monster.MonsterSO._turn = originMonsterSO._turn;
+            ReflectUI();
+            ManagerHandler.Instance.gameManager.DiceRollCoroutine();
+            yield break;
         }
-
-        player.ReflectUI();
-        monster.ReflectUI();
-
+        ReflectUI();
         ManagerHandler.Instance.gameManager.AfterBattleRoutine();
     }
 
     public void StageEnterEffect()
     {
 
+    }
+
+    private void ReflectUI()
+    {
+        player.ReflectUI();
+        monster.ReflectUI();
     }
 }
