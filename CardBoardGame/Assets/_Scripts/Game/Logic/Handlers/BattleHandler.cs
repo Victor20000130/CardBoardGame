@@ -23,6 +23,21 @@ public class BattleHandler : Handler
     private bool isMonsterDie = false;
     private bool isPlayerDie = false;
 
+    private float damageMultiplierValue;
+
+    public float DamageMultiplierValue
+    {
+        get => damageMultiplierValue;
+        set
+        {
+            isTZFZmultipleCalc = true;
+            print("DamageMultiplierValue Propertie");
+            damageMultiplierValue = value;
+        }
+    }
+
+    private bool isTZFZmultipleCalc = false;
+
     protected override void OnInitialize()
     {
         player = FindAnyObjectByType<Player>();
@@ -78,9 +93,16 @@ public class BattleHandler : Handler
         yield return null;
         float damage = originDamage;
 
-        //TODO 연산식: (카드 + 특수효과 적용) + 미니게임효과 + 마블효과(보드판)
+        print(damage);
+
+        if (isTZFZmultipleCalc)
+        {
+            damage *= damageMultiplierValue;
+        }
 
         damage += elemEffectDic[ElementType.Embers].CardEffectCalc(damage, usedCardDic[Shape.Spade]);
+
+        print($"{damage}");
 
         if (player.IsDamageDouble)
         {
@@ -95,7 +117,7 @@ public class BattleHandler : Handler
 
         yield return waitForSeconds;
 
-        isMonsterDie = monster.TakeDamage(damage * 10);
+        isMonsterDie = monster.TakeDamage(damage);
         if (isMonsterDie)
         {
             ReflectUI();
@@ -108,6 +130,10 @@ public class BattleHandler : Handler
 
         if (monster.MonsterSO._turn == 0)
         {
+
+            isTZFZmultipleCalc = false;
+            damageMultiplierValue = 1;
+
             monster.ReflectUI();
             yield return waitForSeconds;
 

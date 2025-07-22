@@ -123,3 +123,22 @@ namespace CardBoardGame.Assets._Scripts.Utility
         Multiply
     }
 }
+
+public enum Direction
+{
+    None,
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+public enum TZFZPuzzle
+{
+    None,
+    SmallPuzzle,
+    MediumPuzzle,
+    LargePuzzle,
+    SuperPuzzle,
+    HyperPuzzle
+}

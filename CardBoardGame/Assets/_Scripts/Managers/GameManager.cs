@@ -235,5 +235,9 @@ public class GameManager : MonoBehaviour
         }
         print("Player Die");
     }
-
+    public void GetTZFZResult(float damageMultiplierValue)
+    {
+        BattleHandler.DamageMultiplierValue = damageMultiplierValue;
+        StartCoroutine(CardGameCoroutine());
+    }
 }

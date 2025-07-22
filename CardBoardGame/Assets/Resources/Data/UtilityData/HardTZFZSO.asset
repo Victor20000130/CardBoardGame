@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21693b22a14be7e41b4bbb4897e5d980, type: 3}
+  m_Name: HardTZFZSO
+  m_EditorClassIdentifier: 
+  tZFZDamageRankings:
+  - tZFZPuzzle: 1
+    minInclusive: 16
+    maxExclusive: 32
+    damageMultiplierValue: 1.2
+  - tZFZPuzzle: 2
+    minInclusive: 32
+    maxExclusive: 64
+    damageMultiplierValue: 1.4
+  - tZFZPuzzle: 3
+    minInclusive: 64
+    maxExclusive: 128
+    damageMultiplierValue: 1.6
+  - tZFZPuzzle: 4
+    minInclusive: 128
+    maxExclusive: 256
+    damageMultiplierValue: 1.8
+  - tZFZPuzzle: 5
+    minInclusive: 512
+    maxExclusive: 1024
+    damageMultiplierValue: 2
