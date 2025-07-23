@@ -30,6 +30,10 @@ MonoBehaviour:
     maxExclusive: 256
     damageMultiplierValue: 1.8
   - tZFZPuzzle: 5
+    minInclusive: 256
+    maxExclusive: 512
+    damageMultiplierValue: 2
+  - tZFZPuzzle: 6
     minInclusive: 512
     maxExclusive: 1024
-    damageMultiplierValue: 2
+    damageMultiplierValue: 2.5

@@ -349,6 +349,7 @@ public class TZFZGame : MonoBehaviour
                     if (value < int.Parse(tZFZGrids[i][k].Tmp.text))
                     {
                         value = int.Parse(tZFZGrids[i][k].Tmp.text);
+                        tZFZGrids[i][k].Color = Color.white;
                     }
                 }
                 tZFZGrids[i][k].Tmp.text = "";

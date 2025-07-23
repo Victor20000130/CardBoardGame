@@ -9,6 +9,50 @@ using DG.Tweening;
 
 public class CardHandler : Handler
 {
+
+    [Serializable]
+    public class CardResultWrapper
+    {
+        private Dictionary<Shape, int> usedCardDic = new Dictionary<Shape, int>()
+        {
+          { Shape.Spade, 0 },
+          { Shape.Club, 0 },
+          { Shape.Diamond, 0 },
+          { Shape.Heart, 0 }
+        };
+        public Dictionary<Shape, int> UsedCardDic
+        {
+            get => usedCardDic;
+            set => usedCardDic = value;
+        }
+        [SerializeField]
+        private Card[] additionalCards;
+        public Card[] AdditionalCards
+        {
+            get => additionalCards;
+        }
+        private int additionalCardCount = 0;
+
+        public int AdditionalCardCount
+        {
+            get => additionalCardCount;
+            set
+            {
+                additionalCardCount = value;
+                print($"추가 카드 활성화: {additionalCardCount}");
+                if (additionalCardCount > 0)
+                {
+                    if (!additionalCards[additionalCardCount - 1].gameObject.activeSelf)
+                    {
+                        additionalCards[additionalCardCount - 1].gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
+        public int CanThrowCount = 0;
+
+    }
+
     private const int MaxCardCounting = 50;
 
     // 카드 조합 관련 상수
@@ -22,6 +66,7 @@ public class CardHandler : Handler
     private int currIdx = 0;
     [SerializeField] private Card[] monsterCard;
     [SerializeField] private Card[] userCard;
+    [SerializeField] private CardResultWrapper cardResultWrapper;
     [SerializeField] private Button attackButton;
     [SerializeField] private Button throwButton;
     [SerializeField] private Button numberOrderButton;
@@ -43,32 +88,30 @@ public class CardHandler : Handler
     private (HandRankings rankings, Func<bool> checker)[] rankingChecks;
     public List<Card> SelectedUserCards => selectedUserCards;
 
-    public int CanThrowCount = 0;
     public float CardsHideY = 1000;
 
-    private Dictionary<Shape, int> usedCardDic =
-        new Dictionary<Shape, int>() {
-        { Shape.Spade, 0 },
-        { Shape.Club, 0 },
-        { Shape.Diamond, 0 },
-        { Shape.Heart, 0 }
-        };
+    public int CanThrowCount
+    {
+        get => cardResultWrapper.CanThrowCount;
+        set => cardResultWrapper.CanThrowCount = value;
+    }
+
     public int SpadeUsedCard
     {
-        get => usedCardDic[Shape.Spade];
+        get => cardResultWrapper.UsedCardDic[Shape.Spade];
     }
 
     public int ClubUsedCard
     {
-        get => usedCardDic[Shape.Club];
+        get => cardResultWrapper.UsedCardDic[Shape.Club];
     }
     public int DiamondUsedCard
     {
-        get => usedCardDic[Shape.Diamond];
+        get => cardResultWrapper.UsedCardDic[Shape.Diamond];
     }
     public int HeartUsedCard
     {
-        get => usedCardDic[Shape.Heart];
+        get => cardResultWrapper.UsedCardDic[Shape.Heart];
     }
     protected override void OnInitialize()
     {
@@ -136,6 +179,15 @@ public class CardHandler : Handler
             card.Initialize(this);
             card.CardData = cardSO.cards[deck[currIdx++]];
         }
+        foreach (var card in cardResultWrapper.AdditionalCards)
+        {
+            card.Initialize(this);
+            if (card.gameObject.activeSelf)
+            {
+                card.CardData = cardSO.cards[deck[currIdx++]];
+            }
+        }
+        drawnCardCurveLayOut.SetCurveLayout();
     }
     public void CardPanelOnOff() => cardPanel.SetActive(!cardPanel.activeSelf);
 
@@ -330,37 +382,37 @@ public class CardHandler : Handler
             switch (card.CardData.shape)
             {
                 case Shape.Spade:
-                    if (++usedCardDic[Shape.Spade] > MaxCardCounting)
+                    if (++cardResultWrapper.UsedCardDic[Shape.Spade] > MaxCardCounting)
                     {
-                        usedCardDic[Shape.Spade] = MaxCardCounting;
+                        cardResultWrapper.UsedCardDic[Shape.Spade] = MaxCardCounting;
                     }
                     break;
                 case Shape.Club:
-                    if (++usedCardDic[Shape.Club] > MaxCardCounting)
+                    if (++cardResultWrapper.UsedCardDic[Shape.Club] > MaxCardCounting)
                     {
-                        usedCardDic[Shape.Club] = MaxCardCounting;
+                        cardResultWrapper.UsedCardDic[Shape.Club] = MaxCardCounting;
                     }
                     break;
                 case Shape.Diamond:
-                    if (++usedCardDic[Shape.Diamond] > MaxCardCounting)
+                    if (++cardResultWrapper.UsedCardDic[Shape.Diamond] > MaxCardCounting)
                     {
-                        usedCardDic[Shape.Diamond] = MaxCardCounting;
+                        cardResultWrapper.UsedCardDic[Shape.Diamond] = MaxCardCounting;
                     }
                     break;
                 case Shape.Heart:
-                    if (++usedCardDic[Shape.Heart] > MaxCardCounting)
+                    if (++cardResultWrapper.UsedCardDic[Shape.Heart] > MaxCardCounting)
                     {
-                        usedCardDic[Shape.Heart] = MaxCardCounting;
+                        cardResultWrapper.UsedCardDic[Shape.Heart] = MaxCardCounting;
                     }
                     break;
             }
             card.SetDefault();
         }
 
-        Debug.Log($"현재까지 사용된 카드: Spade: {usedCardDic[Shape.Spade]}, Club: {usedCardDic[Shape.Club]}, Dia: {usedCardDic[Shape.Diamond]}, Heart: {usedCardDic[Shape.Heart]}");
+        Debug.Log($"현재까지 사용된 카드: Spade: {cardResultWrapper.UsedCardDic[Shape.Spade]}, Club: {cardResultWrapper.UsedCardDic[Shape.Club]}, Dia: {cardResultWrapper.UsedCardDic[Shape.Diamond]}, Heart: {cardResultWrapper.UsedCardDic[Shape.Heart]}");
         Debug.Log(handRankings);
 
-        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, usedCardDic);
+        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, cardResultWrapper);
 
         CardListsClear();
 
@@ -519,6 +571,7 @@ public class CardHandler : Handler
         }
         return selectedCards.All(c => c.CardData.number == Number.King);
     }
+
 }
 
 // 카드 셔플 유틸리티

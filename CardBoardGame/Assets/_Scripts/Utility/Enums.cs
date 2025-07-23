@@ -140,5 +140,6 @@ public enum TZFZPuzzle
     MediumPuzzle,
     LargePuzzle,
     SuperPuzzle,
+    MegaPuzzle,
     HyperPuzzle
 }

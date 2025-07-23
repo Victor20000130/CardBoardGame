@@ -116,12 +116,12 @@ TextureImporter:
       name: cards_order_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 6
-        width: 110
-        height: 115
+        x: 0
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 8c0fef46ac6a0b84b9cb25e7c4a46c17
     internalID: 0
     vertices: []
     indices: 

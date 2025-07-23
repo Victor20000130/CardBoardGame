@@ -191,16 +191,16 @@ public class GameManager : MonoBehaviour
         BattleHandler.ReceiveMonsterSO(StageHandler.CurMonsterSO);
     }
 
-    public void ReceiveCardResult(HandRankings handRankings, Dictionary<Shape, int> usedCardDic)
+    public void ReceiveCardResult(HandRankings handRankings, CardHandler.CardResultWrapper cardResultWrapper)
     {
 
         float damage = StageSO.RankPerDamageSO.GetDamage(handRankings);
 
-        GameUIHandler.ElemEffLevelOn(usedCardDic);
+        GameUIHandler.ElemEffLevelOn(cardResultWrapper.UsedCardDic);
 
-        StartCoroutine(BattleHandler.RecieveDamageValue(damage, usedCardDic));
+        StartCoroutine(BattleHandler.RecieveDamageValue(damage, cardResultWrapper));
 
-        CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
+        cardResultWrapper.CanThrowCount = BattleHandler.CanThrowCount;
     }
 
     public void AfterBattleRoutine()
