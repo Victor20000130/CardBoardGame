@@ -5,21 +5,26 @@ using UnityEngine.UI;
 [Serializable]
 public class GridData
 {
-
     [SerializeField]
     public GridType gridType;
-
     // 런타임 때 필요한 데이터
     private int idx;
     public int Idx { get => idx; set => idx = value; }
+    private string info;
+    public string Info
+    {
+        get => info;
+        set => info = value;
+    }
 }
 
 public class GridHandler : Handler
 {
+
     [SerializeField] private BoardGrid[] grid;
     [SerializeField] private GridData[] gridData;
     [SerializeField] private BoardGrid gridPrefab;
-    [SerializeField] private Image boardEffect_IMG;
+    [SerializeField] private BoardEffectInfo boardEffectInfo;
     private GridData curGridData = new GridData();
     public GridData CurGridData => curGridData;
 
@@ -57,10 +62,12 @@ public class GridHandler : Handler
 
     public void GetCurrentGridData(int idx)
     {
-        boardEffect_IMG.sprite = grid[idx].gridSprite;
+        boardEffectInfo.sprite = grid[idx].gridSprite;
         curGridData.gridType = grid[idx].GridData.gridType;
         curGridData.Idx = idx;
         ManagerHandler.Instance.gameManager.ReceiveGridData(curGridData);
+
+        boardEffectInfo.gridData = curGridData;
     }
 
     protected override void OnInitialize()

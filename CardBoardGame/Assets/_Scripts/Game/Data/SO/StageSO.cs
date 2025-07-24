@@ -1,9 +1,22 @@
 using System;
+using System.Collections.Generic;
 using CardBoardGame.Assets._Scripts.Utility;
 using UnityEngine;
 [CreateAssetMenu(fileName = "StageScriptableObject", menuName = "Scriptable Objects/StageScriptableObject")]
 public class StageSO : ScriptableObject
 {
+
+    [Serializable]
+    public struct GridInfo
+    {
+        public GridType gridType;
+        [TextArea(minLines: 2, maxLines: 10)]
+        public string info;
+    }
+    public GridInfo[] gridInfoByType;
+
+    private Dictionary<GridType, string> gridInfoMap;
+
     [SerializeField]
     private MonsterSO[] monsterSO;
 
@@ -34,6 +47,9 @@ public class StageSO : ScriptableObject
             Debug.LogError("Invalid stage index: " + stage);
             return null;
         }
+
+        InitGridInfo(gridSO[stage]);
+
         return gridSO[stage].GridDataArray;
     }
 
@@ -49,5 +65,26 @@ public class StageSO : ScriptableObject
                 throw new ArgumentOutOfRangeException($"확인되지 않은 난이도 {diff}");
 
         }
+    }
+
+    public void InitGridInfo(GridSO curGridSO)
+    {
+        if (gridInfoMap == null)
+        {
+            gridInfoMap = new Dictionary<GridType, string>();
+            foreach (GridInfo gridInfo in gridInfoByType)
+            {
+                if (!gridInfoMap.ContainsKey(gridInfo.gridType))
+                {
+                    gridInfoMap.Add(gridInfo.gridType, gridInfo.info);
+                }
+            }
+        }
+
+        foreach (GridData gridData in curGridSO.GridDataArray)
+        {
+            gridData.Info = gridInfoMap[gridData.gridType];
+        }
+
     }
 }

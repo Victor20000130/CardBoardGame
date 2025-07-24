@@ -652,3 +652,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleFactor: 1.2
   duration: 0.2
+  moveYvalue: 0
