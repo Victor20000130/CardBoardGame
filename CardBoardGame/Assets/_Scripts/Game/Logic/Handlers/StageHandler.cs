@@ -21,7 +21,7 @@ public class StageHandler : Handler
             Debug.Log($"Current Stage set to: {curStage}");
             if (curStage == Stage.None)
             {
-                return;
+                curStage = Stage.Stage1;
             }
             stageButtons[(int)CurrentStage - 1].interactable = true;
             SelectStagePanelOpen();

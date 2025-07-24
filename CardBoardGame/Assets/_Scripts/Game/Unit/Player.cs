@@ -62,7 +62,7 @@ public class Player : Unit
         if (_playerSO.CurHP <= 0f)
         {
             isDie = true;
-            _anim.SetTrigger("Die");
+            // _anim.SetTrigger("Die");
         }
         return isDie;
 
@@ -70,7 +70,7 @@ public class Player : Unit
 
     public void SlashPlay()
     {
-        _anim.SetTrigger("Slash");
+        // _anim.SetTrigger("Slash");
     }
 
     public override void ReflectUI()

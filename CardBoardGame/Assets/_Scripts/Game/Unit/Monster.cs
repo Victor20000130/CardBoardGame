@@ -92,7 +92,7 @@ public class Monster : Unit
         if (MonsterSO._curHP <= 0f)
         {
             isDie = true;
-            _anim.SetTrigger("Die");
+            // _anim.SetTrigger("Die");
         }
         return isDie;
     }
@@ -102,11 +102,11 @@ public class Monster : Unit
         int rand = UnityEngine.Random.Range(0, 2);
         if (rand == 0)
         {
-            _anim.SetTrigger("Attack1");
+            // _anim.SetTrigger("Attack1");
         }
         else
         {
-            _anim.SetTrigger("Attack2");
+            // _anim.SetTrigger("Attack2");
         }
     }
 

@@ -49,6 +49,7 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
+
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -81,7 +82,7 @@ public class DataManager : MonoBehaviour
         Debug.Log("DM HandleGameScene");
         if (testInGameScene)
         {
-            ForTest();
+            // ForTest();
 
         }
     }

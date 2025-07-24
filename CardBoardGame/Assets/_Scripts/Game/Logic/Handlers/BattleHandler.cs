@@ -111,11 +111,11 @@ public class BattleHandler : Handler
         {
             damage *= 2;
             player.IsDamageDouble = false;
-            player.SlashPlay();
+            // player.SlashPlay();
         }
         else
         {
-            player.Attack();
+            // player.Attack();
         }
 
         yield return waitForSeconds;

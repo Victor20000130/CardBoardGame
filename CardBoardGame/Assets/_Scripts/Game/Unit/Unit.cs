@@ -48,12 +48,12 @@ public abstract class Unit : MonoBehaviour
 
     public virtual bool TakeDamage(float damage)
     {
-        _anim.SetTrigger("Damaged");
+        // _anim.SetTrigger("Damaged");
         return false;
     }
     public virtual void Attack()
     {
-        _anim.SetTrigger("Attack");
+        // _anim.SetTrigger("Attack");
     }
 
 }

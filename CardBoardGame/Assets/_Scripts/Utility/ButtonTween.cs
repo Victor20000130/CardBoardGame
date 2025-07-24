@@ -11,6 +11,7 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private int originalRenderIndex = 0;
     private float originalYPos;
     public float moveYvalue = 0;
+    public bool isSiblingIndex = false;
     private void Awake()
     {
         m_RectTransform = GetComponent<RectTransform>();
@@ -21,15 +22,21 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         // Scale up the button when hovered
         transform.DOScale(scaleFactor, duration).SetEase(Ease.OutBack);
 
-        originalRenderIndex = m_RectTransform.GetSiblingIndex();
-        m_RectTransform.SetSiblingIndex(m_RectTransform.parent.childCount - 1);
+        if (isSiblingIndex)
+        {
+            originalRenderIndex = m_RectTransform.GetSiblingIndex();
+            m_RectTransform.SetSiblingIndex(m_RectTransform.parent.childCount - 1);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         // Scale back to original size when not hovered
         transform.DOScale(originalScale, duration).SetEase(Ease.OutBack);
-        m_RectTransform.SetSiblingIndex(originalRenderIndex);
+        if (isSiblingIndex)
+        {
+            m_RectTransform.SetSiblingIndex(originalRenderIndex);
+        }
     }
 }
 
