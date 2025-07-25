@@ -112,7 +112,6 @@ public class StageHandler : Handler
         GetStageData();
         InitializeStageButtons();
         InitializeStage();
-        print(1);
         print(curStageSO);
         ManagerHandler.Instance.gameManager.StageSO = curStageSO;
     }
