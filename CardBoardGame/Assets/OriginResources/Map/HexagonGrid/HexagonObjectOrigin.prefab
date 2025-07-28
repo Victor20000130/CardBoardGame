@@ -10021,14 +10021,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e30fafd10f2e974db6899f36a943bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPos: {fileID: 3364576979108507320}
-  topPos:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   middlePos:
   - {fileID: 8425958220574650500}
   - {fileID: 1986110889646589668}
@@ -10036,15 +10028,9 @@ MonoBehaviour:
   - {fileID: 4751983823822835182}
   - {fileID: 8823112646770296659}
   - {fileID: 3676355615566162240}
-  bottomPos:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   coord: {x: 0, y: 0}
-  neighbors: []
+  keys: []
+  values: []
   rend: {fileID: 0}
 --- !u!1 &9117503712428818781
 GameObject:

@@ -27,6 +27,8 @@ public class GridHandler : Handler
     [SerializeField] private BoardEffectInfo boardEffectInfo;
     private GridData curGridData = new GridData();
     public GridData CurGridData => curGridData;
+    [SerializeField]
+    private TileGenerator tileGenerator;
 
     public void InitializeGridData(StageSO monsterGridSO, Difficulty diff)
     {
@@ -47,6 +49,15 @@ public class GridHandler : Handler
             grid[i].GridData = gridData[i];
             // Additional initialization logic can be added here if needed
         }
+
+        tileGenerator.GenerateTileArea(Vector2Int.zero);
+
+        int deActiveCount = tileGenerator.pathCount - grid.Length;
+        if (deActiveCount > 0)
+        {
+            tileGenerator.DeactivateTilesExactly(deActiveCount);
+        }
+
     }
 
     // 그리드가 동적으로 변할 경우 사용

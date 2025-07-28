@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class HexTile : MonoBehaviour
@@ -7,10 +8,9 @@ public class HexTile : MonoBehaviour
 
     public Vector2Int coord;
 
-    public List<HexTile> neighbors = new List<HexTile>();
-
+    public Dictionary<Vector2Int, HexTile> neighbors = new Dictionary<Vector2Int, HexTile>();
     public Renderer rend;
-
+    public List<HexTile> neighborList = new List<HexTile>();
     private void Awake()
     {
         rend = GetComponent<Renderer>();
@@ -57,6 +57,15 @@ public class HexTile : MonoBehaviour
         direction %= 6;
         var (dq, dr) = axialOffsets[direction];
         return new Vector2Int(coord.x + dq, coord.y + dr);
+    }
+    public void ActivationTile(float valueY)
+    {
+        transform.position += new Vector3(0, valueY, 0);
+    }
+
+    public void DeActivatonTile(float valueY)
+    {
+        transform.position -= new Vector3(0, valueY, 0);
     }
 
 }
