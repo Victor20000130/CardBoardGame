@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,12 +73,8 @@ public class TileGenerator : MonoBehaviour
                     Vector3 spawnPos = middlePoint.position + direction * distance;
 
                     HexTile newTile = Instantiate(hexTilePref, spawnPos, Quaternion.identity, transform);
-
                     baseTile.neighbors.Add(neighborCoord, newTile);
 
-                    // print($"baseTile: {baseTile.coord}, currentTileCoord: {current}, dir: {dir}, neighborCoord: {neighborCoord}");
-
-                    // yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                     newTile.SetCoords(neighborCoord);
                     hexTiles.Add(neighborCoord, newTile);
 
@@ -109,25 +106,33 @@ public class TileGenerator : MonoBehaviour
 
             for (int j = 0; j < halfRadi; j++)
             {
+                Vector2Int nextCoord = currentCoord + dir;
 
-                currentCoord += dir;
-                if (!path.ContainsKey(currentCoord))
+                if (!path.ContainsKey(nextCoord))
                 {
-                    path.Add(currentCoord, hexTiles[currentCoord]);
+                    path.Add(nextCoord, hexTiles[nextCoord]);
 
-                    hexTiles[currentCoord].ActivationTile(pathTilesYvalue);
+                    hexTiles[nextCoord].ActivationTile(pathTilesYvalue);
 
-                    pathList.Add(hexTiles[currentCoord]);
+                    pathList.Add(hexTiles[nextCoord]);
+
+                    hexTiles[currentCoord].neighborList.Add(hexTiles[nextCoord]);
+                    hexTiles[nextCoord].neighborList.Add(hexTiles[currentCoord]);
 
                 }
                 else
                 {
 
                 }
+
+                currentCoord += dir;
             }
         }
+        pathList[0].neighborList.Add(pathList[^1]);
+        pathList[^1].neighborList.Add(pathList[0]);
     }
 
+    [Obsolete]
     public void DeActivateTiles(int deActiveCount)
     {
         HashSet<HexTile> deActivedTiles = new();
@@ -172,70 +177,56 @@ public class TileGenerator : MonoBehaviour
     public void DeactivateTilesExactly(int deActiveCount)
     {
         List<HexTile> candidates = new(pathList);
-
         Shuffle(candidates);
-
-        List<HexTile> result = new();
-        HashSet<Vector2Int> blocked = new();
-
-        if (TrySelectNonAdjacentTiles(candidates, result, blocked, 0, deActiveCount))
+        List<HexTile> selected = new();
+        if (TrySelectNonAdjacentTilesBiDirectional(candidates, selected, 0, deActiveCount))
         {
-            foreach (HexTile tile in result)
+
+            foreach (HexTile tile in selected)
             {
                 tile.DeActivatonTile(pathTilesYvalue);
+                tile.SetColor(Color.red);
                 path.Remove(tile.coord);
                 pathList.Remove(tile);
             }
-            Debug.Log($"성공적으로 {result.Count}개 비활성화 완료");
+
+            Debug.Log($"성공적으로 {selected.Count}개 비활성화 완료");
         }
         else
         {
-            Debug.LogWarning($"실패: 조건을 만족하며 {deActiveCount}개를 선택할 수 없음");
-
+            Debug.LogWarning($"조건을 만족하며 {deActiveCount}개를 선택할 수 없음");
         }
-    }
 
-    private bool TrySelectNonAdjacentTiles(List<HexTile> candidates, List<HexTile> selected,
-                                       HashSet<Vector2Int> blocked, int startIndex, int targetCount)
+    }
+    private bool TrySelectNonAdjacentTilesBiDirectional(List<HexTile> candidates, List<HexTile> selected,
+                                                        int startIndex, int targetCount)
     {
         if (selected.Count == targetCount)
-        {
             return true;
-        }
-
         for (int i = startIndex; i < candidates.Count; i++)
         {
-            HexTile tile = candidates[i];
-
-            // 자신 또는 이웃이 블록된 경우 skip
-            if (blocked.Contains(tile.coord) || tile.neighbors.Values.Any(n => blocked.Contains(n.coord)))
+            HexTile current = candidates[i];
+            bool isAdjacent = false;
+            foreach (var selectedTile in selected)
             {
-                continue;
+                // 양방향 neighborList 검사
+                if (selectedTile.neighborList.Contains(current) || current.neighborList.Contains(selectedTile))
+                {
+                    isAdjacent = true;
+                    break;
+                }
             }
 
-            // 선택
-            selected.Add(tile);
-            blocked.Add(tile.coord);
-            foreach (var neighbor in tile.neighbors.Values)
-            {
-                blocked.Add(neighbor.coord);
-            }
+            if (isAdjacent) continue;
 
-            // 재귀 탐색
-            if (TrySelectNonAdjacentTiles(candidates, selected, blocked, i + 1, targetCount))
-            {
+            selected.Add(current);
+
+            if (TrySelectNonAdjacentTilesBiDirectional(candidates, selected, i + 1, targetCount))
                 return true;
-            }
 
-            // 백트래킹
-            selected.RemoveAt(selected.Count - 1);
-            blocked.Remove(tile.coord);
-
-            foreach (var neighbor in tile.neighbors.Values)
-            {
-                blocked.Remove(neighbor.coord);
-            }
+            selected.RemoveAt(selected.Count - 1); // 백트래킹
         }
+
         return false;
     }
     private void Shuffle<T>(List<T> list)

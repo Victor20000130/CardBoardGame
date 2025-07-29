@@ -36,9 +36,10 @@ public class CurveLayout : MonoBehaviour
         SetCurveLayout();
         _rect.position += new Vector3(0, moveYvalue, 0);
     }
-    public void SortLayout()
+    public IEnumerator SortLayout()
     {
         _horizontalLayoutGroup.enabled = true;
+        yield return null;
         _horizontalLayoutGroup.enabled = false;
         SetCurveLayout();
     }

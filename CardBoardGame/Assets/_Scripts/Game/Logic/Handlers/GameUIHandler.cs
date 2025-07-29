@@ -41,13 +41,13 @@ public class GameUIHandler : Handler
                 case Shape.Spade:
                     elementObjs[0].SetMaterial(usedCardDic[shape] / LevelPerUsedCards, levelOnMat);
                     break;
-                case Shape.Club:
+                case Shape.Diamond:
                     elementObjs[1].SetMaterial(usedCardDic[shape] / LevelPerUsedCards, levelOnMat);
                     break;
-                case Shape.Diamond:
+                case Shape.Heart:
                     elementObjs[2].SetMaterial(usedCardDic[shape] / LevelPerUsedCards, levelOnMat);
                     break;
-                case Shape.Heart:
+                case Shape.Club:
                     elementObjs[3].SetMaterial(usedCardDic[shape] / LevelPerUsedCards, levelOnMat);
                     break;
 

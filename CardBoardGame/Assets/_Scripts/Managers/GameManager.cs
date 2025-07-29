@@ -119,6 +119,8 @@ public class GameManager : MonoBehaviour
             this.handlers.Add(handler.HandlerType, handler);
             handler.Initialize();
         }
+
+        PieceHandler.SetGridPositions(GridHandler.PathTiles);
     }
 
     /// <summary>

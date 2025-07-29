@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using CardBoardGame.Assets._Scripts.Utility;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 [Serializable]
 public class GridData
 {
@@ -30,12 +32,11 @@ public class GridHandler : Handler
     [SerializeField]
     private TileGenerator tileGenerator;
 
+    public List<HexTile> PathTiles => tileGenerator.pathList;
+
     public void InitializeGridData(StageSO monsterGridSO, Difficulty diff)
     {
         //TODO : 그리드 동적 생성 로직 작성 예정
-        // InstantiateGrids(monsterGridSO.GetGridLength(diff));
-        // grid = new Grid[monsterGridSO.GetGridLength(diff)];
-        // gridData = new GridData[monsterGridSO.GetGridLength(diff)];
 
         gridData = monsterGridSO.GetGridDatas(0);
         if (grid.Length != gridData.Length)
@@ -47,29 +48,14 @@ public class GridHandler : Handler
         for (int i = 0; i < grid.Length; i++)
         {
             grid[i].GridData = gridData[i];
-            // Additional initialization logic can be added here if needed
         }
-
         tileGenerator.GenerateTileArea(Vector2Int.zero);
-
         int deActiveCount = tileGenerator.pathCount - grid.Length;
         if (deActiveCount > 0)
         {
             tileGenerator.DeactivateTilesExactly(deActiveCount);
         }
-
     }
-
-    // 그리드가 동적으로 변할 경우 사용
-    // private void InstantiateGrids(int length)
-    // {
-    //     int gridLength = length;
-    //     grid = new Grid[gridLength];
-    //     for (int i = 0; i < gridLength; i++)
-    //     {
-    //         grid[i] = Instantiate(gridPrefab, transform, false);
-    //     }
-    // }
 
     public void GetCurrentGridData(int idx)
     {

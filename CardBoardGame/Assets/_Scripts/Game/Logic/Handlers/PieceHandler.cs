@@ -8,7 +8,7 @@ using CardBoardGame.Assets._Scripts.Utility;
 public class PieceHandler : Handler
 {
     [SerializeField]
-    private Transform[] piecePositions;
+    private List<Transform> piecePositions = new List<Transform>();
     [SerializeField] int[] cornerIdx;
     private Dictionary<int, bool> cornerDic;
     private int nextMoveIdx = 0;
@@ -21,9 +21,9 @@ public class PieceHandler : Handler
         {
             nextMoveIdx++;
 
-            if (nextMoveIdx % piecePositions.Length == 0)
+            if (nextMoveIdx % piecePositions.Count == 0)
             {
-                nextMoveIdx %= piecePositions.Length;
+                nextMoveIdx %= piecePositions.Count;
             }
             // TODO : 다음 포지션 계산하는 로직
             MoveNext();
@@ -38,20 +38,21 @@ public class PieceHandler : Handler
         }
         int arriveGridIdx = nextMoveIdx;
         onPieceMove?.Invoke(arriveGridIdx);
-        playerPiece.RunStop();
+        // playerPiece.RunStop();
 
     }
 
     private void MoveNext()
     {
-        playerPiece.Run();
+        // playerPiece.Run();
         playerPiece.gameObject.transform.DOMove(piecePositions[nextMoveIdx].position, 1f).SetEase(Ease.Linear).onComplete += () => Move();
     }
 
     private IEnumerator Turn()
     {
-        playerPiece.Turn();
-        yield return new WaitForSeconds(playerPiece.TurnClipLength);
+        // playerPiece.Turn();
+        // yield return new WaitForSeconds(playerPiece.TurnClipLength);
+        yield return null;
     }
     private void Move()
     {
@@ -69,5 +70,15 @@ public class PieceHandler : Handler
     protected override void SetHnadlerType()
     {
         handlerType = HandlerType.PieceHandler;
+    }
+
+    public void SetGridPositions(List<HexTile> pathList)
+    {
+        piecePositions.Clear();
+        foreach (HexTile tile in pathList)
+        {
+            piecePositions.Add(tile.topPos);
+        }
+        playerPiece.transform.position = piecePositions[0].position;
     }
 }

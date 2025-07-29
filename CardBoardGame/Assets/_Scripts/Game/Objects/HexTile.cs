@@ -5,12 +5,12 @@ using UnityEngine;
 public class HexTile : MonoBehaviour
 {
     public Transform[] middlePos;
-
+    public Transform topPos;
     public Vector2Int coord;
 
     public Dictionary<Vector2Int, HexTile> neighbors = new Dictionary<Vector2Int, HexTile>();
-    public Renderer rend;
     public List<HexTile> neighborList = new List<HexTile>();
+    public Renderer rend;
     private void Awake()
     {
         rend = GetComponent<Renderer>();
@@ -68,4 +68,13 @@ public class HexTile : MonoBehaviour
         transform.position -= new Vector3(0, valueY, 0);
     }
 
+    public HexTile GetNextTile()
+    {
+        return neighborList[1];
+    }
+
+    public HexTile GetPrevTile()
+    {
+        return neighborList[0];
+    }
 }

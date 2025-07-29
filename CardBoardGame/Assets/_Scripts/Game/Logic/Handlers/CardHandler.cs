@@ -202,13 +202,13 @@ public class CardHandler : Handler
 
         numberOrderButton.onClick.AddListener(SortCardsByNumber);
 
-        numberOrderButton.onClick.AddListener(drawnCardCurveLayOut.SortLayout);
-        numberOrderButton.onClick.AddListener(ownCardCurveLayOut.SortLayout);
+        numberOrderButton.onClick.AddListener(() => StartCoroutine(drawnCardCurveLayOut.SortLayout()));
+        numberOrderButton.onClick.AddListener(() => StartCoroutine(ownCardCurveLayOut.SortLayout()));
 
         shapeOrderButton.onClick.AddListener(SortCardsByShape);
 
-        shapeOrderButton.onClick.AddListener(drawnCardCurveLayOut.SortLayout);
-        shapeOrderButton.onClick.AddListener(ownCardCurveLayOut.SortLayout);
+        shapeOrderButton.onClick.AddListener(() => StartCoroutine(drawnCardCurveLayOut.SortLayout()));
+        shapeOrderButton.onClick.AddListener(() => StartCoroutine(ownCardCurveLayOut.SortLayout()));
 
     }
     /// <summary>
