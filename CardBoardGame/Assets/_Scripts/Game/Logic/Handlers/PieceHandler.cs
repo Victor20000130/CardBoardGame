@@ -72,13 +72,13 @@ public class PieceHandler : Handler
         handlerType = HandlerType.PieceHandler;
     }
 
-    public void SetGridPositions(List<HexTile> pathList)
-    {
-        piecePositions.Clear();
-        foreach (HexTile tile in pathList)
-        {
-            piecePositions.Add(tile.topPos);
-        }
-        playerPiece.transform.position = piecePositions[0].position;
-    }
+    // public void SetGridPositions(List<HexTile> pathList)
+    // {
+    //     piecePositions.Clear();
+    //     foreach (HexTile tile in pathList)
+    //     {
+    //         piecePositions.Add(tile.topPos);
+    //     }
+    //     playerPiece.transform.position = piecePositions[0].position;
+    // }
 }

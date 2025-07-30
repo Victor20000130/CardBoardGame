@@ -44,9 +44,13 @@ namespace CardBoardGame.Assets._Scripts.Utility
     public enum Shape
     {
         None,
+        // Ember
         Spade,
+        // Spray
         Diamond,
+        // Nuri
         Heart,
+        // Fair_Wind
         Club
     }
 

@@ -40,17 +40,12 @@ public class CardHandler : Handler
             {
                 additionalCardCount = value;
                 print($"추가 카드 활성화: {additionalCardCount}");
-                if (additionalCardCount > 0)
-                {
-                    if (!additionalCards[additionalCardCount - 1].gameObject.activeSelf)
-                    {
-                        additionalCards[additionalCardCount - 1].gameObject.SetActive(true);
-                    }
-                }
+                cardShuffleAct?.Invoke();
             }
         }
         public int CanThrowCount = 0;
 
+        public Action cardShuffleAct;
     }
 
     private const int MaxCardCounting = 50;
@@ -139,6 +134,7 @@ public class CardHandler : Handler
         (HandRankings.Dyad, IsDyad),
         (HandRankings.Solo, () => selectedCount == 1),
         };
+        cardResultWrapper.cardShuffleAct += Shuffle;
     }
     protected override void SetHnadlerType()
     {
@@ -150,6 +146,7 @@ public class CardHandler : Handler
         currIdx = 0;
         new CardShuffle().Shuffle(deck);
         SetCards();
+        print("Shuffle");
     }
 
     public void SetCards()
@@ -182,12 +179,19 @@ public class CardHandler : Handler
         foreach (var card in cardResultWrapper.AdditionalCards)
         {
             card.Initialize(this);
+            if (cardResultWrapper.AdditionalCardCount > 0)
+            {
+                if (!cardResultWrapper.AdditionalCards[cardResultWrapper.AdditionalCardCount - 1].gameObject.activeSelf)
+                {
+                    cardResultWrapper.AdditionalCards[cardResultWrapper.AdditionalCardCount - 1].gameObject.SetActive(true);
+                }
+            }
             if (card.gameObject.activeSelf)
             {
                 card.CardData = cardSO.cards[deck[currIdx++]];
             }
         }
-        drawnCardCurveLayOut.SetCurveLayout();
+        StartCoroutine(drawnCardCurveLayOut.SortLayout());
     }
     public void CardPanelOnOff() => cardPanel.SetActive(!cardPanel.activeSelf);
 

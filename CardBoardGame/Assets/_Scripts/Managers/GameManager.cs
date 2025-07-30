@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
             handler.Initialize();
         }
 
-        PieceHandler.SetGridPositions(GridHandler.PathTiles);
+        // PieceHandler.SetGridPositions(GridHandler.PathTiles);
     }
 
     /// <summary>

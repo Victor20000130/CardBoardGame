@@ -32,21 +32,21 @@ public class PlayerPiece : MonoBehaviour
             return;
         }
         pieceHandler.playerPiece = this;
-        StartCoroutine(Start());
+        // StartCoroutine(Start());
     }
 
-    private IEnumerator Start()
-    {
-        WaitForSeconds waitForSeconds = new(1.5f);
-        while (true)
-        {
-            transform.DOMoveY(transform.position.y + 8, 1.5f).SetEase(Ease.OutSine);
-            yield return waitForSeconds;
-            transform.DOMoveY(transform.position.y - 8, 1.5f).SetEase(Ease.InSine);
-            yield return waitForSeconds;
-        }
+    // private IEnumerator Start()
+    // {
+    //     WaitForSeconds waitForSeconds = new(1.5f);
+    //     while (true)
+    //     {
+    //         transform.DOMoveY(transform.position.y + 8, 1.5f).SetEase(Ease.OutSine);
+    //         yield return waitForSeconds;
+    //         transform.DOMoveY(transform.position.y - 8, 1.5f).SetEase(Ease.InSine);
+    //         yield return waitForSeconds;
+    //     }
 
-    }
+    // }
 
     // [Obsolete]
     // public void Turn()

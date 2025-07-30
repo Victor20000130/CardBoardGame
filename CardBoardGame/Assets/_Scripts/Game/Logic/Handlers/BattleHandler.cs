@@ -90,7 +90,7 @@ public class BattleHandler : Handler
     public IEnumerator RecieveDamageValue(float originDamage, CardHandler.CardResultWrapper cardResultWrapper)
     {
         int emberLevel = cardResultWrapper.UsedCardDic[Shape.Spade];
-        int sprayLevel = cardResultWrapper.UsedCardDic[Shape.Club];
+        int sprayLevel = cardResultWrapper.UsedCardDic[Shape.Diamond];
 
         WaitForSeconds waitForSeconds = new(1f);
         yield return null;
@@ -199,7 +199,6 @@ public class BattleHandler : Handler
             getter: () => cardResultWrapper.AdditionalCardCount,
             setter: val => cardResultWrapper.AdditionalCardCount = (int)val
         );
-
     }
 
     private void ReflectUI()
@@ -245,9 +244,9 @@ public class BattleHandler : Handler
         return elementType switch
         {
             ElementType.Embers => Shape.Spade,
-            ElementType.Spray => Shape.Club,
-            ElementType.Nuri => Shape.Diamond,
-            ElementType.Fair_Wind => Shape.Heart,
+            ElementType.Spray => Shape.Diamond,
+            ElementType.Nuri => Shape.Heart,
+            ElementType.Fair_Wind => Shape.Club,
             _ => Shape.Spade
         };
     }

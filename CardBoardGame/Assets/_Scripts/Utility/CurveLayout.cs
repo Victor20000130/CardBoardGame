@@ -39,8 +39,8 @@ public class CurveLayout : MonoBehaviour
     public IEnumerator SortLayout()
     {
         _horizontalLayoutGroup.enabled = true;
-        yield return null;
         _horizontalLayoutGroup.enabled = false;
+        yield return null;
         SetCurveLayout();
     }
     public void SetCurveLayout()
