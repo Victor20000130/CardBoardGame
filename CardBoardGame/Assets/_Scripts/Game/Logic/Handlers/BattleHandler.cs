@@ -8,6 +8,7 @@ public class BattleHandler : Handler
 {
     [SerializeField] private Player player;
     [SerializeField] private Monster monster;
+    [SerializeField] private Monster[] monsters;
     [SerializeField] private PlayerSO originPlayerSO;
     [SerializeField] private ElementEffectSO[] elemEffectsSO;
 
@@ -41,7 +42,7 @@ public class BattleHandler : Handler
     protected override void OnInitialize()
     {
         player = FindAnyObjectByType<Player>();
-        monster = FindAnyObjectByType<Monster>();
+        // monster = monsters[0];
         originPlayerSO = Resources.Load<PlayerSO>("Data/PlayerData/PlayerSO");
         PlayerSO = ScriptableObject.CreateInstance<PlayerSO>();
         originPlayerSO.Copy(PlayerSO);
@@ -57,8 +58,31 @@ public class BattleHandler : Handler
         }
     }
 
-    public void ReceiveMonsterSO(MonsterSO monsterSO)
+    public void ReceiveMonsterSO(MonsterSO monsterSO, Stage currentStage)
     {
+        if (monster != null)
+        {
+            monster.gameObject.SetActive(false);
+        }
+        switch (currentStage)
+        {
+            case Stage.Stage1:
+                monster = monsters[0];
+                break;
+            case Stage.Stage2:
+                monster = monsters[1];
+                break;
+            case Stage.Stage3:
+                monster = monsters[2];
+                break;
+            case Stage.Stage4:
+                monster = monsters[3];
+                break;
+            case Stage.Stage5:
+                monster = monsters[4];
+                break;
+
+        }
         originMonsterSO = monsterSO;
         monster.MonsterSO = ScriptableObject.CreateInstance<MonsterSO>();
         originMonsterSO.Copy(monster.MonsterSO);
@@ -112,10 +136,13 @@ public class BattleHandler : Handler
             damage *= 2;
             player.IsDamageDouble = false;
             player.SlashPlay();
+            yield return new WaitForSeconds(player.GetAnimationClipLength("Slash"));
+            yield return new WaitForSeconds(player.GetAnimationClipLength("Dodge"));
         }
         else
         {
             player.Attack();
+            yield return new WaitForSeconds(player.GetAnimationClipLength("Attack"));
         }
 
         yield return waitForSeconds;
@@ -124,7 +151,7 @@ public class BattleHandler : Handler
         if (isMonsterDie)
         {
             ReflectUI();
-            yield return waitForSeconds;
+            yield return new WaitForSeconds(monster.GetAnimationClipLength("Die"));
             ManagerHandler.Instance.gameManager.NextStage(isMonsterDie);
             yield break;
         }
@@ -141,16 +168,14 @@ public class BattleHandler : Handler
             yield return waitForSeconds;
 
             monster.Attack();
-
-            yield return waitForSeconds;
+            yield return new WaitForSeconds(monster.GetAnimationClipLength("Attack"));
 
             isPlayerDie = player.TakeDamage(monster.MonsterSO._damage);
-
+            yield return new WaitForSeconds(player.GetAnimationClipLength("TakeDamage"));
             if (isPlayerDie)
             {
-                yield return waitForSeconds;
+                yield return new WaitForSeconds(player.GetAnimationClipLength("Die"));
                 ManagerHandler.Instance.gameManager.GameOver(isPlayerDie);
-                print("Player Die");
                 yield break;
             }
 

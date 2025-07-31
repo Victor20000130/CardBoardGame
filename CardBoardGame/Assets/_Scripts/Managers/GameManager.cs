@@ -190,7 +190,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("CurMonsterSO is Null");
         }
-        BattleHandler.ReceiveMonsterSO(StageHandler.CurMonsterSO);
+        BattleHandler.ReceiveMonsterSO(StageHandler.CurMonsterSO, StageHandler.CurrentStage);
     }
 
     public void ReceiveCardResult(HandRankings handRankings, CardHandler.CardResultWrapper cardResultWrapper)
@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         print("Monster Die");
-        int nextStage = (int)StageHandler.CurrentStage++;
+        int nextStage = (int)++StageHandler.CurrentStage;
         if (Enum.IsDefined(typeof(Stage), nextStage))
         {
             StageHandler.CurrentStage = (Stage)nextStage;

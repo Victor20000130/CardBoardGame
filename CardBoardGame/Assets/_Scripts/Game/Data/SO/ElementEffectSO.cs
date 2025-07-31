@@ -19,47 +19,13 @@ public class ElementEffectSO : ScriptableObject
 
     private static readonly Dictionary<Operator, Func<float, float, float>> operatorFuncs = new()
     {
-    { Operator.None,     (v, mod) => v },
+    { Operator.None,     (v, mod) => v = mod },
     { Operator.Plus,     (v, mod) => v + mod },
     { Operator.Minus,    (v, mod) => v - mod },
     { Operator.Multiply, (v, mod) => v * mod },
     { Operator.Divide,   (v, mod) => v / mod },
     { Operator.Percent,  (v, mod) => v * (mod / 100f) },
     };
-
-    // public float CardEffectCalc(float value, int level)
-    // {
-    //     level /= LevelPerUsedCards;
-    //     Debug.Log($"Type: {ElementType}, Value: {value}, Level: {level}");
-    //     foreach (ElementEffect elem in elementEffects)
-    //     {
-    //         switch (elem.Operator)
-    //         {
-    //             case Operator.None:
-    //                 break;
-    //             case Operator.Plus:
-
-    //                 return value += elem.LevelPerValue[level];
-
-    //             case Operator.Minus:
-
-    //                 return value -= elem.LevelPerValue[level];
-
-    //             case Operator.Multiply:
-
-    //                 return value *= elem.LevelPerValue[level];
-
-    //             case Operator.Divide:
-
-    //                 return value /= elem.LevelPerValue[level];
-
-    //             case Operator.Percent:
-
-    //                 return value *= elem.LevelPerValue[level] / PercentBase;
-    //         }
-    //     }
-    //     return 0;
-    // }
 
     public float CardEffectCalc(EffectType effectType, float value, int level)
     {
@@ -78,31 +44,6 @@ public class ElementEffectSO : ScriptableObject
 
     public float CalcByOperator(ElementEffect elem, float value, int safeLevel)
     {
-        // switch (elem.Operator)
-        // {
-        //     case Operator.None:
-        //         break;
-        //     case Operator.Plus:
-
-        //         return value += elem.LevelPerValue[level];
-
-        //     case Operator.Minus:
-
-        //         return value -= elem.LevelPerValue[level];
-
-        //     case Operator.Multiply:
-
-        //         return value *= elem.LevelPerValue[level];
-
-        //     case Operator.Divide:
-
-        //         return value /= elem.LevelPerValue[level];
-
-        //     case Operator.Percent:
-
-        //         return value *= elem.LevelPerValue[level] / PercentBase;
-        // }
-        // return 0;
 
         if (elem.LevelPerValue == null || elem.LevelPerValue.Count == 0)
         {

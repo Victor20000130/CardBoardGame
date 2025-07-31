@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using CardBoardGame.Assets._Scripts.Utility;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class Monster : Unit
@@ -14,8 +17,24 @@ public class Monster : Unit
         set => _monsterSO = value;
     }
     private float _damage;
+
     protected override void OnInitialize()
     {
+        gameObject.SetActive(true);
+
+        if (unitObjSetter == null)
+        {
+            unitObjSetter = gameObject.GetComponentInParent<UnitObjectSetter>();
+        }
+        if (unitObjSetter == null)
+        {
+            Debug.LogError($"{gameObject.name} UnitOBJSetter is Null");
+        }
+        if (_anim == null)
+        {
+            _anim = GetComponentInChildren<Animator>();
+        }
+
         _hpTMP = unitObjSetter.HpTMP;
         monsterDMGTMP = unitObjSetter.MonsterDMG_TMP;
         monsterTurnTMP = unitObjSetter.MonsterTurn_TMP;
@@ -24,6 +43,7 @@ public class Monster : Unit
         monsterTurnTMP.text = _monsterSO._turn.ToString();
         applyEffectAct += OnApplayEffect;
         _damage = _monsterSO._damage;
+
     }
 
     protected override void OnApplayEffect(GridType gridType)
@@ -96,10 +116,10 @@ public class Monster : Unit
         }
         return isDie;
     }
-
+    private int rand;
     public override void Attack()
     {
-        int rand = UnityEngine.Random.Range(0, 2);
+        rand = UnityEngine.Random.Range(0, 2);
         if (rand == 0)
         {
             _anim.SetTrigger("Attack1");
@@ -108,6 +128,22 @@ public class Monster : Unit
         {
             _anim.SetTrigger("Attack2");
         }
+    }
+
+    public override float GetAnimationClipLength(string stateName)
+    {
+        if (stateName == "Attack")
+        {
+            if (rand == 0)
+            {
+                stateName = "Attack1";
+            }
+            else
+            {
+                stateName = "Attack2";
+            }
+        }
+        return base.GetAnimationClipLength(stateName);
     }
 
     public override void ReflectUI()

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using CardBoardGame.Assets._Scripts.Utility;
 using DG.Tweening;
 using TMPro;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,26 +21,31 @@ public abstract class Unit : MonoBehaviour
     }
     [SerializeField]
     protected UnitObjectSetter unitObjSetter;
-    protected void Start()
-    {
-        if (unitObjSetter == null)
-        {
-            unitObjSetter = gameObject.GetComponentInParent<UnitObjectSetter>();
-        }
-        if (unitObjSetter == null)
-        {
-            Debug.LogError($"{gameObject.name} UnitOBJSetter is Null");
-        }
-        _anim = GetComponent<Animator>();
-    }
+
+    protected Dictionary<string, float> animClipDic = new Dictionary<string, float>();
+
     public void Initialize()
     {
-
+        _anim = GetComponent<Animator>();
         // 차후 체력바 기능 넣고 싶으면 작업
         // hpBar = unitObjSetter.HpBar;
         OnInitialize();
-    }
+        var ctrler = _anim.runtimeAnimatorController as AnimatorController;
 
+        foreach (var layer in ctrler.layers)
+        {
+            foreach (var state in layer.stateMachine.states)
+            {
+                var clip = state.state.motion as AnimationClip;
+                animClipDic.Add(state.state.name, clip.length);
+                print(state.state.name);
+            }
+        }
+    }
+    public virtual float GetAnimationClipLength(string stateName)
+    {
+        return animClipDic[stateName];
+    }
     protected abstract void OnInitialize();
     protected abstract void OnApplayEffect(GridType gridType);
     protected abstract void Heal();
