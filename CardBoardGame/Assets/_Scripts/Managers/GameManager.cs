@@ -171,12 +171,19 @@ public class GameManager : MonoBehaviour
         CardHandler.CardsDOTween();
         yield return new WaitForSeconds(1f);
         CardHandler.SetAllCardsInteractable(true);
+        GameUIHandler.IsCardSelectTime = true;
     }
 
     public void StartGame()
     {
         SendMonsterSO();
+        StageEnterEffects();
         DiceRollCoroutine();
+    }
+
+    private void StageEnterEffects()
+    {
+        BattleHandler.StageEnterEffect(CardHandler.CardResultWrapperPropertie);
     }
 
     public void DiceRollCoroutine()
@@ -195,7 +202,7 @@ public class GameManager : MonoBehaviour
 
     public void ReceiveCardResult(HandRankings handRankings, CardHandler.CardResultWrapper cardResultWrapper)
     {
-
+        GameUIHandler.IsCardSelectTime = false;
         float damage = StageSO.RankPerDamageSO.GetDamage(handRankings);
 
         GameUIHandler.ElemEffLevelOn(cardResultWrapper.UsedCardDic);
@@ -207,7 +214,7 @@ public class GameManager : MonoBehaviour
 
     public void AfterBattleRoutine()
     {
-        CardHandler.CardsDOTween();
+        StartCoroutine(CardGameCoroutine());
     }
 
     public void NextStage(bool isMonsterDie)
@@ -241,5 +248,11 @@ public class GameManager : MonoBehaviour
     {
         BattleHandler.DamageMultiplierValue = damageMultiplierValue;
         StartCoroutine(CardGameCoroutine());
+    }
+
+    public void CardSelectTimeOver()
+    {
+        CardHandler.HandRankings = HandRankings.Solo;
+        CardHandler.CardSelectFin();
     }
 }

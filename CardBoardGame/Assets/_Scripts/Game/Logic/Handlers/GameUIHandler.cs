@@ -14,6 +14,26 @@ public class GameUIHandler : Handler
 
     [SerializeField]
     private ElementObj[] elementObjs;
+
+    [SerializeField]
+    private Image fillArea;
+
+    private float timer = 0f;
+
+    public int CardSelectTime = 90;
+    private bool isCardSelectTime = false;
+    public bool IsCardSelectTime
+    {
+        get => isCardSelectTime;
+        set
+        {
+            isCardSelectTime = value;
+            if (IsCardSelectTime == false)
+            {
+                timer = 0;
+            }
+        }
+    }
     private void Awake()
     {
         if (elementObjs.Length < 3)
@@ -21,6 +41,15 @@ public class GameUIHandler : Handler
             Debug.LogError($"특수효과 오브젝트 갯수 부족");
         }
 
+    }
+
+    private void Update()
+    {
+        if (isCardSelectTime)
+        {
+            ClockStart();
+        }
+        fillArea.fillAmount = timer / CardSelectTime;
     }
     protected override void OnInitialize()
     {
@@ -52,6 +81,17 @@ public class GameUIHandler : Handler
                     break;
 
             }
+        }
+    }
+
+    private void ClockStart()
+    {
+        timer += Time.deltaTime;
+        if (timer >= CardSelectTime)
+        {
+            isCardSelectTime = false;
+            ManagerHandler.Instance.gameManager.CardSelectTimeOver();
+            timer = 0;
         }
     }
 }

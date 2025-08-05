@@ -89,11 +89,6 @@ public class BattleHandler : Handler
         monster.Initialize();
     }
 
-    public void SODataLoad()
-    {
-
-    }
-
     public void ReceiveGridType(GridType gridType)
     {
         StartCoroutine(ApplyEffect(gridType));
@@ -202,9 +197,23 @@ public class BattleHandler : Handler
         ManagerHandler.Instance.gameManager.AfterBattleRoutine();
     }
 
-    public void StageEnterEffect()
+    public void StageEnterEffect(CardHandler.CardResultWrapper cardResultWrapper)
     {
+        player.PlayerSO.Barriar = 0;
+        ApplyEffectSafe(
+            wrapper: cardResultWrapper,
+            elementType: ElementType.Nuri,
+            effectType: EffectType.ShieldBaseCurrentHP,
+            getter: () => player.PlayerSO.CurHP,
+            setter: val => player.PlayerSO.Barriar += val
+            );
 
+        ApplyEffectSafe(wrapper: cardResultWrapper,
+        elementType: ElementType.Nuri,
+        effectType: EffectType.ShieldBaseLostHP,
+        getter: () => player.PlayerSO.MaxHP - player.PlayerSO.CurHP,
+         setter: val => player.PlayerSO.Barriar += val);
+        player.ReflectUI();
     }
 
     public void EveryTurnEffect(CardHandler.CardResultWrapper cardResultWrapper)

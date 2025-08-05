@@ -15,6 +15,9 @@ public class UnitObjectSetter : MonoBehaviour
     private TextMeshProUGUI _hpTMP;
     public TextMeshProUGUI HpTMP => _hpTMP;
     [SerializeField]
+    private TextMeshProUGUI _barriorTMP;
+    public TextMeshProUGUI BarriorTMP => _barriorTMP;
+    [SerializeField]
     private TextMeshProUGUI monsterDMG_TMP;
     public TextMeshProUGUI MonsterDMG_TMP => monsterDMG_TMP;
     [SerializeField]

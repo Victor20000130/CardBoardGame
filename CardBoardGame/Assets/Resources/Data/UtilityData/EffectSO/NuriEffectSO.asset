@@ -19,9 +19,9 @@ MonoBehaviour:
     levelPerValue:
     - 0
     - 5
-    - 5
+    - 0
     - 10
-    - 10
+    - 0
     - 15
   - effectType: 4
     _operator: 3
@@ -29,6 +29,6 @@ MonoBehaviour:
     - 0
     - 0
     - 5
-    - 5
+    - 0
     - 10
     - 15

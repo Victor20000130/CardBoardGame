@@ -62,6 +62,10 @@ public class CardHandler : Handler
     [SerializeField] private Card[] monsterCard;
     [SerializeField] private Card[] userCard;
     [SerializeField] private CardResultWrapper cardResultWrapper;
+    public CardResultWrapper CardResultWrapperPropertie
+    {
+        get => cardResultWrapper;
+    }
     [SerializeField] private Button attackButton;
     [SerializeField] private Button throwButton;
     [SerializeField] private Button numberOrderButton;
@@ -74,6 +78,11 @@ public class CardHandler : Handler
     private CurveLayout ownCardCurveLayOut;
 
     private HandRankings handRankings;
+    public HandRankings HandRankings
+    {
+        get => handRankings;
+        set => handRankings = value;
+    }
     private int selectedCount = 0;
 
     private List<Card> selectedCards = new List<Card>(MaxHandCount);
@@ -84,7 +93,6 @@ public class CardHandler : Handler
     public List<Card> SelectedUserCards => selectedUserCards;
 
     public float CardsHideY = 1000;
-
     public int CanThrowCount
     {
         get => cardResultWrapper.CanThrowCount;
@@ -199,7 +207,6 @@ public class CardHandler : Handler
     {
         SetAllCardsInteractable(false);
         attackButton.onClick.AddListener(HandRankingCalc);
-        attackButton.onClick.AddListener(CardsHide);
         attackButton.interactable = false;
         throwButton.onClick.AddListener(OnCardThrow);
         throwButton.interactable = false;
@@ -416,12 +423,8 @@ public class CardHandler : Handler
         Debug.Log($"현재까지 사용된 카드: Spade: {cardResultWrapper.UsedCardDic[Shape.Spade]}, Club: {cardResultWrapper.UsedCardDic[Shape.Club]}, Dia: {cardResultWrapper.UsedCardDic[Shape.Diamond]}, Heart: {cardResultWrapper.UsedCardDic[Shape.Heart]}");
         Debug.Log(handRankings);
 
-        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, cardResultWrapper);
+        CardSelectFin();
 
-        CardListsClear();
-
-        attackButton.interactable = false;
-        throwButton.interactable = false;
     }
 
     private void CardListsClear()
@@ -429,6 +432,15 @@ public class CardHandler : Handler
         selectedCards.Clear();
         selectedUserCards.Clear();
         throwedCards.Clear();
+    }
+
+    public void CardSelectFin()
+    {
+        ManagerHandler.Instance.gameManager.ReceiveCardResult(handRankings, cardResultWrapper);
+        CardListsClear();
+        attackButton.interactable = false;
+        throwButton.interactable = false;
+        CardsHide();
     }
 
     // --- 카드 특수 효과 ---

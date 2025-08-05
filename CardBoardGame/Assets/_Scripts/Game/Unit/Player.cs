@@ -1,11 +1,17 @@
 using CardBoardGame.Assets._Scripts.Utility;
+using TMPro;
 using UnityEngine;
 
 public class Player : Unit
 {
 
     private PlayerSO _playerSO;
-
+    private TextMeshProUGUI _barriorTMP;
+    public TextMeshProUGUI BarriorTMP
+    {
+        get => _barriorTMP;
+        set => _barriorTMP = value;
+    }
     public PlayerSO PlayerSO
     {
         get => _playerSO;
@@ -21,6 +27,8 @@ public class Player : Unit
     {
         _hpTMP = unitObjSetter.HpTMP;
         _hpTMP.text = _playerSO.CurHP.ToString();
+        _barriorTMP = unitObjSetter.BarriorTMP;
+        _barriorTMP.text = _playerSO.Barriar.ToString();
         applyEffectAct += OnApplayEffect;
     }
 
@@ -76,5 +84,6 @@ public class Player : Unit
     public override void ReflectUI()
     {
         _hpTMP.text = _playerSO.CurHP.ToString();
+        _barriorTMP.text = _playerSO.Barriar.ToString();
     }
 }
