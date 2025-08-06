@@ -87,7 +87,6 @@ public class TZFZGame : MonoBehaviour
             rightAction.canceled += ctx => hasInput = false;
 
         }
-        tZFZActionMap.Enable();
     }
 
     private void OnMoveUp(InputAction.CallbackContext context)
@@ -273,6 +272,7 @@ public class TZFZGame : MonoBehaviour
         moveCount = tempMoveCount;
         moveCountTmp.text = moveCount.ToString();
         SpawnInitialTiles();
+        tZFZActionMap.Enable();
     }
 
     private void ButtonInit()
@@ -349,9 +349,9 @@ public class TZFZGame : MonoBehaviour
                     if (value < int.Parse(tZFZGrids[i][k].Tmp.text))
                     {
                         value = int.Parse(tZFZGrids[i][k].Tmp.text);
-                        tZFZGrids[i][k].Color = Color.white;
                     }
                 }
+                tZFZGrids[i][k].Color = Color.white;
                 tZFZGrids[i][k].Tmp.text = "";
             }
         }

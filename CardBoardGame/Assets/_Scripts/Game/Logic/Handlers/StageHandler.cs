@@ -55,22 +55,27 @@ public class StageHandler : Handler
         {
             case Stage.Stage1:
                 ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage1;
+                CurrentStage = Stage.Stage1;
                 CurMonsterSO = curStageSO.MonsterSO[0];
                 break;
             case Stage.Stage2:
                 ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage2;
+                CurrentStage = Stage.Stage2;
                 CurMonsterSO = curStageSO.MonsterSO[1];
                 break;
             case Stage.Stage3:
                 ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage3;
+                CurrentStage = Stage.Stage3;
                 CurMonsterSO = curStageSO.MonsterSO[2];
                 break;
             case Stage.Stage4:
                 ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage4;
+                CurrentStage = Stage.Stage4;
                 CurMonsterSO = curStageSO.MonsterSO[3];
                 break;
             case Stage.Stage5:
                 ManagerHandler.Instance.dataManager.CurGameData.Stage = Stage.Stage5;
+                CurrentStage = Stage.Stage5;
                 CurMonsterSO = curStageSO.MonsterSO[4];
                 break;
             default:

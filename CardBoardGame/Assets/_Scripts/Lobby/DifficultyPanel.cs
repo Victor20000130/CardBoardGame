@@ -21,6 +21,7 @@ public class DifficultyPanel : LobbyPanel
         easyButton.onClick.AddListener(() => SetDifficulty(Difficulty.Easy));
         normalButton.onClick.AddListener(() => SetDifficulty(Difficulty.Normal));
         hardButton.onClick.AddListener(() => SetDifficulty(Difficulty.Hard));
+        exitButton.onClick.AddListener(() => lobbyUIHandler.OpenPanel(LobbyPanelType.MainPanel));
     }
 
     private void SetDifficulty(Difficulty diff)
@@ -49,7 +50,6 @@ public class DifficultyPanel : LobbyPanel
             print("씬 로딩중..");
             if (asyncOperation.progress >= 0.9f)
             {
-                Time.timeScale = 0f;
                 asyncOperation.allowSceneActivation = true;
             }
             yield return null;

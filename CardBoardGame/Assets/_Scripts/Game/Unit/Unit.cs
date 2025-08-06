@@ -38,7 +38,6 @@ public abstract class Unit : MonoBehaviour
             {
                 var clip = state.state.motion as AnimationClip;
                 animClipDic.Add(state.state.name, clip.length);
-                print(state.state.name);
             }
         }
     }

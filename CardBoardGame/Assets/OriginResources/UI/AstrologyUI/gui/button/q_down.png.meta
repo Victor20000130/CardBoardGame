@@ -1,10 +1,7 @@
 fileFormatVersion: 2
-guid: 30e7a82ba616b244c836f924571b1d30
+guid: 016dacd865e99da46a9e2c116c29a02a
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -2282990572870065373
-    second: arrow_cross_0
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -42,7 +39,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -113,23 +110,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: arrow_cross_0
+      name: q_down_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 128
-        height: 128
+        width: 70
+        height: 70
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 323a3867b203150e0800000000000000
-      internalID: -2282990572870065373
+      spriteID: 822d295f47b621f48b15079518edc879
+      internalID: 135489253
       vertices: []
       indices: 
       edges: []
@@ -138,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 3e6a119c24492d64e8c2c985e43e140a
+    spriteID: c2cf3eabb53a71f4697a3d29aada1827
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      arrow_cross_0: -2282990572870065373
+      q_down_0: 135489253
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

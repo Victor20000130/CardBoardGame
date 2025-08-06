@@ -84,6 +84,11 @@ public class BattleHandler : Handler
 
         }
         originMonsterSO = monsterSO;
+        if (monsterSO == null)
+        {
+            Debug.LogError("monsterSO is NULL");
+        }
+        print(currentStage);
         monster.MonsterSO = ScriptableObject.CreateInstance<MonsterSO>();
         originMonsterSO.Copy(monster.MonsterSO);
         monster.Initialize();

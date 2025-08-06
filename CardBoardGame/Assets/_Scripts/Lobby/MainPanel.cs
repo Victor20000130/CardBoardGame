@@ -45,6 +45,7 @@ public class MainPanel : LobbyPanel
         // TODO : 데이터 저장관리 로직 완성 시 호출
         // lobbyUIHandler.OpenPanel(LobbyPanelType.SaveDataPanel);
         lobbyUIHandler.OpenPanel(LobbyPanelType.DifficultyPanel);
+        gameObject.SetActive(false);
     }
     private void OnHowToPlayButtonClicked()
     {
