@@ -71,6 +71,7 @@ public class CardHandler : Handler
     [SerializeField] private Button numberOrderButton;
     [SerializeField] private Button shapeOrderButton;
     [SerializeField] private GameObject cardPanel;
+    [SerializeField] private GameObject cardUpDownPanel;
     [SerializeField] private RectTransform drawnCard;
     [SerializeField] private RectTransform ownCard;
 

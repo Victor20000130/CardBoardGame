@@ -158,6 +158,9 @@ public class GameManager : MonoBehaviour
                 MiniGameHandler.StartMiniGame(gridData.gridType);
                 //TODO MiniGameHandler 제작 예정
                 break;
+            case GridType.Buff:
+
+                break;
             default:
                 StartCoroutine(CardGameCoroutine());
                 break;

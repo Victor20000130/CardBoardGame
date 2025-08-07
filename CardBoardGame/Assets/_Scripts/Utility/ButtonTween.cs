@@ -15,6 +15,10 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         m_RectTransform = GetComponent<RectTransform>();
     }
+    private void OnEnable()
+    {
+        transform.DOScale(originalScale, 0);
+    }
     public void OnPointerEnter(PointerEventData eventData)
     {
 

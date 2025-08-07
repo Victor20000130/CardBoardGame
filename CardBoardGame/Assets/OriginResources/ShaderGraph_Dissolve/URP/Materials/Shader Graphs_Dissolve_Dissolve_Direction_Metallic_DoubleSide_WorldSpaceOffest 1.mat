@@ -9,11 +9,10 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Shader Graphs_Dissolve_Dissolve_Direction_Metallic_DoubleSide_WorldSpaceOffest
     1
-  m_Shader: {fileID: -6465566751694194690, guid: 479a3a5ebe2be224c9db1e0fd92977df, type: 3}
+  m_Shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - BOOLEAN_USE_WROLDSPACE_ON
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -28,6 +27,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -57,9 +60,10 @@ Material:
     - BOOLEAN_USE_WROLDSPACE: 1
     - BOOLEAN_WORLDORIGIN: 0
     - BOOLEAN_WROLDSPACE_OFFEST: 0
-    - _DierctionEdgeWidthScale: 23.92
+    - _ColorMask: 15
+    - _DierctionEdgeWidthScale: 0.9
     - _DirectionMaskScale: 4.21
-    - _Dissolve: 0.41
+    - _Dissolve: 0.697
     - _EdgeColorIntensity: 1
     - _EdgeWidth: 0.265
     - _Metallic: 0
@@ -69,8 +73,15 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Smoothness: 0.871
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
     m_Colors:
     - _BaseColor: {r: 0.1745283, g: 1, b: 0.8819078, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DirectionFactor: {r: 0, g: 0.1, b: 0, a: 0}
     - _DissolveDirection: {r: 0, g: 0.1, b: 0, a: 0}
     - _DissolveOffest: {r: 0, g: 0, b: 0, a: 0}
