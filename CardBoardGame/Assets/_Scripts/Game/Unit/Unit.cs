@@ -48,7 +48,7 @@ public abstract class Unit : MonoBehaviour
     protected abstract void OnInitialize();
     protected abstract void OnApplayEffect(GridType gridType);
     protected abstract void Heal();
-    protected abstract void Buff();
+    public abstract void Buff(bool isBuff);
 
     public abstract void ReflectUI();
 

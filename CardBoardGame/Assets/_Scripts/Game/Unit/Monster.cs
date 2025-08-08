@@ -59,9 +59,6 @@ public class Monster : Unit
             case GridType.MonsterHeal:
                 Heal();
                 break;
-            case GridType.Buff:
-                Buff();
-                break;
             default:
                 break;
         }
@@ -95,10 +92,17 @@ public class Monster : Unit
         _hpTMP.text = MonsterSO._curHP.ToString();
     }
 
-    protected override void Buff()
+    public override void Buff(bool isBuff)
     {
         print("몬스터 버프 효과");
-        MonsterSO._turn += 1;
+        if (isBuff)
+        {
+            MonsterSO._turn -= 1;
+        }
+        else
+        {
+            MonsterSO._turn += 1;
+        }
     }
 
     public override bool TakeDamage(float damage)

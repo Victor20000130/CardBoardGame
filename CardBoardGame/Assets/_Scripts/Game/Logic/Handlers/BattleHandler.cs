@@ -25,7 +25,6 @@ public class BattleHandler : Handler
     private bool isPlayerDie = false;
 
     private float tZFZMultiplierValue;
-
     public float DamageMultiplierValue
     {
         get => tZFZMultiplierValue;
@@ -129,7 +128,12 @@ public class BattleHandler : Handler
 
         damage += elemEffectDic[ElementType.Embers].CardEffectCalc(EffectType.Attack, damage, emberLevel);
 
-        print($"{damage}");
+        if (player.IsDamageHalf)
+        {
+            damage /= 2;
+            player.IsDamageHalf = false;
+
+        }
 
         if (player.IsDamageDouble)
         {
@@ -144,7 +148,7 @@ public class BattleHandler : Handler
             player.Attack();
             yield return new WaitForSeconds(player.GetAnimationClipLength("Attack"));
         }
-
+        print($"적용된 데미지: {damage}");
         yield return waitForSeconds;
 
         isMonsterDie = monster.TakeDamage(damage);
@@ -288,5 +292,21 @@ public class BattleHandler : Handler
             ElementType.Fair_Wind => Shape.Club,
             _ => Shape.Spade
         };
+    }
+
+    public IEnumerator GetBuffResult(bool isCorrect)
+    {
+        player.Buff(isCorrect);
+        monster.Buff(!isCorrect);
+        if (isCorrect)
+        {
+            player.PowerUp();
+            yield return new WaitForSeconds(player.GetAnimationClipLength("PowerUp"));
+        }
+        else
+        {
+            player.DamageHalf();
+            yield return new WaitForSeconds(player.GetAnimationClipLength("DamageHalf"));
+        }
     }
 }

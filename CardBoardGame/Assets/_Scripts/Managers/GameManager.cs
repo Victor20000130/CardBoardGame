@@ -154,12 +154,15 @@ public class GameManager : MonoBehaviour
 
         switch (gridData.gridType)
         {
+            case GridType.Start:
+                // PieceHandler.
+                break;
             case GridType.MiniGame:
                 MiniGameHandler.StartMiniGame(gridData.gridType);
                 //TODO MiniGameHandler 제작 예정
                 break;
             case GridType.Buff:
-
+                CardHandler.StartCardUpDown();
                 break;
             default:
                 StartCoroutine(CardGameCoroutine());
@@ -252,7 +255,16 @@ public class GameManager : MonoBehaviour
         BattleHandler.DamageMultiplierValue = damageMultiplierValue;
         StartCoroutine(CardGameCoroutine());
     }
+    public void GetUpDownCardResult(bool isCorrect)
+    {
+        StartCoroutine(BuffAndCardGameCoroutine(isCorrect));
+    }
 
+    private IEnumerator BuffAndCardGameCoroutine(bool isCorrect)
+    {
+        yield return StartCoroutine(BattleHandler.GetBuffResult(isCorrect));
+        yield return StartCoroutine(CardGameCoroutine());
+    }
     public void CardSelectTimeOver()
     {
         CardHandler.HandRankings = HandRankings.Solo;

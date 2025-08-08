@@ -1,3 +1,4 @@
+using System;
 using CardBoardGame.Assets._Scripts.Utility;
 using TMPro;
 using UnityEngine;
@@ -18,10 +19,16 @@ public class Player : Unit
         set => _playerSO = value;
     }
     private bool isDamageDouble;
+    private bool isDamageHalf;
     public bool IsDamageDouble
     {
         get => isDamageDouble;
         set => isDamageDouble = value;
+    }
+    public bool IsDamageHalf
+    {
+        get => isDamageHalf;
+        set => isDamageHalf = value;
     }
     protected override void OnInitialize()
     {
@@ -41,9 +48,6 @@ public class Player : Unit
             case GridType.PlayerHeal:
                 Heal();
                 break;
-            case GridType.Buff:
-                Buff();
-                break;
             default:
                 print("효과 적용 안함");
                 break;
@@ -56,10 +60,17 @@ public class Player : Unit
         _hpTMP.text = _playerSO.CurHP.ToString();
     }
 
-    protected override void Buff()
+    public override void Buff(bool isBuff)
     {
         print("플레이어 버프 효과");
-        isDamageDouble = true;
+        if (isBuff)
+        {
+            isDamageDouble = true;
+        }
+        else
+        {
+            isDamageHalf = true;
+        }
     }
 
     public override bool TakeDamage(float damage)
@@ -85,5 +96,15 @@ public class Player : Unit
     {
         _hpTMP.text = _playerSO.CurHP.ToString();
         _barriorTMP.text = _playerSO.Barriar.ToString();
+    }
+
+    internal void PowerUp()
+    {
+        _anim.SetTrigger("PowerUp");
+    }
+
+    internal void DamageHalf()
+    {
+        _anim.SetTrigger("DamageHalf");
     }
 }

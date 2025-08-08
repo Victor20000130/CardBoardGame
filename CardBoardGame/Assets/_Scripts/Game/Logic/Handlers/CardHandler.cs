@@ -6,7 +6,8 @@ using UnityEngine.UI;
 using Random = System.Random;
 using System.Linq;
 using DG.Tweening;
-
+using System.Collections;
+using System.Threading.Tasks;
 public class CardHandler : Handler
 {
 
@@ -61,6 +62,7 @@ public class CardHandler : Handler
     private int currIdx = 0;
     [SerializeField] private Card[] monsterCard;
     [SerializeField] private Card[] userCard;
+    [SerializeField] private SpriteRendererCard[] upDownCard;
     [SerializeField] private CardResultWrapper cardResultWrapper;
     public CardResultWrapper CardResultWrapperPropertie
     {
@@ -70,6 +72,8 @@ public class CardHandler : Handler
     [SerializeField] private Button throwButton;
     [SerializeField] private Button numberOrderButton;
     [SerializeField] private Button shapeOrderButton;
+    [SerializeField] private Button cardUpButton;
+    [SerializeField] private Button cardDownButton;
     [SerializeField] private GameObject cardPanel;
     [SerializeField] private GameObject cardUpDownPanel;
     [SerializeField] private RectTransform drawnCard;
@@ -85,7 +89,7 @@ public class CardHandler : Handler
         set => handRankings = value;
     }
     private int selectedCount = 0;
-
+    private int currUpDownCardIdx = 0;
     private List<Card> selectedCards = new List<Card>(MaxHandCount);
     public List<Card> SelectedCards => selectedCards;
     private List<Card> throwedCards = new List<Card>(MaxPairCount + 1);
@@ -94,6 +98,7 @@ public class CardHandler : Handler
     public List<Card> SelectedUserCards => selectedUserCards;
 
     public float CardsHideY = 1000;
+    public float UpDownCardYValue;
     public int CanThrowCount
     {
         get => cardResultWrapper.CanThrowCount;
@@ -144,6 +149,7 @@ public class CardHandler : Handler
         (HandRankings.Solo, () => selectedCount == 1),
         };
         cardResultWrapper.cardShuffleAct += Shuffle;
+
     }
     protected override void SetHnadlerType()
     {
@@ -222,7 +228,10 @@ public class CardHandler : Handler
         shapeOrderButton.onClick.AddListener(() => StartCoroutine(drawnCardCurveLayOut.SortLayout()));
         shapeOrderButton.onClick.AddListener(() => StartCoroutine(ownCardCurveLayOut.SortLayout()));
 
+        cardUpButton.onClick.AddListener(() => GetNextCardValue(true));
+        cardDownButton.onClick.AddListener(() => GetNextCardValue(false));
     }
+
     /// <summary>
     /// ownCard의 경우 -로 적용
     /// </summary>
@@ -589,6 +598,77 @@ public class CardHandler : Handler
         return selectedCards.All(c => c.CardData.number == Number.King);
     }
 
+    public void StartCardUpDown()
+    {
+        cardUpDownPanel.SetActive(true);
+        UpDownCardButtonOnOff(true);
+        foreach (SpriteRendererCard card in upDownCard)
+        {
+            card.CardData = cardSO.cards[deck[currIdx++]];
+            card.Initialize();
+        }
+        upDownCard[currUpDownCardIdx].transform.DORotate(new Vector3(0, UpDownCardYValue, 0), 1.5f, RotateMode.FastBeyond360).SetEase(Ease.OutExpo);
+        Shuffle();
+    }
+
+    private void GetNextCardValue(bool isUp)
+    {
+        if (currUpDownCardIdx == upDownCard.Length - 1)
+        {
+            return;
+        }
+
+        bool isNextCardValHigher = IsNextCardValueHigher(upDownCard[currUpDownCardIdx].CardData, upDownCard[currUpDownCardIdx + 1].CardData);
+        bool isCorrect = false;
+        UpDownCardButtonOnOff(isCorrect);
+        if (isUp)
+        {
+            if (isNextCardValHigher)
+            {
+                isCorrect = true;
+            }
+        }
+        else
+        {
+            if (!isNextCardValHigher)
+            {
+                isCorrect = true;
+            }
+        }
+        currUpDownCardIdx++;
+        upDownCard[currUpDownCardIdx].transform.DORotate(new Vector3(0, UpDownCardYValue, 0), 1.5f, RotateMode.FastBeyond360).SetEase(Ease.OutExpo).onComplete += () => UpDownCardButtonOnOff(isCorrect);
+        if (!isCorrect || currUpDownCardIdx == upDownCard.Length - 1)
+        {
+            StartCoroutine(UpDownCardGameEnd(isCorrect));
+        }
+    }
+
+    private IEnumerator UpDownCardGameEnd(bool isCorrect)
+    {
+        yield return new WaitForSeconds(4);
+        ManagerHandler.Instance.gameManager.GetUpDownCardResult(isCorrect);
+        cardUpDownPanel.SetActive(false);
+    }
+
+    private bool IsNextCardValueHigher(CardData curr, CardData next)
+    {
+        if (curr.number < next.number)
+        {
+            return true;
+        }
+        if (curr.number > next.number)
+        {
+            return false;
+        }
+        // 숫자가 같으면 shape 비교
+        return curr.shape > next.shape;
+    }
+
+    private void UpDownCardButtonOnOff(bool isOn)
+    {
+        cardDownButton.interactable = isOn;
+        cardUpButton.interactable = isOn;
+    }
 }
 
 // 카드 셔플 유틸리티

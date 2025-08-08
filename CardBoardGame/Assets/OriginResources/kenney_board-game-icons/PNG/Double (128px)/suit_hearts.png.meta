@@ -116,12 +116,12 @@ TextureImporter:
       name: suit_hearts_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 23
-        width: 102
-        height: 82
+        x: 0
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 44e060dc7bf1d324dbbb5b76b589b6b5
     internalID: 0
     vertices: []
     indices: 

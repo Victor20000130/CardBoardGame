@@ -85,7 +85,6 @@ public class Card : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler
         this.cardHandler = cardHandler;
         deSelectAction += DeSelectAction;
     }
-
     // public void OnPointerEnter(PointerEventData eventData)
     // {
     //     _Canvas.sortingOrder++;
