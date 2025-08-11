@@ -10,12 +10,14 @@ public class StageSO : ScriptableObject
     public struct GridInfo
     {
         public GridType gridType;
+        public string title;
+
         [TextArea(minLines: 2, maxLines: 10)]
         public string info;
     }
     public GridInfo[] gridInfoByType;
 
-    private Dictionary<GridType, string> gridInfoMap;
+    private Dictionary<GridType, (string, string)> gridInfoMap;
 
     [SerializeField]
     private MonsterSO[] monsterSO;
@@ -71,19 +73,20 @@ public class StageSO : ScriptableObject
     {
         if (gridInfoMap == null)
         {
-            gridInfoMap = new Dictionary<GridType, string>();
+            gridInfoMap = new Dictionary<GridType, (string, string)>();
             foreach (GridInfo gridInfo in gridInfoByType)
             {
                 if (!gridInfoMap.ContainsKey(gridInfo.gridType))
                 {
-                    gridInfoMap.Add(gridInfo.gridType, gridInfo.info);
+                    gridInfoMap.Add(gridInfo.gridType, (gridInfo.title, gridInfo.info));
                 }
             }
         }
 
         foreach (GridData gridData in curGridSO.GridDataArray)
         {
-            gridData.Info = gridInfoMap[gridData.gridType];
+            gridData.Title = gridInfoMap[gridData.gridType].Item1;
+            gridData.Info = gridInfoMap[gridData.gridType].Item2;
         }
 
     }

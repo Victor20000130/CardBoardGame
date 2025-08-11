@@ -10,7 +10,10 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-
+    [SerializeField]
+    private RectTransform canvasRt;
+    private PopUpUI popUpUI;
+    private RectTransform popUpRect;
     private StageSO curStageSO;
     public StageSO StageSO
     {
@@ -106,7 +109,9 @@ public class GameManager : MonoBehaviour
 
         onPieceMove += GridHandler.GetCurrentGridData;
         CardHandler.CanThrowCount = BattleHandler.CanThrowCount;
-
+        canvasRt = GameUIHandler.CanvasRt;
+        popUpUI = GameUIHandler.popUpUI;
+        popUpRect = popUpUI.GetComponent<RectTransform>();
         Debug.Log("GameManager: 핸들러 초기화 완료");
     }
 
@@ -146,7 +151,6 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(PieceHandler.MoveCorou(diceValue, onPieceMove));
     }
-
     public void ReceiveGridData(GridData gridData)
     {
         BattleHandler.ReceiveGridType(gridData.gridType);
@@ -155,7 +159,7 @@ public class GameManager : MonoBehaviour
         switch (gridData.gridType)
         {
             case GridType.Start:
-                // PieceHandler.
+                GridHandler.IsMarbleUIOn = true;
                 break;
             case GridType.MiniGame:
                 MiniGameHandler.StartMiniGame(gridData.gridType);
@@ -270,4 +274,36 @@ public class GameManager : MonoBehaviour
         CardHandler.HandRankings = HandRankings.Solo;
         CardHandler.CardSelectFin();
     }
+
+    public void SetGridInfos(string title, string infos, Sprite sprite)
+    {
+        GridHandler.GridPopUp(title, infos, sprite);
+    }
+
+    public void GridInfosUIActive(bool isOn)
+    {
+        GridHandler.IsGridPopUpOn = isOn;
+    }
+    public IEnumerator PopUpFollowMousePoint()
+    {
+        while (true)
+        {
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRt, Input.mousePosition, Camera.main, out Vector3 anchoredPosition))
+            {
+                popUpRect.position = anchoredPosition;
+            }
+            yield return null;
+        }
+    }
+    public void MarbleUIOff()
+    {
+        GridHandler.IsMarbleUIOn = false;
+    }
+
+    public void PopUpActivation(bool isOn) =>
+    popUpUI.gameObject.SetActive(isOn);
+
+    public void SetPopUpInfos(string title, string infos, Sprite sprite, Vector2 pivot) =>
+    popUpUI.SetPopUpInfos(title, infos, sprite, pivot);
+
 }

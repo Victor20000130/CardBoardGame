@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CardBoardGame.Assets._Scripts.Utility;
 using UnityEngine;
@@ -5,8 +6,9 @@ using UnityEngine.UI;
 
 public class GameUIHandler : Handler
 {
+    public RectTransform CanvasRt;
+    public PopUpUI popUpUI;
     private const int LevelPerUsedCards = 10;
-
     [SerializeField]
     private Material levelOnMat;
     [SerializeField]
@@ -17,9 +19,8 @@ public class GameUIHandler : Handler
 
     [SerializeField]
     private Image fillArea;
-
+    [SerializeField] private Button[] gameUIBTNs;
     private float timer = 0f;
-
     public int CardSelectTime = 90;
     private bool isCardSelectTime = false;
     public bool IsCardSelectTime
@@ -34,6 +35,7 @@ public class GameUIHandler : Handler
             }
         }
     }
+
     private void Awake()
     {
         if (elementObjs.Length < 3)
@@ -94,4 +96,6 @@ public class GameUIHandler : Handler
             timer = 0;
         }
     }
+
 }
+

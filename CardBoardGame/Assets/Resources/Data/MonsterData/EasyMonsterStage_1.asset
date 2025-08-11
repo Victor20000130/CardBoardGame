@@ -16,5 +16,5 @@ MonoBehaviour:
   _maxHP: 250
   _curHP: 250
   _damage: 5
-  _turn: 5
+  _turn: 1
   IsHeal: 0

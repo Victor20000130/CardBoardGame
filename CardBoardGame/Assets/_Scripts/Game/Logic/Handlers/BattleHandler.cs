@@ -37,6 +37,7 @@ public class BattleHandler : Handler
     }
 
     private bool isTZFZmultipleCalc = false;
+    private WaitForSeconds waitForSeconds = new(1f);
 
     protected override void OnInitialize()
     {
@@ -110,13 +111,10 @@ public class BattleHandler : Handler
         handlerType = HandlerType.BattleHandler;
     }
 
-    public IEnumerator RecieveDamageValue(float originDamage, CardHandler.CardResultWrapper cardResultWrapper)
+    public IEnumerator PlayerCoroutine(float originDamage, CardHandler.CardResultWrapper cardResultWrapper)
     {
         int emberLevel = cardResultWrapper.UsedCardDic[Shape.Spade];
-        int sprayLevel = cardResultWrapper.UsedCardDic[Shape.Diamond];
 
-        WaitForSeconds waitForSeconds = new(1f);
-        yield return null;
         float damage = originDamage;
 
         print(damage);
@@ -152,6 +150,68 @@ public class BattleHandler : Handler
         yield return waitForSeconds;
 
         isMonsterDie = monster.TakeDamage(damage);
+
+        isTZFZmultipleCalc = false;
+        tZFZMultiplierValue = 1;
+    }
+
+    public IEnumerator MonsterCoroutine()
+    {
+
+        monster.ReflectUI();
+        yield return waitForSeconds;
+
+        monster.Attack();
+        yield return new WaitForSeconds(monster.GetAnimationClipLength("Attack"));
+
+        isPlayerDie = player.TakeDamage(monster.MonsterSO._damage);
+        yield return new WaitForSeconds(player.GetAnimationClipLength("TakeDamage"));
+        if (isPlayerDie)
+        {
+            yield return new WaitForSeconds(player.GetAnimationClipLength("Die"));
+            ManagerHandler.Instance.gameManager.GameOver(isPlayerDie);
+            yield break;
+        }
+        yield return waitForSeconds;
+        monster.MonsterSO._turn = originMonsterSO._turn;
+    }
+
+    public IEnumerator RecieveDamageValue(float originDamage, CardHandler.CardResultWrapper cardResultWrapper)
+    {
+
+        int sprayLevel = cardResultWrapper.UsedCardDic[Shape.Diamond];
+
+        #region Player
+        // yield return null;
+        // float damage = originDamage;
+        // print(damage);
+        // if (isTZFZmultipleCalc)
+        // {
+        //     damage *= tZFZMultiplierValue;
+        // }
+        // damage += elemEffectDic[ElementType.Embers].CardEffectCalc(EffectType.Attack, damage, emberLevel);
+        // if (player.IsDamageHalf)
+        // {
+        //     damage /= 2;
+        //     player.IsDamageHalf = false;
+        // }
+        // if (player.IsDamageDouble)
+        // {
+        //     damage *= 2;
+        //     player.IsDamageDouble = false;
+        //     player.SlashPlay();
+        //     yield return new WaitForSeconds(player.GetAnimationClipLength("Slash"));
+        //     yield return new WaitForSeconds(player.GetAnimationClipLength("Dodge"));
+        // }
+        // else
+        // {
+        //     player.Attack();
+        //     yield return new WaitForSeconds(player.GetAnimationClipLength("Attack"));
+        // }
+        #endregion
+
+        yield return StartCoroutine(PlayerCoroutine(originDamage, cardResultWrapper));
+
         if (isMonsterDie)
         {
             ReflectUI();
@@ -159,31 +219,35 @@ public class BattleHandler : Handler
             ManagerHandler.Instance.gameManager.NextStage(isMonsterDie);
             yield break;
         }
-
-        monster.MonsterSO._turn--;
+        if (monster.MonsterSO._turn != 0)
+        {
+            monster.MonsterSO._turn--;
+        }
 
         if (monster.MonsterSO._turn == 0)
         {
 
-            isTZFZmultipleCalc = false;
-            tZFZMultiplierValue = 1;
+            #region Monster
+            // isTZFZmultipleCalc = false;
+            // tZFZMultiplierValue = 1;
 
-            monster.ReflectUI();
-            yield return waitForSeconds;
+            // monster.ReflectUI();
+            // yield return waitForSeconds;
 
-            monster.Attack();
-            yield return new WaitForSeconds(monster.GetAnimationClipLength("Attack"));
+            // monster.Attack();
+            // yield return new WaitForSeconds(monster.GetAnimationClipLength("Attack"));
 
-            isPlayerDie = player.TakeDamage(monster.MonsterSO._damage);
-            yield return new WaitForSeconds(player.GetAnimationClipLength("TakeDamage"));
-            if (isPlayerDie)
-            {
-                yield return new WaitForSeconds(player.GetAnimationClipLength("Die"));
-                ManagerHandler.Instance.gameManager.GameOver(isPlayerDie);
-                yield break;
-            }
+            // isPlayerDie = player.TakeDamage(monster.MonsterSO._damage);
+            // yield return new WaitForSeconds(player.GetAnimationClipLength("TakeDamage"));
+            // if (isPlayerDie)
+            // {
+            //     yield return new WaitForSeconds(player.GetAnimationClipLength("Die"));
+            //     ManagerHandler.Instance.gameManager.GameOver(isPlayerDie);
+            //     yield break;
+            // }
+            #endregion
 
-            yield return waitForSeconds;
+            yield return StartCoroutine(MonsterCoroutine());
 
             if (player.PlayerSO.CurHP < player.PlayerSO.MaxHP)
             {
@@ -196,11 +260,11 @@ public class BattleHandler : Handler
                 }
             }
 
-            monster.MonsterSO._turn = originMonsterSO._turn;
             ReflectUI();
             ManagerHandler.Instance.gameManager.DiceRollCoroutine();
             yield break;
         }
+
         ReflectUI();
         EveryTurnEffect(cardResultWrapper);
         ManagerHandler.Instance.gameManager.AfterBattleRoutine();
@@ -298,6 +362,7 @@ public class BattleHandler : Handler
     {
         player.Buff(isCorrect);
         monster.Buff(!isCorrect);
+        ReflectUI();
         if (isCorrect)
         {
             player.PowerUp();
@@ -308,5 +373,10 @@ public class BattleHandler : Handler
             player.DamageHalf();
             yield return new WaitForSeconds(player.GetAnimationClipLength("DamageHalf"));
         }
+        if (monster.MonsterSO._turn == 0)
+        {
+            yield return StartCoroutine(MonsterCoroutine());
+        }
+        ReflectUI();
     }
 }
