@@ -19,7 +19,6 @@ public class GameUIHandler : Handler
 
     [SerializeField]
     private Image fillArea;
-    [SerializeField] private Button[] gameUIBTNs;
     private float timer = 0f;
     public int CardSelectTime = 90;
     private bool isCardSelectTime = false;

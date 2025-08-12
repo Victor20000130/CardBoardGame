@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PopUpUI : MonoBehaviour
 {
@@ -9,15 +10,14 @@ public class PopUpUI : MonoBehaviour
     private TextMeshProUGUI title;
     [SerializeField]
     private TextMeshProUGUI infos;
+    [SerializeField]
+    private Image image;
 
-    private void Awake()
-    {
-        _Rt = GetComponent<RectTransform>();
-    }
     public void SetPopUpInfos(string title, string infos, Sprite sprite, Vector2 pivot)
     {
         this.title.text = title;
         this.infos.text = infos;
+        this.image.sprite = sprite;
         _Rt.pivot = pivot;
     }
 

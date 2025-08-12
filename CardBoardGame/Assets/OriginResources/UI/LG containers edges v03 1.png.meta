@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 66133e10f355ecb4eae4b991f0c3d140
+guid: e45aa277bbf821b41a3299c33f4678ea
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -45,11 +45,11 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 0.01
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 0.001
+  spriteBorder: {x: 110, y: 160, z: 110, w: 160}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LG containers edges v01_0
+      name: LG containers edges v03_0
       rect:
         serializedVersion: 2
         x: 0
@@ -119,14 +119,14 @@ TextureImporter:
         height: 450
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 170, y: 180, z: 170, w: 180}
+      border: {x: 170, y: 175, z: 170, w: 175}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82b077b95ab9d7b4abf0aa58f740fa70
-      internalID: -1342923352
+      spriteID: f43352fc1bdf40c4d998a009c9ee70fe
+      internalID: -105411273
       vertices: []
       indices: 
       edges: []
@@ -135,8 +135,8 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: f3f4cfba4f8043f4aaaa43d37f5e88c2
-    internalID: 0
+    spriteID: ee68eee2ebd1a6d49a8e18bafd2f28bb
+    internalID: -1520802830
     vertices: []
     indices: 
     edges: []
@@ -145,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      LG containers edges v01_0: -1342923352
+      LG containers edges v03_0: -105411273
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

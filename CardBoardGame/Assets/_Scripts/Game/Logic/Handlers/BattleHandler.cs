@@ -150,7 +150,7 @@ public class BattleHandler : Handler
         yield return waitForSeconds;
 
         isMonsterDie = monster.TakeDamage(damage);
-
+        yield return new WaitForSeconds(monster.GetAnimationClipLength("TakeDamage"));
         isTZFZmultipleCalc = false;
         tZFZMultiplierValue = 1;
     }
