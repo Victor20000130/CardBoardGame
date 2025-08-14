@@ -550,19 +550,15 @@ public class CardHandler : Handler
         return true;
     }
 
-    /// <summary> 모두 다른 문양, 모두 Ace 또는 모두 King </summary>
+    /// <summary> 모두 다른 문양, 연속되는 숫자가 1~5 또는 9~13인 경우만 true </summary>
     private bool IsAtropos()
     {
-        if (selectedCount != MaxHandCount)
+        if (selectedCount != MaxHandCount || selectedCards.Count == 0)
         {
             return false;
         }
 
-        if (selectedCards.Count == 0)
-        {
-            return false;
-        }
-
+        // 모두 다른 문양인지 확인
         bool allShapeDistinct = selectedCards.Select(c => c.CardData.shape)
                                              .Distinct()
                                              .Count() == MaxHandCount;
@@ -571,8 +567,16 @@ public class CardHandler : Handler
             return false;
         }
 
-        return selectedCards.All(c => c.CardData.number == Number.Ace) ||
-               selectedCards.All(c => c.CardData.number == Number.King);
+        // 숫자 오름차순 정렬
+        var numbers = selectedCards.Select(c => (int)c.CardData.number)
+                                  .OrderBy(n => n)
+                                  .ToList();
+
+        // 1~5 또는 9~13인지 확인
+        bool isOneToFive = numbers.SequenceEqual(Enumerable.Range(1, 4));
+        bool isNineToThirteen = numbers.SequenceEqual(Enumerable.Range(9, 5));
+
+        return isOneToFive || isNineToThirteen;
     }
 
     /// <summary> 모두 같은 문양, 모두 King </summary>

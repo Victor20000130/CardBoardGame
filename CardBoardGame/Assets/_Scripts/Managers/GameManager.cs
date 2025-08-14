@@ -237,7 +237,9 @@ public class GameManager : MonoBehaviour
         int nextStage = (int)++StageHandler.CurrentStage;
         if (Enum.IsDefined(typeof(Stage), nextStage))
         {
-            StageHandler.CurrentStage = (Stage)nextStage;
+            StageHandler.StageClear();
+            StageHandler.SelectStagePanelOpen();
+
         }
         else
         {
