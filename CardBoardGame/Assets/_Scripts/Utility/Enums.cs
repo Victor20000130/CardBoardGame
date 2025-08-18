@@ -86,16 +86,19 @@ namespace CardBoardGame.Assets._Scripts.Utility
     public enum HandRankings
     {
         None,
-        Solo,           //숫자가 가장 높은 카드 1장
-        Dyad,           //숫자가 같은 카드 2장
-        Dyad_Set,       //다이어드 2개
-        Triad,          //숫자가 같은 카드 3장
-        Tetrad,         //숫자가 같은 카드 4장
-        Soma,           //같은 무늬 카드 5장
-        Legion,         //숫자가 같은 카드 3장과, 2장
-        Nemesis,        //무늬가 같고 숫자가 연속되는 카드 5장
-        Atropos,        //무늬가 다른, 최고 또는 최소 숫자카드 4장
-        Aion            //무늬가 같은 최고 숫자카드 5장
+        Solo,           //노페어
+        Dyad,           //원페어
+        Dyad_Set,       //투페어
+        Triad,          //트리플
+        Hermes,         //스트레이트
+        Ananke,         //백스트레이트
+        Atlas,          //마운틴
+        Soma,           //플러쉬
+        Legion,         //풀하우스
+        Tetrad,         //포카드
+        Nemesis,        //스트레이트 플러쉬
+        Atropos,        //백 스트레이트 플러쉬
+        Aion            //로얄 스트레이트 플러쉬
     }
 
     public enum ElementType

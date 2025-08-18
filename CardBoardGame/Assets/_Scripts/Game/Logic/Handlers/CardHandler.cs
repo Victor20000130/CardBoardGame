@@ -128,8 +128,10 @@ public class CardHandler : Handler
         drawnCardCurveLayOut = drawnCard.GetComponent<CurveLayout>();
         ownCardCurveLayOut = ownCard.GetComponent<CurveLayout>();
 
-        cardSO = Resources.Load<CardSO>("Data/UtilityData/CardSO");
-        cardSO.InitCardSO();
+        CardSO originCardSO = Resources.Load<CardSO>("Data/UtilityData/CardSO");
+        originCardSO.InitCardSO();
+        cardSO = ScriptableObject.CreateInstance<CardSO>();
+        originCardSO.Copy(cardSO);
         deck = Enumerable.Range(0, 52).ToList();
         Shuffle();
         SetAllCardsInteractable(false);
@@ -140,9 +142,12 @@ public class CardHandler : Handler
         (HandRankings.Aion, IsAion),
         (HandRankings.Atropos, IsAtropos),
         (HandRankings.Nemesis, IsNemesis),
+        (HandRankings.Tetrad, IsTetrad),
         (HandRankings.Legion, IsLegion),
         (HandRankings.Soma, IsSoma),
-        (HandRankings.Tetrad, IsTetrad),
+        (HandRankings.Atlas, IsAtlas),
+        (HandRankings.Ananke, IsAnanke),
+        (HandRankings.Hermes, IsHermes),
         (HandRankings.Triad, IsTriad),
         (HandRankings.Dyad_Set, IsDyad_Set),
         (HandRankings.Dyad, IsDyad),
@@ -151,6 +156,7 @@ public class CardHandler : Handler
         cardResultWrapper.cardShuffleAct += Shuffle;
 
     }
+
     protected override void SetHnadlerType()
     {
         handlerType = HandlerType.CardHandler;
@@ -436,7 +442,20 @@ public class CardHandler : Handler
         CardSelectFin();
 
     }
-
+    public void TestCard()
+    {
+        selectedCount = 5;
+        handRankings = HandRankings.None;
+        foreach (var (ranking, checker) in rankingChecks)
+        {
+            if (checker())
+            {
+                handRankings = ranking;
+                break;
+            }
+        }
+        print(handRankings);
+    }
     private void CardListsClear()
     {
         selectedCards.Clear();
@@ -456,12 +475,11 @@ public class CardHandler : Handler
     // --- 카드 특수 효과 ---
 
     /// <summary> 특수효과 검출 전 전부 같은 모양인지 확인 </summary>
-    [Obsolete]
-    private bool IsSameShape()
+    private bool IsAnyDifferentShape()
     {
         var firstShape = selectedCards[0].CardData.shape;
 
-        if (!selectedCards.All(c => c.CardData.shape == firstShape))
+        if (!selectedCards.Any(c => c.CardData.shape != firstShape))
         {
             return false;
         }
@@ -470,11 +488,17 @@ public class CardHandler : Handler
 
     // --- 핸드 랭킹 판별 메서드들 ---
 
-    /// <summary> 같은 숫자 2장(페어) </summary>
+    /// <summary> 같은 숫자 2장(원페어) </summary>
     private bool IsDyad() =>
         selectedCount >= MaxPairCount &&
         selectedCards.GroupBy(c => c.CardData.number)
                      .Any(g => g.Count() == MaxPairCount);
+
+    /// <summary> 2장짜리 페어가 2쌍(투페어) </summary>
+    private bool IsDyad_Set() =>
+        selectedCount >= MaxQuadCount &&
+        selectedCards.GroupBy(c => c.CardData.number)
+                     .Count(g => g.Count() == MaxPairCount) == MaxPairCount;
 
     /// <summary> 같은 숫자 3장(트리플) </summary>
     private bool IsTriad() =>
@@ -482,17 +506,113 @@ public class CardHandler : Handler
         selectedCards.GroupBy(c => c.CardData.number)
                      .Any(g => g.Count() == MaxTripleCount);
 
-    /// <summary> 2장짜리 페어가 2쌍 </summary>
-    private bool IsDyad_Set() =>
-        selectedCount >= MaxQuadCount &&
-        selectedCards.GroupBy(c => c.CardData.number)
-                     .Count(g => g.Count() == MaxPairCount) == MaxPairCount;
+    /// <summary> 모두 다른 문양, 연속되는 숫자가 1~5, 1,10,11,12,13이 아닌경우만 true(스트레이트) </summary>
+    private bool IsHermes()
+    {
+        print(1);
+        if (!IsFullSelect())
+        {
+            return false;
+        }
+        print(11);
 
-    /// <summary> 같은 숫자 4장(쿼드) </summary>
-    private bool IsTetrad() =>
-        selectedCount >= MaxQuadCount &&
-        selectedCards.GroupBy(c => c.CardData.number)
-                     .Any(g => g.Count() == MaxQuadCount);
+        if (!IsAllDifferentShape())
+        {
+            print(2);
+            return false;
+        }
+        print(111);
+
+        // 숫자 오름차순 정렬
+        var numbers = selectedCards.Select(c => (int)c.CardData.number)
+                                  .OrderBy(n => n)
+                                  .ToList();
+
+        // 특정한 숫자 조합이 있는지 확인
+        List<List<int>> validCombinations = new List<List<int>>()
+        {
+        new List<int> { 1, 2, 11, 12, 13 },
+        new List<int> { 1, 2, 3, 12, 13 },
+        new List<int> { 1, 2, 3, 4, 13 }
+        };
+
+        bool containsValidCombination = validCombinations.Any(combo => combo.All(c => numbers.Contains(c)));
+
+        if (containsValidCombination)
+        {
+            return true;
+        }
+
+        for (int i = 1; i < numbers.Count; i++)
+        {
+            if (numbers[i] != numbers[i - 1] + 1)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /// <summary> 모두 다른 문양, A,2,3,4,5인 경우만 true(백스트레이트) </summary>
+    private bool IsAnanke()
+    {
+        if (!IsFullSelect())
+        {
+            return false;
+        }
+
+        if (!IsAllDifferentShape())
+        {
+            return false;
+        }
+
+        // 숫자 오름차순 정렬
+        var numbers = selectedCards.Select(c => (int)c.CardData.number)
+                                  .OrderBy(n => n)
+                                  .ToList();
+
+        // 1~5인지 확인
+        bool isOneToFive = numbers.SequenceEqual(Enumerable.Range(1, 5));
+        print(isOneToFive);
+        return isOneToFive;
+    }
+
+    /// <summary> 모두 다른 문양, 10, J, Q, K, A인 경우만 true(마운틴) </summary>
+    private bool IsAtlas()
+    {
+        print(44);
+        if (!IsFullSelect())
+        {
+            return false;
+        }
+        print(33);
+        // 모두 다른 문양인지 확인
+        if (!IsAllDifferentShape())
+        {
+            print(1);
+            return false;
+        }
+        print(2);
+
+        // 숫자 오름차순 정렬
+        var numbers = selectedCards.Select(c => (int)c.CardData.number)
+                                  .OrderBy(n => n)
+                                  .ToList();
+
+        List<int> compare = new List<int> { 1, 10, 11, 12, 13 };
+        foreach (int num in numbers)
+        {
+            print(num);
+        }
+        foreach (int num in compare)
+        {
+            print(num);
+        }
+        bool isTenToOne = numbers.SequenceEqual(compare);
+
+        print(isTenToOne);
+        return isTenToOne;
+    }
 
     /// <summary> 같은 문양 5장(플러시) </summary>
     private bool IsSoma() =>
@@ -503,7 +623,7 @@ public class CardHandler : Handler
     /// <summary> 3장+2장(풀하우스) </summary>
     private bool IsLegion()
     {
-        if (selectedCount != MaxHandCount)
+        if (!IsFullSelect())
         {
             return false;
         }
@@ -515,22 +635,23 @@ public class CardHandler : Handler
         return groups.Contains(MaxTripleCount) && groups.Contains(MaxPairCount);
     }
 
+    /// <summary> 같은 숫자 4장(포카드) </summary>
+    private bool IsTetrad() =>
+        selectedCount >= MaxQuadCount &&
+        selectedCards.GroupBy(c => c.CardData.number)
+                     .Any(g => g.Count() == MaxQuadCount);
+
     /// <summary> 같은 문양, 연속된 숫자 5장(스트레이트 플러시) </summary>
     private bool IsNemesis()
     {
-        if (selectedCount != MaxHandCount)
-        {
-            return false;
-        }
-
-        if (selectedCards.Count == 0)
+        if (!IsFullSelect())
         {
             return false;
         }
 
         var firstShape = selectedCards[0].CardData.shape;
 
-        if (!selectedCards.All(c => c.CardData.shape == firstShape))
+        if (IsAnyDifferentShape())
         {
             return false;
         }
@@ -538,6 +659,21 @@ public class CardHandler : Handler
         var numbers = selectedCards.Select(c => (int)c.CardData.number)
                                   .OrderBy(n => n)
                                   .ToList();
+
+        // 특정한 숫자 조합이 있는지 확인
+        List<List<int>> validCombinations = new List<List<int>>()
+        {
+        new List<int> { 1, 2, 11, 12, 13 },
+        new List<int> { 1, 2, 3, 12, 13 },
+        new List<int> { 1, 2, 3, 4, 13 }
+        };
+
+        bool containsValidCombination = validCombinations.Any(combo => combo.All(c => numbers.Contains(c)));
+
+        if (containsValidCombination)
+        {
+            return true;
+        }
 
         for (int i = 1; i < numbers.Count; i++)
         {
@@ -549,57 +685,63 @@ public class CardHandler : Handler
 
         return true;
     }
-
-    /// <summary> 모두 다른 문양, 연속되는 숫자가 1~5 또는 9~13인 경우만 true </summary>
+    /// <summary> 모두 같은 문양, 1,2,3,4,5 5장(백 스트레이트 플러쉬) </summary>
     private bool IsAtropos()
+    {
+        if (!IsFullSelect())
+        {
+            return false;
+        }
+
+        if (IsAnyDifferentShape())
+        {
+            return false;
+        }
+        var numbers = selectedCards.Select(c => (int)c.CardData.number)
+                                  .OrderBy(n => n)
+                                  .ToList();
+
+        bool isOneToFive = numbers.SequenceEqual(Enumerable.Range(1, 5));
+        return isOneToFive;
+    }
+
+    /// <summary> 모두 같은 문양, 1, 10,11,12,13 5장(로얄 스트레이트 플러쉬) </summary>
+    private bool IsAion()
+    {
+        if (!IsFullSelect())
+        {
+            return false;
+        }
+
+        if (IsAnyDifferentShape())
+        {
+            return false;
+        }
+        var numbers = selectedCards.Select(c => (int)c.CardData.number)
+                                  .OrderBy(n => n)
+                                  .ToList();
+
+        List<int> compare = new List<int> { 1, 10, 11, 12, 13 };
+        bool isTenToOne = numbers.SequenceEqual(compare);
+        return isTenToOne;
+    }
+
+    private bool IsAllDifferentShape()
+    {
+        // 모두 다른 문양인지 확인
+        bool allShapeDistinct = selectedCards.Select(c => c.CardData.shape)
+                                     .Distinct()
+                                     .Count() == MaxHandCount;
+        return !allShapeDistinct;
+    }
+
+    private bool IsFullSelect()
     {
         if (selectedCount != MaxHandCount || selectedCards.Count == 0)
         {
             return false;
         }
-
-        // 모두 다른 문양인지 확인
-        bool allShapeDistinct = selectedCards.Select(c => c.CardData.shape)
-                                             .Distinct()
-                                             .Count() == MaxHandCount;
-        if (!allShapeDistinct)
-        {
-            return false;
-        }
-
-        // 숫자 오름차순 정렬
-        var numbers = selectedCards.Select(c => (int)c.CardData.number)
-                                  .OrderBy(n => n)
-                                  .ToList();
-
-        // 1~5 또는 9~13인지 확인
-        bool isOneToFive = numbers.SequenceEqual(Enumerable.Range(1, 4));
-        bool isNineToThirteen = numbers.SequenceEqual(Enumerable.Range(9, 5));
-
-        return isOneToFive || isNineToThirteen;
-    }
-
-    /// <summary> 모두 같은 문양, 모두 King </summary>
-    private bool IsAion()
-    {
-        if (selectedCount != MaxHandCount)
-        {
-            return false;
-        }
-
-        if (selectedCards.Count == 0)
-        {
-            return false;
-        }
-
-        bool allShapeSame =
-        selectedCards.All(c => c.CardData.shape == selectedCards[0].CardData.shape);
-
-        if (!allShapeSame)
-        {
-            return false;
-        }
-        return selectedCards.All(c => c.CardData.number == Number.King);
+        return true;
     }
 
     public void StartCardUpDown()

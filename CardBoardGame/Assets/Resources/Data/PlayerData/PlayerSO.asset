@@ -15,7 +15,8 @@ MonoBehaviour:
   Name: User1
   MaxHP: 100
   CurHP: 100
-  CanThrowCount: 3
+  Barriar: 0
+  CanThrowCount: 100
   IsStart: 0
   IsHeal: 0
   IsBuff: 0

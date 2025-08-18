@@ -47,19 +47,17 @@ public class CardSO : ScriptableObject
 
     public void InitCardSO()
     {
-        if (cards.Count == ManagerHandler.Instance.dataManager.TotalCardCount)
-        {
-            Debug.Log("이미 SO가 초기화 되어 있습니다.");
-            return;
-        }
-        else
-        {
-            cards.Clear();
-        }
+        cards.Clear();
+
         initCount = 0;
         InitCardData(spadeName);
         InitCardData(diamondName);
         InitCardData(clubName);
         InitCardData(heartName);
+    }
+
+    public void Copy(CardSO cardSO)
+    {
+        cardSO.cards = this.cards;
     }
 }
