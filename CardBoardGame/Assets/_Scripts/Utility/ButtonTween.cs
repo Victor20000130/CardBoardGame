@@ -1,6 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -11,8 +12,10 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private int originalRenderIndex = 0;
     private float originalYPos;
     public float moveYvalue = 0;
+    private Button button;
     private void Awake()
     {
+        button = GetComponent<Button>();
         m_RectTransform = GetComponent<RectTransform>();
     }
     private void OnEnable()
@@ -21,7 +24,10 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-
+        if (!button.interactable)
+        {
+            return;
+        }
         // Scale up the button when hovered
         transform.DOScale(scaleFactor, duration).SetEase(Ease.OutBack);
 
@@ -31,6 +37,10 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!button.interactable)
+        {
+            return;
+        }
         // Scale back to original size when not hovered
         transform.DOScale(originalScale, duration).SetEase(Ease.OutBack);
         m_RectTransform.SetSiblingIndex(originalRenderIndex);
