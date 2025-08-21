@@ -53,10 +53,6 @@ public class StageHandler : Handler
 
     private void OnStageButtonClicked()
     {
-        if (CurrentStage == Stage.None)
-        {
-            CurrentStage = Stage.Stage1;
-        }
         var dataManager = ManagerHandler.Instance.dataManager;
         int stageIdx = (int)CurrentStage - 1;
         dataManager.CurGameData.Stage = CurrentStage;

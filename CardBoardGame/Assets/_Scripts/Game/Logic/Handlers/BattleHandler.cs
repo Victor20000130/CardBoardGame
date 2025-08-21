@@ -96,15 +96,15 @@ public class BattleHandler : Handler
 
     public void ReceiveGridType(GridType gridType)
     {
-        StartCoroutine(ApplyEffect(gridType));
+        ApplyEffect(gridType);
     }
 
-    private IEnumerator ApplyEffect(GridType gridType)
+    private void ApplyEffect(GridType gridType)
     {
         print($"적용되는 효과 : {gridType}");
         player.applyEffectAct?.Invoke(gridType);
         monster.applyEffectAct?.Invoke(gridType);
-        yield return new WaitForSeconds(3f);
+
     }
     protected override void SetHnadlerType()
     {
@@ -147,12 +147,12 @@ public class BattleHandler : Handler
             yield return new WaitForSeconds(player.GetAnimationClipLength("Attack"));
         }
         print($"적용된 데미지: {damage}");
-        yield return waitForSeconds;
 
         isMonsterDie = monster.TakeDamage(damage);
         yield return new WaitForSeconds(monster.GetAnimationClipLength("TakeDamage"));
         isTZFZmultipleCalc = false;
         tZFZMultiplierValue = 1;
+        yield return null;
     }
 
     public IEnumerator MonsterCoroutine()
@@ -172,7 +172,7 @@ public class BattleHandler : Handler
             ManagerHandler.Instance.gameManager.GameOver(isPlayerDie);
             yield break;
         }
-        yield return waitForSeconds;
+        yield return null;
         monster.MonsterSO._turn = originMonsterSO._turn;
     }
 

@@ -37,10 +37,6 @@ public class ButtonTween : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (!button.interactable)
-        {
-            return;
-        }
         // Scale back to original size when not hovered
         transform.DOScale(originalScale, duration).SetEase(Ease.OutBack);
         m_RectTransform.SetSiblingIndex(originalRenderIndex);

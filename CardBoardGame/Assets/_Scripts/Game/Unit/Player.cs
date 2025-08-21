@@ -77,7 +77,15 @@ public class Player : Unit
     {
         bool isDie;
         isDie = base.TakeDamage(damage);
+
+        float absorbed = Mathf.Min(damage, _playerSO.Barriar);
+
+        _playerSO.Barriar -= absorbed;
+
+        damage -= absorbed;
+
         _playerSO.CurHP -= damage;
+
         if (_playerSO.CurHP <= 0f)
         {
             isDie = true;
