@@ -14858,6 +14858,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBar: {fileID: 6815039175516844909}
   _hpTMP: {fileID: 449589161864230074}
+  _barriorTMP: {fileID: 0}
   monsterDMG_TMP: {fileID: 3794123298595888501}
   monsterTurn_TMP: {fileID: 3383941193129160655}
 --- !u!1 &8662382888786510214

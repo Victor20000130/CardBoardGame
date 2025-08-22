@@ -15,8 +15,10 @@ public class CurveLayout : MonoBehaviour
     public float startAngle = 120f;
     public float endAngle = 60f;
     public float upSideDeg = 90f;
+    public bool isInLobby = false;
     private void Awake()
     {
+
         if (isReverse)
         {
             upSideDeg *= -1f;
@@ -34,7 +36,10 @@ public class CurveLayout : MonoBehaviour
         _rect = GetComponent<RectTransform>();
 
         SetCurveLayout();
-        _rect.position += new Vector3(0, moveYvalue, 0);
+        if (!isInLobby)
+        {
+            _rect.position += new Vector3(0, moveYvalue, 0);
+        }
     }
     public IEnumerator SortLayout()
     {

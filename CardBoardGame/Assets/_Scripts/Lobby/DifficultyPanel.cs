@@ -10,14 +10,11 @@ public class DifficultyPanel : LobbyPanel
     [SerializeField] private Button easyButton;
     [SerializeField] private Button normalButton;
     [SerializeField] private Button hardButton;
-    protected override void Awake()
-    {
-        base.Awake();
-        panelType = LobbyPanelType.DifficultyPanel;
-    }
-    protected override void InitializePanel()
+
+    public override void InitializePanel()
     {
         base.InitializePanel();
+        panelType = LobbyPanelType.DifficultyPanel;
         easyButton.onClick.AddListener(() => SetDifficulty(Difficulty.Easy));
         normalButton.onClick.AddListener(() => SetDifficulty(Difficulty.Normal));
         hardButton.onClick.AddListener(() => SetDifficulty(Difficulty.Hard));

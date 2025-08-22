@@ -3,12 +3,11 @@ using UnityEngine;
 public class SaveDataPanel : LobbyPanel
 {
 
-    protected override void Awake()
+    public override void InitializePanel()
     {
-        base.Awake();
+        base.InitializePanel();
         panelType = LobbyPanelType.SaveDataPanel;
     }
-
     private void SetDataPanelActive(bool isActive)
     {
         // if (saveDataPanel != null)

@@ -14,12 +14,17 @@ public class LobbyUIHandler : MonoBehaviour
     private void Awake()
     {
         // Initialize the panel dictionary
+        foreach (LobbyPanel lobbyPanel in lobbyPanels)
+        {
+            lobbyPanel.InitializePanel();
+        }
         foreach (var panel in lobbyPanels)
         {
             if (panel != null)
             {
                 panel.GetHandler();
                 panelDictionary[panel.GetPanelType()] = panel;
+                print(1);
             }
             else
             {

@@ -10,9 +10,9 @@ public class MainPanel : LobbyPanel
     [SerializeField] private Button optionButton;
     [SerializeField] private Button editorsButton;
 
-    protected override void Awake()
+    public override void InitializePanel()
     {
-        base.Awake();
+
         panelType = LobbyPanelType.MainPanel;
         // Ensure all buttons are assigned
         if (gameStartButton == null ||
@@ -25,10 +25,6 @@ public class MainPanel : LobbyPanel
             return;
         }
 
-    }
-
-    protected override void InitializePanel()
-    {
         // Add listeners to buttons
         gameStartButton.onClick.AddListener(OnGameStartButtonClicked);
         howToPlayButton.onClick.AddListener(OnHowToPlayButtonClicked);
@@ -51,6 +47,8 @@ public class MainPanel : LobbyPanel
     {
         // Logic to show how to play
         print("How To Play Button Clicked");
+        lobbyUIHandler.OpenPanel(LobbyPanelType.HowToPlayPanel);
+        gameObject.SetActive(false);
     }
     private void OnOptionButtonClicked()
     {
