@@ -8,7 +8,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using System;
 using Random = UnityEngine.Random;
-using UnityEditor.Rendering;
 public class TZFZGame : MonoBehaviour
 {
     private MiniGameHandler miniGameHandler;
@@ -358,4 +357,3 @@ public class TZFZGame : MonoBehaviour
         miniGameHandler.GetTZFZGameResult(value);
     }
 }
-

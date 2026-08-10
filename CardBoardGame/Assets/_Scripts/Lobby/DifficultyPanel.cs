@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using CardBoardGame.Assets._Scripts.Utility;
 using System.Collections;
-using UnityEditor;
 
 public class DifficultyPanel : LobbyPanel
 {
