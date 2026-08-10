@@ -48,7 +48,7 @@ public class DifficultyPanel : LobbyPanel
             print("씬 로딩중..");
             if (asyncOperation.progress >= 0.9f)
             {
-                Time.timeScale = 0f;
+                Time.timeScale = 1f;
                 asyncOperation.allowSceneActivation = true;
             }
             yield return null;

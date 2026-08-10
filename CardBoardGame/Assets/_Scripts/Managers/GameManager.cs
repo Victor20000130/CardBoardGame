@@ -45,6 +45,12 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnLoaded;
+    }
+
     private void FixedUpdate()
     {
         if (isRoll == true)
@@ -111,6 +117,7 @@ public class GameManager : MonoBehaviour
 
     private void InitializeHandlers()
     {
+        this.handlers.Clear();
         Handler[] handlers = FindObjectsByType<Handler>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (Handler handler in handlers)
         {
